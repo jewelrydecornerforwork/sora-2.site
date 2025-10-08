@@ -8,22 +8,22 @@ export function Footer() {
 
   const footerLinks = {
     quickLinks: [
-      { name: '首页', href: '/' },
-      { name: '仪表板', href: '/dashboard' },
-      { name: '探索', href: '/explore' },
-      { name: '历史', href: '/history' },
+      { name: 'Home', href: '/' },
+      { name: 'Dashboard', href: '/dashboard' },
+      { name: 'Explore', href: '/explore' },
+      { name: 'History', href: '/history' },
     ],
     support: [
-      { name: '帮助中心', href: '/help' },
-      { name: '联系支持', href: '/support' },
-      { name: '状态页面', href: '/status' },
-      { name: '社区论坛', href: '/community' },
+      { name: 'Help Center', href: '/help' },
+      { name: 'Contact Support', href: '/support' },
+      { name: 'Status Page', href: '/status' },
+      { name: 'Community Forum', href: '/community' },
     ],
     legal: [
-      { name: '服务条款', href: '/terms' },
-      { name: '隐私政策', href: '/privacy' },
-      { name: '退款政策', href: '/refund' },
-      { name: 'Cookie 政策', href: '/cookies' },
+      { name: 'Terms of Service', href: '/terms' },
+      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Refund Policy', href: '/refund' },
+      { name: 'Cookie Policy', href: '/cookies' },
     ],
   }
 
@@ -46,8 +46,8 @@ export function Footer() {
               <span className="text-xl font-bold">Sora-2 Ai</span>
             </Link>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              专业的 AI 图像转视频生成器，支持运动控制、音频集成和多分辨率输出。
-              将您的创意想法转化为令人惊叹的视频内容。访问 sora-2.site 体验最先进的 AI 视频生成技术。
+              Professional AI image-to-video generator with motion control, audio integration, and multi-resolution output.
+              Transform your creative ideas into stunning video content. Visit sora-2.site to experience the most advanced AI video generation technology.
             </p>
             
             {/* 社交媒体链接 */}
@@ -67,7 +67,7 @@ export function Footer() {
 
           {/* 快速链接 */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">快速链接</h3>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-3">
               {footerLinks.quickLinks.map((link) => (
                 <li key={link.name}>
@@ -84,7 +84,7 @@ export function Footer() {
 
           {/* 支持 */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">支持</h3>
+            <h3 className="text-lg font-semibold mb-4">Support</h3>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
@@ -101,7 +101,7 @@ export function Footer() {
 
           {/* 法律条款 */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">法律条款</h3>
+            <h3 className="text-lg font-semibold mb-4">Legal</h3>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
@@ -123,13 +123,13 @@ export function Footer() {
             <div className="flex items-center space-x-2 text-gray-400 mb-4 md:mb-0">
               <span>© {currentYear} sora-2.site</span>
               <span>•</span>
-              <span>保留所有权利</span>
+              <span>All rights reserved</span>
             </div>
             
             <div className="flex items-center space-x-2 text-gray-400">
-              <span>用</span>
+              <span>Made with</span>
               <Heart className="w-4 h-4 text-red-500" />
-              <span>制作</span>
+              <span>by</span>
             </div>
           </div>
         </div>

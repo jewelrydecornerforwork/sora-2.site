@@ -31,7 +31,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
         setImagePreview(reader.result as string)
       }
       reader.readAsDataURL(file)
-      toast.success('图像上传成功！')
+      toast.success('Image uploaded successfully!')
     }
   }
 
@@ -40,7 +40,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     const file = event.target.files?.[0]
     if (file) {
       setAudioFile(file)
-      toast.success('音频文件上传成功！')
+      toast.success('Audio file uploaded successfully!')
     }
   }
 
@@ -50,13 +50,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     
     if (!selectedImage) {
       console.log('❌ 没有选择图像')
-      toast.error('请先上传图像！')
+      toast.error('Please upload an image first!')
       return
     }
     
     if (!motionPrompt.trim()) {
       console.log('❌ 没有输入运动描述')
-      toast.error('请输入运动描述！')
+      toast.error('Please enter a motion description!')
       return
     }
 
@@ -104,10 +104,10 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       console.log('✅ 生成结果:', result)
       
       setGeneratedVideo(result.videoUrl)
-      toast.success(result.message || '视频生成成功！')
+      toast.success(result.message || 'Video generated successfully!')
     } catch (error) {
       console.error('❌ 生成视频时发生错误:', error)
-      toast.error(`视频生成失败: ${error instanceof Error ? error.message : '未知错误'}`)
+      toast.error(`Video generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsGenerating(false)
     }
@@ -118,10 +118,10 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Sora-2 Ai - 图像转视频生成器
+            Sora-2 Ai - Image to Video Generator
           </h2>
           <p className="text-lg text-gray-600">
-            使用 AI 技术将您的图像转换为动态视频
+            Transform your images into dynamic videos with AI
           </p>
         </div>
 
@@ -131,7 +131,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             {/* AI 模型选择 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                AI 模型
+                AI Model
               </label>
               <select
                 value={selectedModel}
@@ -147,17 +147,17 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             {/* 图像上传 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                上传图像（可选）
+                Upload Image (Optional)
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
                 {imagePreview ? (
                   <div className="space-y-4">
                     <img
                       src={imagePreview}
-                      alt="预览"
+                      alt="Preview"
                       className="max-w-full max-h-48 mx-auto rounded-lg"
                     />
-                    <p className="text-sm text-gray-600">点击更换图像</p>
+                    <p className="text-sm text-gray-600">Click to change image</p>
                     <input
                       type="file"
                       accept="image/*"
@@ -169,7 +169,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                       htmlFor="image-upload"
                       className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
                     >
-                      选择新图像
+                      Select New Image
                     </label>
                   </div>
                 ) : (
@@ -177,13 +177,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     <Upload className="w-12 h-12 text-gray-400 mx-auto" />
                     <div>
                       <p className="text-lg font-medium text-gray-700 mb-2">
-                        选择图像文件
+                        Select Image File
                       </p>
                       <p className="text-sm text-gray-500 mb-4">
-                        支持 JPEG, PNG, WEBP, BMP 格式
+                        Supports JPEG, PNG, WEBP, BMP formats
                       </p>
                       <p className="text-xs text-gray-400 mb-4">
-                        最大 10MB，分辨率 360-2000 像素
+                        Max 10MB, resolution 360-2000 pixels
                       </p>
                       <input
                         type="file"
@@ -196,7 +196,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         htmlFor="image-upload"
                         className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
                       >
-                        选择图像
+                        Select Image
                       </label>
                     </div>
                   </div>
@@ -207,12 +207,12 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             {/* 运动描述 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                运动描述（描述期望的运动）
+                Motion Prompt (describe desired movement)
               </label>
               <textarea
                 value={motionPrompt}
                 onChange={(e) => setMotionPrompt(e.target.value)}
-                placeholder="例如：一个女人在海滩上行走并说：'你听说了吗？Sora-2 现在可以在 sora-2.site 上使用了！'"
+                placeholder="e.g.: A woman walks on the beach and says: 'Have you heard? Sora-2 is now available on sora-2.site!'"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 rows={4}
                 maxLength={500}
@@ -226,13 +226,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Settings className="w-5 h-5 text-gray-500" />
-                <span className="font-medium text-gray-700">设置</span>
+                <span className="font-medium text-gray-700">Settings</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    分辨率
+                    Resolution
                   </label>
                   <select
                     value={resolution}
@@ -247,15 +247,15 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    时长
+                    Duration
                   </label>
                   <select
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="5">5秒</option>
-                    <option value="10">10秒</option>
+                    <option value="5">5 seconds</option>
+                    <option value="10">10 seconds</option>
                   </select>
                 </div>
               </div>
@@ -263,7 +263,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               {/* 音频上传 */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  背景音乐（可选）
+                  Background Music (Optional)
                 </label>
                 <div className="flex items-center space-x-4">
                   <input
@@ -278,7 +278,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
                   >
                     <Volume2 className="w-4 h-4" />
-                    <span className="text-sm">选择音频文件</span>
+                    <span className="text-sm">Select Audio File</span>
                   </label>
                   {audioFile && (
                     <span className="text-sm text-gray-600">
@@ -287,7 +287,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   )}
                 </div>
                 <p className="text-xs text-gray-400 mt-1">
-                  支持 WAV/MP3，3-30秒，最大 15MB
+                  Supports WAV/MP3, 3-30 seconds, max 15MB
                 </p>
               </div>
 
@@ -301,7 +301,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <label htmlFor="isPublic" className="text-sm text-gray-700">
-                  视频公开
+                  Video Public
                 </label>
               </div>
             </div>
@@ -315,12 +315,12 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               {isGenerating ? (
                 <>
                   <div className="loading-spinner"></div>
-                  <span>生成中...</span>
+                  <span>Generating...</span>
                 </>
               ) : (
                 <>
                   <Play className="w-5 h-5" />
-                  <span>生成视频</span>
+                  <span>Generate Video</span>
                 </>
               )}
             </button>
@@ -330,20 +330,20 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                生成的视频
+                Generated Video
               </h3>
               
               {generatedVideo ? (
                 <div className="space-y-4">
                   <div className="bg-gray-100 rounded-lg p-4">
                     <div className="text-sm text-gray-600 mb-2">
-                      {new Date().toLocaleString('zh-CN')}
+                      {new Date().toLocaleString('en-US')}
                     </div>
                     <div className="text-sm text-gray-600 mb-2">
-                      模型: {selectedModel}
+                      Model: {selectedModel}
                     </div>
                     <div className="text-sm text-gray-600 mb-4">
-                      提示: {motionPrompt}
+                      Prompt: {motionPrompt}
                     </div>
                     
                     <video
@@ -357,11 +357,11 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   <div className="flex space-x-2">
                     <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                       <Download className="w-4 h-4" />
-                      <span>下载</span>
+                      <span>Download</span>
                     </button>
                     <button className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
                       <Play className="w-4 h-4" />
-                      <span>分享</span>
+                      <span>Share</span>
                     </button>
                   </div>
                 </div>
@@ -369,7 +369,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 <div className="bg-gray-50 rounded-lg p-8 text-center">
                   <Image className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500">
-                    生成的视频将显示在这里
+                    Generated video will appear here
                   </p>
                 </div>
               )}

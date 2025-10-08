@@ -29,16 +29,16 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-              首页
+              Home
             </Link>
             <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
-              仪表板
+              Dashboard
             </Link>
             <Link href="/explore" className="text-gray-700 hover:text-blue-600 transition-colors">
-              探索
+              Explore
             </Link>
             <Link href="/history" className="text-gray-700 hover:text-blue-600 transition-colors">
-              历史
+              History
             </Link>
           </nav>
 
@@ -53,21 +53,21 @@ export function Header() {
                   className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
                 >
                   <User className="w-4 h-4" />
-                  <span>{session.user?.name || '用户'}</span>
+                  <span>{session.user?.name || 'User'}</span>
                 </Link>
                 <Link 
                   href="/dashboard" 
                   className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <CreditCard className="w-4 h-4" />
-                  <span>积分</span>
+                  <span>Credits</span>
                 </Link>
                 <button
                   onClick={() => signOut()}
                   className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>退出</span>
+                  <span>Logout</span>
                 </button>
               </div>
             ) : (
@@ -75,7 +75,7 @@ export function Header() {
                   onClick={() => alert('登录功能待实现')}
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  登录
+                  Login
                 </button>
             )}
           </div>
@@ -98,35 +98,35 @@ export function Header() {
                 className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                首页
+                Home
               </Link>
               <Link 
                 href="/dashboard" 
                 className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                仪表板
+                Dashboard
               </Link>
               <Link 
                 href="/explore" 
                 className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                探索
+                Explore
               </Link>
               <Link 
                 href="/history" 
                 className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                历史
+                History
               </Link>
               
               <div className="pt-4 border-t border-gray-200">
                 {session ? (
                   <div className="flex flex-col space-y-2">
                     <div className="text-sm text-gray-600">
-                      欢迎，{session.user?.name || '用户'}
+                      Welcome, {session.user?.name || 'User'}
                     </div>
                     <Link 
                       href="/dashboard" 
@@ -134,7 +134,7 @@ export function Header() {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <CreditCard className="w-4 h-4" />
-                      <span>积分</span>
+                      <span>Credits</span>
                     </Link>
                     <button
                       onClick={() => {
@@ -144,18 +144,18 @@ export function Header() {
                       className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
-                      <span>退出</span>
+                      <span>Logout</span>
                     </button>
                   </div>
                 ) : (
                     <button
                       onClick={() => {
-                        alert('登录功能待实现')
+                        alert('Login feature coming soon')
                         setIsMenuOpen(false)
                       }}
                       className="w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                     >
-                      登录
+                      Login
                     </button>
                 )}
               </div>

@@ -7,23 +7,23 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Sora-2 Ai - 专业图像转视频生成器 | sora-2.site',
-  description: '使用 AI 技术将图像转换为专业视频，支持运动控制、音频集成和多分辨率输出。访问 sora-2.site 体验最先进的图像转视频技术。',
-  keywords: 'AI视频生成,图像转视频,Sora,人工智能,视频制作,sora-2.site',
+  title: 'Sora-2 Ai - Professional Image to Video Generator | sora-2.site',
+  description: 'Transform images into stunning videos with AI technology, featuring motion control, audio integration, and multi-resolution output. Experience the most advanced image-to-video technology at sora-2.site.',
+  keywords: 'AI video generation,image to video,Sora,artificial intelligence,video creation,sora-2.site',
   authors: [{ name: 'Sora-2 Ai Team' }],
   metadataBase: new URL('https://sora-2.site'),
   openGraph: {
-    title: 'Sora-2 Ai - 专业图像转视频生成器',
-    description: '使用 AI 技术将图像转换为专业视频',
+    title: 'Sora-2 Ai - Professional Image to Video Generator',
+    description: 'Transform images into stunning videos with AI technology',
     type: 'website',
-    locale: 'zh_CN',
+    locale: 'en_US',
     url: 'https://sora-2.site',
     siteName: 'sora-2.site',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sora-2 Ai - 专业图像转视频生成器',
-    description: '使用 AI 技术将图像转换为专业视频',
+    title: 'Sora-2 Ai - Professional Image to Video Generator',
+    description: 'Transform images into stunning videos with AI technology',
   },
 }
 
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body className={inter.className}>
         <Providers>
           {children}
