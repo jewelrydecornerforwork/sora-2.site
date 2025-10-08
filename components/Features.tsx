@@ -93,7 +93,7 @@ export function Features() {
                   <div>
                     <div className="text-sm text-gray-600 mb-2">视频提示</div>
                     <p className="text-sm text-gray-700 italic">
-                      "一个女人在海滩上行走并说：'你听说了吗？Sora 2 现在可以在 sora2ai.io 上使用了！'"
+                      "一个女人在海滩上行走并说：'你听说了吗？Sora 2 现在可以在 sora-2.site 上使用了！'"
                     </p>
                   </div>
                   <div>

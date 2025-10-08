@@ -18,7 +18,7 @@ export function Hero() {
           
           <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
             使用先进的 AI 技术将静态图像转换为动态视频，支持运动控制、音频集成和多分辨率输出。
-            在 5-10 秒内生成 480p 到 1080p 的专业质量视频。
+            在 5-10 秒内生成 480p 到 1080p 的专业质量视频。访问 <span className="font-semibold text-blue-600">sora-2.site</span> 体验最先进的图像转视频技术。
           </p>
 
           {/* 特性标签 */}

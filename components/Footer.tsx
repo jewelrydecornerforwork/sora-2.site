@@ -48,7 +48,7 @@ export function Footer() {
             </Link>
             <p className="text-gray-400 mb-6 leading-relaxed">
               专业的 AI 图像转视频生成器，支持运动控制、音频集成和多分辨率输出。
-              将您的创意想法转化为令人惊叹的视频内容。
+              将您的创意想法转化为令人惊叹的视频内容。访问 sora-2.site 体验最先进的 AI 视频生成技术。
             </p>
             
             {/* 社交媒体链接 */}
@@ -122,7 +122,7 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 text-gray-400 mb-4 md:mb-0">
-              <span>© {currentYear} sora2ai.io</span>
+              <span>© {currentYear} sora-2.site</span>
               <span>•</span>
               <span>保留所有权利</span>
             </div>

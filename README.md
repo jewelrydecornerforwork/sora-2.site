@@ -2,6 +2,8 @@
 
 一个基于 AI 的专业图像转视频生成器网站，支持运动控制、音频集成和多分辨率输出。
 
+🌐 **网站地址**: [https://sora-2.site](https://sora-2.site)
+
 ## 功能特性
 
 - 🎬 **多分辨率支持**: 480p、720p、1080p 视频生成
@@ -82,7 +84,8 @@ git push -u origin main
 3. 点击 "New Project"
 4. 选择你的 GitHub 仓库
 5. 配置环境变量
-6. 点击 "Deploy"
+6. 设置自定义域名 `sora-2.site`
+7. 点击 "Deploy"
 
 ### 3. 环境变量配置
 
@@ -90,7 +93,7 @@ git push -u origin main
 
 ```
 NEXTAUTH_SECRET=your-secret-key
-NEXTAUTH_URL=https://your-domain.vercel.app
+NEXTAUTH_URL=https://sora-2.site
 DATABASE_URL=your-database-url
 STRIPE_SECRET_KEY=your-stripe-secret
 STRIPE_PUBLISHABLE_KEY=your-stripe-publishable

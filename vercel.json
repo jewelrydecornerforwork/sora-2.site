@@ -6,7 +6,7 @@
   },
   "env": {
     "NEXTAUTH_SECRET": "@nextauth-secret",
-    "NEXTAUTH_URL": "@nextauth-url",
+    "NEXTAUTH_URL": "https://sora-2.site",
     "DATABASE_URL": "@database-url",
     "STRIPE_SECRET_KEY": "@stripe-secret-key",
     "STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key",

@@ -20,7 +20,10 @@ export function Header() {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">S2</span>
             </div>
-            <span className="text-xl font-bold gradient-text">Sora 2 AI</span>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold gradient-text">Sora 2 AI</span>
+              <span className="text-xs text-gray-500">sora-2.site</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
