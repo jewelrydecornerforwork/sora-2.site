@@ -21,7 +21,7 @@ export function Header() {
               <span className="text-white font-bold text-sm">S2</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold gradient-text">Sora 2 AI</span>
+              <span className="text-xl font-bold gradient-text">Sora-2 Ai</span>
               <span className="text-xs text-gray-500">sora-2.site</span>
             </div>
           </Link>
@@ -33,9 +33,6 @@ export function Header() {
             </Link>
             <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
               仪表板
-            </Link>
-            <Link href="/pricing" className="text-gray-700 hover:text-blue-600 transition-colors">
-              定价
             </Link>
             <Link href="/explore" className="text-gray-700 hover:text-blue-600 transition-colors">
               探索
@@ -59,7 +56,7 @@ export function Header() {
                   <span>{session.user?.name || '用户'}</span>
                 </Link>
                 <Link 
-                  href="/pricing" 
+                  href="/dashboard" 
                   className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <CreditCard className="w-4 h-4" />
@@ -111,13 +108,6 @@ export function Header() {
                 仪表板
               </Link>
               <Link 
-                href="/pricing" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                定价
-              </Link>
-              <Link 
                 href="/explore" 
                 className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
@@ -139,7 +129,7 @@ export function Header() {
                       欢迎，{session.user?.name || '用户'}
                     </div>
                     <Link 
-                      href="/pricing" 
+                      href="/dashboard" 
                       className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >

@@ -118,7 +118,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Sora 2 AI - 图像转视频生成器
+            Sora-2 Ai - 图像转视频生成器
           </h2>
           <p className="text-lg text-gray-600">
             使用 AI 技术将您的图像转换为动态视频
@@ -212,7 +212,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               <textarea
                 value={motionPrompt}
                 onChange={(e) => setMotionPrompt(e.target.value)}
-                placeholder="例如：一个女人在海滩上行走并说：'你听说了吗？Sora 2 现在可以在 sora-2.site 上使用了！'"
+                placeholder="例如：一个女人在海滩上行走并说：'你听说了吗？Sora-2 现在可以在 sora-2.site 上使用了！'"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 rows={4}
                 maxLength={500}

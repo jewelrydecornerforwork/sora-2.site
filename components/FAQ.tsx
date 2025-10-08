@@ -8,36 +8,36 @@ export function FAQ() {
 
   const faqs = [
     {
-      question: 'Sora 2 AI 支持哪些视频分辨率？',
-      answer: 'Sora 2 AI 支持 480p、720p 和 1080p 视频生成。根据项目需求选择最适合的分辨率，处理时间根据质量和时长在 1-3 分钟之间。'
+      question: 'Sora-2 Ai 支持哪些视频分辨率？',
+      answer: 'Sora-2 Ai 支持 480p、720p 和 1080p 视频生成。根据项目需求选择最适合的分辨率，处理时间根据质量和时长在 1-3 分钟之间。'
     },
     {
-      question: '我可以在 Sora 2 中生成多长的视频？',
+      question: '我可以在 Sora-2 中生成多长的视频？',
       answer: '您可以生成 5 秒或 10 秒时长的视频。这对于社交媒体内容、演示文稿、动画和需要精确时间控制的创意项目来说是完美的。'
     },
     {
-      question: '我可以在 Sora 2 中为视频添加音频吗？',
-      answer: '是的！Sora 2 AI 支持 WAV 和 MP3 格式的音频集成。音频时长 3-30 秒，文件大小最大 15MB。音频会自动处理以匹配视频长度。'
+      question: '我可以在 Sora-2 中为视频添加音频吗？',
+      answer: '是的！Sora-2 Ai 支持 WAV 和 MP3 格式的音频集成。音频时长 3-30 秒，文件大小最大 15MB。音频会自动处理以匹配视频长度。'
     },
     {
-      question: 'Sora 2 支持哪些图像格式？',
+      question: 'Sora-2 支持哪些图像格式？',
       answer: '支持的格式包括 JPEG、JPG、PNG（无透明通道）、BMP 和 WEBP。图像应为 360-2000 像素的宽度和高度，最大文件大小为 10MB 以获得最佳处理效果。'
     },
     {
-      question: 'Sora 2 AI 中的提示扩展是什么？',
+      question: 'Sora-2 Ai 中的提示扩展是什么？',
       answer: '提示扩展使用 LLM 技术自动增强您的文本提示，以获得更好的视频生成结果。此功能有助于创建更详细和准确的运动描述。'
     },
     {
-      question: 'Sora 2 AI 的视频处理需要多长时间？',
+      question: 'Sora-2 Ai 的视频处理需要多长时间？',
       answer: '处理通常需要 1-3 分钟，具体取决于分辨率和时长。1080p 和 10 秒视频比 480p 和 5 秒视频需要更长时间。处理过程中您会收到状态更新。'
     },
     {
-      question: '我可以将 Sora 2 AI 用于商业项目吗？',
+      question: '我可以将 Sora-2 Ai 用于商业项目吗？',
       answer: '是的！所有付费计划都包含商业许可权。您可以创建用于营销、社交媒体、演示文稿或任何商业目的的视频，拥有完整的使用权。'
     },
     {
-      question: 'Sora 2 AI 与其他工具有什么不同？',
-      answer: 'Sora 2 AI 提供专业质量，具有多种分辨率选项、音频集成、灵活的时长控制和先进的提示扩展。它专为初学者和专业人士设计。'
+      question: 'Sora-2 Ai 与其他工具有什么不同？',
+      answer: 'Sora-2 Ai 提供专业质量，具有多种分辨率选项、音频集成、灵活的时长控制和先进的提示扩展。它专为初学者和专业人士设计。'
     },
     {
       question: '积分系统是如何工作的？',
@@ -54,7 +54,7 @@ export function FAQ() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            关于 Sora 2 AI 的常见问题
+            关于 Sora-2 Ai 的常见问题
           </h2>
           <p className="text-lg text-gray-600">
             找到您需要的答案

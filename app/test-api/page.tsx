@@ -53,7 +53,7 @@ export default function TestAPI() {
     <div className="min-h-screen bg-gray-100 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          API 测试页面
+          Sora-2 Ai API 测试页面
         </h1>
 
         <div className="bg-white rounded-lg shadow-lg p-6">

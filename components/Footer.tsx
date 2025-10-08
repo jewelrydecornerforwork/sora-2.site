@@ -10,7 +10,6 @@ export function Footer() {
     quickLinks: [
       { name: '首页', href: '/' },
       { name: '仪表板', href: '/dashboard' },
-      { name: '定价', href: '/pricing' },
       { name: '探索', href: '/explore' },
       { name: '历史', href: '/history' },
     ],
@@ -44,7 +43,7 @@ export function Footer() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">S2</span>
               </div>
-              <span className="text-xl font-bold">Sora 2 AI</span>
+              <span className="text-xl font-bold">Sora-2 Ai</span>
             </Link>
             <p className="text-gray-400 mb-6 leading-relaxed">
               专业的 AI 图像转视频生成器，支持运动控制、音频集成和多分辨率输出。

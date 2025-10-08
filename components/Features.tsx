@@ -41,7 +41,7 @@ export function Features() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            为什么选择 Sora 2 AI
+            为什么选择 Sora-2 Ai
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             专业的视频生成功能，支持运动控制、音频集成和多种分辨率选项
@@ -70,10 +70,10 @@ export function Features() {
         {/* 示例展示 */}
         <div className="mt-20">
           <h3 className="text-2xl font-bold text-gray-900 text-center mb-12">
-            Sora 2 AI 社区精彩视频
+            Sora-2 Ai 社区精彩视频
           </h3>
           <p className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            观看 Sora 2 AI 如何将您的想法转化为令人惊叹的现实 - 从概念到产品只需几秒钟
+            观看 Sora-2 Ai 如何将您的想法转化为令人惊叹的现实 - 从概念到产品只需几秒钟
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -81,7 +81,7 @@ export function Features() {
             <div className="bg-white rounded-xl overflow-hidden shadow-lg">
               <div className="p-6">
                 <h4 className="font-semibold text-gray-900 mb-4">
-                  完整的 Sora 2 AI 唇形同步转换流程
+                  完整的 Sora-2 Ai 唇形同步转换流程
                 </h4>
                 <div className="space-y-4">
                   <div>
@@ -93,7 +93,7 @@ export function Features() {
                   <div>
                     <div className="text-sm text-gray-600 mb-2">视频提示</div>
                     <p className="text-sm text-gray-700 italic">
-                      "一个女人在海滩上行走并说：'你听说了吗？Sora 2 现在可以在 sora-2.site 上使用了！'"
+                      "一个女人在海滩上行走并说：'你听说了吗？Sora-2 现在可以在 sora-2.site 上使用了！'"
                     </p>
                   </div>
                   <div>
@@ -113,7 +113,7 @@ export function Features() {
             <div className="bg-white rounded-xl overflow-hidden shadow-lg">
               <div className="p-6">
                 <h4 className="font-semibold text-gray-900 mb-4">
-                  完整的 Sora 2 AI 动画运动转换流程
+                  完整的 Sora-2 Ai 动画运动转换流程
                 </h4>
                 <div className="space-y-4">
                   <div>
@@ -145,7 +145,7 @@ export function Features() {
             <div className="bg-white rounded-xl overflow-hidden shadow-lg">
               <div className="p-6">
                 <h4 className="font-semibold text-gray-900 mb-4">
-                  完整的 Sora 2 AI 产品转换流程
+                  完整的 Sora-2 Ai 产品转换流程
                 </h4>
                 <div className="space-y-4">
                   <div>

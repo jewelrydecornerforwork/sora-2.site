@@ -7,13 +7,13 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Sora 2 AI - 专业图像转视频生成器 | sora-2.site',
+  title: 'Sora-2 Ai - 专业图像转视频生成器 | sora-2.site',
   description: '使用 AI 技术将图像转换为专业视频，支持运动控制、音频集成和多分辨率输出。访问 sora-2.site 体验最先进的图像转视频技术。',
   keywords: 'AI视频生成,图像转视频,Sora,人工智能,视频制作,sora-2.site',
-  authors: [{ name: 'Sora 2 AI Team' }],
+  authors: [{ name: 'Sora-2 Ai Team' }],
   metadataBase: new URL('https://sora-2.site'),
   openGraph: {
-    title: 'Sora 2 AI - 专业图像转视频生成器',
+    title: 'Sora-2 Ai - 专业图像转视频生成器',
     description: '使用 AI 技术将图像转换为专业视频',
     type: 'website',
     locale: 'zh_CN',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sora 2 AI - 专业图像转视频生成器',
+    title: 'Sora-2 Ai - 专业图像转视频生成器',
     description: '使用 AI 技术将图像转换为专业视频',
   },
 }
