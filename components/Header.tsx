@@ -8,8 +8,8 @@ import { Menu, X, User, LogOut, CreditCard } from 'lucide-react'
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   // 模拟用户状态
-  const session = null
-  const status = 'unauthenticated'
+  const session = null as { user?: { name?: string } } | null
+  const status: 'loading' | 'authenticated' | 'unauthenticated' = 'unauthenticated'
 
   return (
     <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
@@ -44,9 +44,7 @@ export function Header() {
 
           {/* User Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {status === 'loading' ? (
-              <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse"></div>
-            ) : session ? (
+            {session ? (
               <div className="flex items-center space-x-4">
                 <Link 
                   href="/dashboard" 
@@ -63,7 +61,7 @@ export function Header() {
                   <span>Credits</span>
                 </Link>
                 <button
-                  onClick={() => signOut()}
+                  onClick={() => alert('登出功能待实现')}
                   className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
@@ -138,7 +136,7 @@ export function Header() {
                     </Link>
                     <button
                       onClick={() => {
-                        signOut()
+                        alert('登出功能待实现')
                         setIsMenuOpen(false)
                       }}
                       className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
