@@ -1,18 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 // import { useSession, signIn, signOut } from 'next-auth/react'
 import { Menu, X, User, LogOut, CreditCard } from 'lucide-react'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   // 模拟用户状态
   const session = null as { user?: { name?: string } } | null
   const status: 'loading' | 'authenticated' | 'unauthenticated' = 'unauthenticated'
 
+  // 监听滚动事件，实现导航栏背景透明度变化
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      setIsScrolled(scrollTop > 10)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <header className="bg-white/90 backdrop-blur-md border-b border-gray-200 relative z-10">
+    <header className={`backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 transition-all duration-300 ease-in-out ${
+      isScrolled 
+        ? 'bg-white/95 shadow-lg' 
+        : 'bg-white/80'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
