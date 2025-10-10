@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Header } from '@/components/Header'
 
 export default function TestAPI() {
   const [result, setResult] = useState<any>(null)
@@ -50,7 +51,9 @@ export default function TestAPI() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <Header />
+      <div className="py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
           Sora-2 Ai API 测试页面
@@ -89,6 +92,7 @@ export default function TestAPI() {
             <li>如果成功，返回演示视频 URL</li>
           </ol>
         </div>
+      </div>
       </div>
     </div>
   )
