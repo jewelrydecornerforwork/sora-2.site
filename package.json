@@ -7,13 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node scripts/test-site.js"
+    "test": "node scripts/test-site.js",
+    "test:api": "node scripts/test-video-api.js"
   },
   "dependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "dotenv": "^17.2.3",
     "form-data": "^4.0.4",
     "lucide-react": "^0.294.0",
     "next": "14.0.4",

@@ -13,6 +13,7 @@
 - 🖼️ **多格式支持**: JPEG、PNG、BMP、WEBP 图像
 - 💳 **积分系统**: 灵活的付费模式
 - 🔐 **用户认证**: 完整的用户管理系统
+- 🆓 **免费 API**: 支持 Replicate 和 Hugging Face 免费服务
 
 ## 技术栈
 
@@ -22,7 +23,7 @@
 - **认证**: NextAuth.js
 - **支付**: Stripe
 - **部署**: Vercel
-- **AI 服务**: OpenAI API 或其他 AI 视频生成服务
+- **AI 服务**: Replicate API (免费) / Hugging Face Inference API (免费) / Stable Video Diffusion
 
 ## 快速开始
 
@@ -47,11 +48,25 @@ npm install
 
 3. **环境配置**
 ```bash
-cp .env.example .env.local
+cp env.example .env.local
 # 编辑 .env.local 文件，填入必要的环境变量
 ```
 
-4. **数据库设置**
+**重要**: 配置免费 AI API 密钥以启用视频生成功能：
+
+- **选项 1: Replicate API**（推荐，每月免费 $5 积分）
+  - 注册: https://replicate.com/
+  - 获取密钥: https://replicate.com/account/api-tokens
+  - 在 `.env.local` 中设置 `REPLICATE_API_TOKEN="r8_..."`
+
+- **选项 2: Hugging Face API**（完全免费，有速率限制）
+  - 注册: https://huggingface.co/
+  - 获取密钥: https://huggingface.co/settings/tokens
+  - 在 `.env.local` 中设置 `HF_API_TOKEN="hf_..."`
+
+📖 **详细配置指南**: 请查看 [FREE_API_SETUP.md](./FREE_API_SETUP.md)
+
+4. **数据库设置（可选）**
 ```bash
 npx prisma generate
 npx prisma db push
@@ -91,14 +106,23 @@ git push -u origin main
 
 在 Vercel 项目设置中添加以下环境变量：
 
+**必需（免费 API）**:
+```
+# 二选一或都配置
+REPLICATE_API_TOKEN=your-replicate-token
+HF_API_TOKEN=your-huggingface-token
+```
+
+**可选**:
 ```
 NEXTAUTH_SECRET=your-secret-key
 NEXTAUTH_URL=https://sora-2.site
 DATABASE_URL=your-database-url
 STRIPE_SECRET_KEY=your-stripe-secret
 STRIPE_PUBLISHABLE_KEY=your-stripe-publishable
-OPENAI_API_KEY=your-openai-key
 ```
+
+📖 **如何获取免费 API 密钥**: 请查看 [FREE_API_SETUP.md](./FREE_API_SETUP.md)
 
 ## 项目结构
 
