@@ -24,10 +24,10 @@ export function Header() {
   }, [])
 
   return (
-    <header className={`backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 transition-all duration-300 ease-in-out ${
+    <header className={`backdrop-blur-md border-b border-gray-700 sticky top-0 z-50 transition-all duration-300 ease-in-out ${
       isScrolled 
-        ? 'bg-white/95 shadow-lg' 
-        : 'bg-white/80'
+        ? 'bg-gray-900/95 shadow-lg' 
+        : 'bg-gray-900/80'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -37,24 +37,18 @@ export function Header() {
               <span className="text-white font-bold text-sm">S2</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold gradient-text">Sora-2 Ai</span>
-              <span className="text-xs text-gray-500">sora-2.site</span>
+              <span className="text-xl font-bold text-white">Sora2</span>
+              <span className="text-xs text-gray-400">sora-2.site</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Home
+            <Link href="/" className="text-gray-300 hover:text-white transition-colors">
+              Features
             </Link>
-            <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Dashboard
-            </Link>
-            <Link href="/explore" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Explore
-            </Link>
-            <Link href="/history" className="text-gray-700 hover:text-blue-600 transition-colors">
-              History
+            <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">
+              Pricing
             </Link>
           </nav>
 
@@ -87,9 +81,9 @@ export function Header() {
             ) : (
                 <button
                   onClick={() => alert('登录功能待实现')}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="bg-white text-gray-900 px-6 py-2 rounded-lg hover:bg-gray-100 transition-colors font-medium"
                 >
-                  Login
+                  Sign in to generate
                 </button>
             )}
           </div>

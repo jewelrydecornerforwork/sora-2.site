@@ -114,34 +114,40 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   }
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-800">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Sora-2 Ai - Image to Video Generator
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Sora 2 Generator
           </h2>
-          <p className="text-lg text-gray-600">
-            Transform your images into dynamic videos with AI
-          </p>
+          <div className="flex justify-center gap-4 mb-8">
+            <button className="px-6 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors">
+              Text to Video
+            </button>
+            <button className="px-6 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors">
+              Image to Video
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* 左侧：输入区域 */}
           <div className="space-y-6">
-            {/* AI 模型选择 */}
+            {/* Prompt 输入 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                AI Model
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Prompt
               </label>
-              <select
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="google-veo3">Google Veo3</option>
-                <option value="runway-gen3">Runway Gen-3</option>
-                <option value="pika-labs">Pika Labs</option>
-              </select>
+              <textarea
+                value={motionPrompt}
+                onChange={(e) => setMotionPrompt(e.target.value)}
+                placeholder="Describe the motion you want to create..."
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows={4}
+              />
+              <div className="text-right text-sm text-gray-400 mt-1">
+                {motionPrompt.length}/5000
+              </div>
             </div>
 
             {/* 图像上传 */}

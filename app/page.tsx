@@ -12,7 +12,7 @@ export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gray-900 text-white">
       <Header />
       <main>
         <Hero />

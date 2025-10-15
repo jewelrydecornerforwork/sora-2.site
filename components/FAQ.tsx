@@ -8,40 +8,44 @@ export function FAQ() {
 
   const faqs = [
     {
-      question: 'What video resolutions does Sora-2 Ai support?',
-      answer: 'Sora-2 Ai supports 480p, 720p, and 1080p video generation. Choose the most suitable resolution based on your project needs, with processing time ranging from 1-3 minutes depending on quality and duration.'
+      question: 'What is Sora2 AI generator?',
+      answer: 'Sora2 is an advanced AI video generation platform that transforms text prompts and images into high-quality videos using cutting-edge artificial intelligence technology.'
     },
     {
-      question: 'How long can I generate videos in Sora-2?',
-      answer: 'You can generate videos with 5-second or 10-second duration. This is perfect for social media content, presentations, animations, and creative projects that require precise timing control.'
+      question: 'How does text-to-video work?',
+      answer: 'Simply enter a text description of the video you want to create, and our AI model will generate a corresponding video based on your prompt. The AI understands context and creates relevant visual content.'
     },
     {
-      question: 'Can I add audio to videos in Sora-2?',
-      answer: 'Yes! Sora-2 Ai supports audio integration in WAV and MP3 formats. Audio duration should be 3-30 seconds with a maximum file size of 15MB. Audio will be automatically processed to match video length.'
+      question: 'Can I use Sora2 for free?',
+      answer: 'Yes! Sora2 offers a free tier that allows you to try the platform and generate videos. You can upgrade to premium plans for more credits and advanced features.'
     },
     {
-      question: 'What image formats does Sora-2 support?',
-      answer: 'Supported formats include JPEG, JPG, PNG (no transparency), BMP, and WEBP. Images should be 360-2000 pixels in width and height with a maximum file size of 10MB for optimal processing.'
+      question: 'What formats are supported?',
+      answer: 'Sora2 supports multiple export formats including MP4, WebM, and MOV. You can choose the format that best suits your needs and platform requirements.'
     },
     {
-      question: 'What is prompt expansion in Sora-2 Ai?',
-      answer: 'Prompt expansion uses LLM technology to automatically enhance your text prompts for better video generation results. This feature helps create more detailed and accurate motion descriptions.'
+      question: 'How long does generation take?',
+      answer: 'Video generation typically takes 2-5 minutes depending on complexity and current server load. Premium users get priority processing for faster results.'
     },
     {
-      question: 'How long does video processing take in Sora-2 Ai?',
-      answer: 'Processing typically takes 1-3 minutes, depending on resolution and duration. 1080p and 10-second videos take longer than 480p and 5-second videos. You will receive status updates during processing.'
+      question: 'Is Sora2 suitable for commercial use?',
+      answer: 'Yes! All generated content comes with commercial license and unrestricted usage rights, making it perfect for marketing, social media, and professional projects.'
     },
     {
-      question: 'Can I use Sora-2 Ai for commercial projects?',
-      answer: 'Yes! All paid plans include commercial licensing rights. You can create videos for marketing, social media, presentations, or any commercial purpose with full usage rights.'
+      question: 'What makes this different from other AI generators?',
+      answer: 'Sora2 combines advanced AI technology with an intuitive interface, offering high-quality results, fast processing, and flexible export options in one platform.'
     },
     {
-      question: 'How is Sora-2 Ai different from other tools?',
-      answer: 'Sora-2 Ai offers professional quality with multiple resolution options, audio integration, flexible duration control, and advanced prompt expansion. It is designed for both beginners and professionals.'
+      question: 'Can Sora2 convert images to videos?',
+      answer: 'Absolutely! Sora2 supports both text-to-video and image-to-video generation, allowing you to animate static images or create videos from scratch using text prompts.'
     },
     {
-      question: 'How does the credit system work?',
-      answer: 'Each video generation consumes credits based on resolution and duration. Higher quality (1080p) and longer duration (10 seconds) videos consume more credits. Check your plan for credit allowances and pricing.'
+      question: 'Do I need technical skills?',
+      answer: 'No technical skills required! Sora2 is designed to be user-friendly for everyone, from beginners to professionals. The intuitive interface makes AI video creation accessible to all.'
+    },
+    {
+      question: 'How can I get support?',
+      answer: 'Our support team is available to help you with any questions or issues. You can reach out through our contact form or check our comprehensive FAQ section.'
     }
   ]
 
@@ -50,40 +54,36 @@ export function FAQ() {
   }
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions about Sora-2 Ai
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Sora2 FAQ
           </h2>
-          <p className="text-lg text-gray-600">
-            Find the answers you need
+          <p className="text-xl text-gray-300">
+            Common Questions About Sora2
           </p>
         </div>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
-            >
+            <div key={index} className="bg-gray-800 rounded-lg overflow-hidden">
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-700 transition-colors"
               >
-                <span className="font-semibold text-gray-900 pr-4">
+                <h3 className="text-lg font-semibold text-white pr-4">
                   {faq.question}
-                </span>
+                </h3>
                 {openIndex === index ? (
-                  <ChevronUp className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                  <ChevronUp className="w-5 h-5 text-gray-400 flex-shrink-0" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                  <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                 )}
               </button>
-              
               {openIndex === index && (
                 <div className="px-6 pb-4">
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-300 leading-relaxed">
                     {faq.answer}
                   </p>
                 </div>
@@ -91,28 +91,7 @@ export function FAQ() {
             </div>
           ))}
         </div>
-
-        {/* Contact Support */}
-        <div className="text-center mt-12">
-          <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Still have questions?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Our support team is here to help you
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                Contact Support
-              </button>
-              <button className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
-                View Documentation
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )
 }
-

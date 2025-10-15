@@ -7,73 +7,73 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   const footerLinks = {
-    quickLinks: [
-      { name: 'Home', href: '/' },
-      { name: 'Dashboard', href: '/dashboard' },
-      { name: 'Explore', href: '/explore' },
-      { name: 'History', href: '/history' },
+    product: [
+      { name: 'Features', href: '/features' },
+      { name: 'Pricing', href: '/pricing' },
+      { name: 'FAQ', href: '/faq' },
     ],
-    support: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'Contact Support', href: '/support' },
-      { name: 'Status Page', href: '/status' },
-      { name: 'Community Forum', href: '/community' },
+    company: [
+      { name: 'About', href: '/about' },
+      { name: 'Contact', href: '/contact' },
+      { name: 'Waitlist', href: '/waitlist' },
     ],
     legal: [
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Refund Policy', href: '/refund' },
       { name: 'Cookie Policy', href: '/cookies' },
+      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Terms of Service', href: '/terms' },
+      { name: 'Refund Policy', href: '/refund' },
     ],
   }
 
   const socialLinks = [
     { name: 'Twitter', href: '#', icon: Twitter },
     { name: 'GitHub', href: '#', icon: Github },
-    { name: 'Email', href: 'mailto:support@sora2ai.io', icon: Mail },
+    { name: 'Email', href: 'mailto:contact@sora-2.site', icon: Mail },
   ]
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-900 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Logo 和描述 */}
-          <div className="lg:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Logo and Description */}
+          <div className="md:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">S2</span>
               </div>
-              <span className="text-xl font-bold">Sora-2 Ai</span>
+              <span className="text-xl font-bold text-white">Sora2</span>
             </Link>
-            <p className="text-gray-400 mb-6 leading-relaxed">
-              Professional AI image-to-video generator with motion control, audio integration, and multi-resolution output.
-              Transform your creative ideas into stunning video content. Visit sora-2.site to experience the most advanced AI video generation technology.
+            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+              Create stunning AI-powered video content with advanced technology
             </p>
             
-            {/* 社交媒体链接 */}
-            <div className="flex space-x-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
-                  aria-label={social.name}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
+            {/* Email Signup */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email
+              </label>
+              <div className="flex">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-l-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <button className="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors">
+                  Subscribe
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* 快速链接 */}
+          {/* Product Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-3">
-              {footerLinks.quickLinks.map((link) => (
+            <h3 className="text-white font-semibold mb-4">Product</h3>
+            <ul className="space-y-2">
+              {footerLinks.product.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -82,15 +82,15 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* 支持 */}
+          {/* Company Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
+            <h3 className="text-white font-semibold mb-4">Company</h3>
+            <ul className="space-y-2">
+              {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -99,15 +99,15 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* 法律条款 */}
+          {/* Legal Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Legal</h3>
-            <ul className="space-y-3">
+            <h3 className="text-white font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -117,24 +117,27 @@ export function Footer() {
           </div>
         </div>
 
-        {/* 底部版权信息 */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 text-gray-400 mb-4 md:mb-0">
-              <span>© {currentYear} sora-2.site</span>
-              <span>•</span>
-              <span>All rights reserved</span>
-            </div>
-            
-            <div className="flex items-center space-x-2 text-gray-400">
-              <span>Made with</span>
-              <Heart className="w-4 h-4 text-red-500" />
-              <span>by</span>
-            </div>
+        {/* Bottom Section */}
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="flex items-center space-x-1 text-gray-400 text-sm mb-4 md:mb-0">
+            <span>© {currentYear} Sora2 All Rights Reserved.</span>
+          </div>
+          
+          {/* Social Links */}
+          <div className="flex space-x-4">
+            {socialLinks.map((social) => (
+              <Link
+                key={social.name}
+                href={social.href}
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label={social.name}
+              >
+                <social.icon className="w-5 h-5" />
+              </Link>
+            ))}
           </div>
         </div>
       </div>
     </footer>
   )
 }
-
