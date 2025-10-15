@@ -143,13 +143,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '请输入运动描述' }, { status: 400 })
     }
 
-    // 检查是否配置了API密钥
-    const hasReplicateToken = !!process.env.REPLICATE_API_TOKEN
-    const hasHFToken = !!process.env.HF_API_TOKEN
+    // 检查是否配置了API密钥（排除占位符）
+    const replicateToken = process.env.REPLICATE_API_TOKEN
+    const hfToken = process.env.HF_API_TOKEN
+
+    const hasReplicateToken = replicateToken && replicateToken !== 'r8_...' && !replicateToken.includes('...')
+    const hasHFToken = hfToken && hfToken !== 'hf_...' && !hfToken.includes('...')
 
     console.log('🔑 API 密钥状态:', {
       hasReplicateToken,
-      hasHFToken
+      hasHFToken,
+      replicatePrefix: replicateToken?.substring(0, 5) || 'null',
+      hfPrefix: hfToken?.substring(0, 5) || 'null'
     })
 
     // 如果没有配置任何API，返回演示模式
