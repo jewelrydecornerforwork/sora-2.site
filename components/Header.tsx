@@ -84,12 +84,28 @@ export function Header() {
                 </button>
               </div>
             ) : (
-                <button
-                  onClick={() => alert('登录功能待实现')}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Login
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => alert('登录功能待实现')}
+                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-border hover:opacity-90 transition-all"
+                    style={{
+                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                      border: '2px solid transparent'
+                    }}
+                  >
+                    Log in
+                  </button>
+                  <button
+                    onClick={() => alert('注册功能待实现')}
+                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-border hover:opacity-90 transition-all"
+                    style={{
+                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                      border: '2px solid transparent'
+                    }}
+                  >
+                    Sign up
+                  </button>
+                </div>
             )}
           </div>
 
@@ -161,15 +177,34 @@ export function Header() {
                     </button>
                   </div>
                 ) : (
-                    <button
-                      onClick={() => {
-                        alert('Login feature coming soon')
-                        setIsMenuOpen(false)
-                      }}
-                      className="w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Login
-                    </button>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        onClick={() => {
+                          alert('登录功能待实现')
+                          setIsMenuOpen(false)
+                        }}
+                        className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
+                        style={{
+                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                          border: '2px solid transparent'
+                        }}
+                      >
+                        Log in
+                      </button>
+                      <button
+                        onClick={() => {
+                          alert('注册功能待实现')
+                          setIsMenuOpen(false)
+                        }}
+                        className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
+                        style={{
+                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                          border: '2px solid transparent'
+                        }}
+                      >
+                        Sign up
+                      </button>
+                    </div>
                 )}
               </div>
             </nav>
