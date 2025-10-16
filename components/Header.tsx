@@ -87,9 +87,9 @@ export function Header() {
                 <div className="flex gap-3">
                   <button
                     onClick={() => alert('登录功能待实现')}
-                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-border hover:opacity-90 transition-all"
+                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                     style={{
-                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
                       border: '2px solid transparent'
                     }}
                   >
@@ -97,9 +97,9 @@ export function Header() {
                   </button>
                   <button
                     onClick={() => alert('注册功能待实现')}
-                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 bg-clip-border hover:opacity-90 transition-all"
+                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                     style={{
-                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
                       border: '2px solid transparent'
                     }}
                   >
@@ -185,7 +185,7 @@ export function Header() {
                         }}
                         className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                         style={{
-                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
                           border: '2px solid transparent'
                         }}
                       >
@@ -198,7 +198,7 @@ export function Header() {
                         }}
                         className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                         style={{
-                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6) border-box',
+                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
                           border: '2px solid transparent'
                         }}
                       >
