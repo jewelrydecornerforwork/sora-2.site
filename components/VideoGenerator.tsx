@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Upload, Image, Play, Settings, Volume2, Download, Video, Smartphone, Monitor } from 'lucide-react'
+import { Upload, Image, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface VideoGeneratorProps {
@@ -12,10 +12,11 @@ interface VideoGeneratorProps {
 export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGeneratorProps) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [textPrompt, setTextPrompt] = useState('')
   const [motionPrompt, setMotionPrompt] = useState('')
   const [selectedModel, setSelectedModel] = useState('google-veo3')
-  const [resolution, setResolution] = useState('standard')
-  const [videoRatio, setVideoRatio] = useState('9:16')
+  const [resolution, setResolution] = useState('720p')
+  const [videoRatio, setVideoRatio] = useState('16:9')
   const [duration, setDuration] = useState('5')
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [isPublic, setIsPublic] = useState(true)
@@ -40,9 +41,9 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
         setImagePreview(reader.result as string)
       }
       reader.readAsDataURL(file)
-      toast.success('Image uploaded successfully!')
+      toast.success('图片上传成功！')
     } else {
-      toast.error('Please select a valid image file!')
+      toast.error('请选择有效的图片文件！')
     }
   }
 
@@ -72,7 +73,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     const file = event.target.files?.[0]
     if (file) {
       setAudioFile(file)
-      toast.success('Audio file uploaded successfully!')
+      toast.success('音频文件上传成功！')
     }
   }
 
@@ -82,24 +83,30 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     
     // 根据模式进行不同的验证
     if (activeTab === 'text') {
-      if (!motionPrompt.trim()) {
-        console.log('❌ 没有输入提示词')
-        toast.error('Please enter a prompt!')
+      if (!textPrompt.trim()) {
+        console.log('❌ 没有输入文本提示词')
+        toast.error('请输入文本描述！')
         return
       }
     } else if (activeTab === 'image') {
       if (!selectedImage) {
         console.log('❌ 没有选择图像')
-        toast.error('Please upload an image first!')
+        toast.error('请先上传图片！')
+        return
+      }
+      if (!motionPrompt.trim()) {
+        console.log('❌ 没有输入运动描述')
+        toast.error('请输入运动描述！')
         return
       }
     }
 
     console.log('📋 生成参数:', {
       mode: activeTab,
+      textPrompt: textPrompt,
       imageName: selectedImage?.name,
       imageSize: selectedImage?.size,
-      prompt: motionPrompt,
+      motionPrompt: motionPrompt,
       model: selectedModel,
       resolution: resolution,
       videoRatio: videoRatio,
@@ -107,11 +114,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     })
 
     setIsGenerating(true)
-    
+    setGeneratedVideo(null)
+
     try {
       const formData = new FormData()
       formData.append('mode', activeTab)
-      formData.append('prompt', motionPrompt)
+      formData.append('textPrompt', textPrompt)
+      formData.append('motionPrompt', motionPrompt)
       formData.append('model', selectedModel)
       formData.append('resolution', resolution)
       formData.append('videoRatio', videoRatio)
@@ -125,82 +134,111 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       
       if (audioFile) {
         formData.append('audio', audioFile)
-        console.log('🎵 包含音频文件:', audioFile.name)
       }
 
-      console.log('📤 发送请求到 API...')
-      
       const response = await fetch('/api/generate-video', {
         method: 'POST',
         body: formData,
       })
 
-      console.log('📥 收到响应:', response.status, response.statusText)
-
       if (!response.ok) {
-        const errorData = await response.json()
-        console.error('❌ API 错误:', errorData)
-        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const result = await response.json()
-      console.log('✅ 生成结果:', result)
-      
-      setGeneratedVideo(result.videoUrl)
-      toast.success(result.message || 'Video generated successfully!')
+      console.log('✅ 视频生成成功:', result)
+
+      if (result.videoUrl) {
+        setGeneratedVideo(result.videoUrl)
+        toast.success('视频生成成功！')
+      } else {
+        throw new Error('No video URL returned')
+      }
     } catch (error) {
-      console.error('❌ 生成视频时发生错误:', error)
-      toast.error(`Video generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error('❌ 视频生成失败:', error)
+      toast.error(`视频生成失败: ${error instanceof Error ? error.message : '未知错误'}`)
     } finally {
       setIsGenerating(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="flex h-screen">
-        {/* 左侧面板 - Sora 2 Generator */}
-        <div className="w-1/2 p-8 bg-gray-800 border-r border-gray-700">
-          <div className="h-full flex flex-col">
-            {/* 标题和选项卡 */}
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-6">
-                <Video className="w-8 h-8 text-white" />
-                <h1 className="text-2xl font-bold text-white">Sora 2 Generator</h1>
-              </div>
-              
+    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Sora-2 Ai - 视频生成器
+          </h2>
+          <p className="text-lg text-gray-600">
+            使用 AI 技术将文本或图片转换为动态视频
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* 左侧：输入区域 */}
+          <div className="space-y-6">
+            {/* 模式选择 */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                生成模式
+              </label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setActiveTab('text')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-colors ${
                     activeTab === 'text' 
-                      ? 'bg-gray-700 text-white' 
-                      : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700' 
+                      : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
                   }`}
                 >
-                  Text to Video
+                  <FileText className="w-5 h-5" />
+                  <span>文本转视频</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('image')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-colors ${
                     activeTab === 'image' 
-                      ? 'bg-gray-700 text-white' 
-                      : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700' 
+                      : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
                   }`}
                 >
-                  Image to Video
+                  <Image className="w-5 h-5" />
+                  <span>图片转视频</span>
                 </button>
               </div>
             </div>
 
-            {/* 图片上传区域 - 仅在 Image to Video 模式显示 */}
+            {/* 文本转视频 - 文本输入 */}
+            {activeTab === 'text' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  视频描述 <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={textPrompt}
+                  onChange={(e) => setTextPrompt(e.target.value)}
+                  placeholder="描述您想要创建的视频内容，例如：一只可爱的小猫在花园里玩耍，阳光明媚，微风轻拂..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows={6}
+                  maxLength={1000}
+                />
+                <div className="text-right text-sm text-gray-500 mt-1">
+                  {textPrompt.length}/1000
+                </div>
+              </div>
+            )}
+
+            {/* 图片转视频 - 图片上传 */}
             {activeTab === 'image' && (
-              <div className="mb-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  上传图片 <span className="text-red-500">*</span>
+                </label>
                 <div 
                   className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                     isDragOver 
-                      ? 'border-green-500 bg-green-500/10' 
-                      : 'border-gray-600 hover:border-gray-500'
+                      ? 'border-blue-500 bg-blue-50' 
+                      : 'border-gray-300 hover:border-gray-400'
                   }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -213,7 +251,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         alt="Preview"
                         className="max-w-full max-h-48 mx-auto rounded-lg"
                       />
-                      <p className="text-sm text-gray-400">Click to change image</p>
+                      <p className="text-sm text-gray-600">点击更换图片</p>
                       <input
                         type="file"
                         accept="image/*"
@@ -223,17 +261,23 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                       />
                       <label
                         htmlFor="image-upload"
-                        className="inline-block bg-gray-700 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                        className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
                       >
-                        Choose New Image
+                        选择新图片
                       </label>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       <Upload className="w-12 h-12 text-gray-400 mx-auto" />
                       <div>
-                        <p className="text-lg font-medium text-gray-300 mb-2">
-                          Click or drag to upload image
+                        <p className="text-lg font-medium text-gray-700 mb-2">
+                          点击或拖拽上传图片
+                        </p>
+                        <p className="text-sm text-gray-500 mb-4">
+                          支持 JPEG, PNG, WEBP, BMP 格式
+                        </p>
+                        <p className="text-xs text-gray-400 mb-4">
+                          最大 10MB，分辨率 360-2000 像素
                         </p>
                         <input
                           type="file"
@@ -244,13 +288,10 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         />
                         <label
                           htmlFor="image-upload"
-                          className="inline-block bg-gray-700 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                          className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
                         >
-                          Choose Image
+                          选择图片
                         </label>
-                        <p className="text-xs text-gray-400 mt-2">
-                          Max 10MB • JPEG, PNG, WebP
-                        </p>
                       </div>
                     </div>
                   )}
@@ -258,176 +299,220 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               </div>
             )}
 
-            {/* Prompt 输入区域 */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Prompt {activeTab === 'image' && '(optional)'}
-              </label>
-              <textarea
-                value={motionPrompt}
-                onChange={(e) => setMotionPrompt(e.target.value)}
-                placeholder={
-                  activeTab === 'text' 
-                    ? "Describe the video you want to create..."
-                    : "Describe the video motion you want..."
-                }
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                rows={6}
-                maxLength={5000}
-              />
-              <div className="text-right text-sm text-gray-400 mt-1">
-                {motionPrompt.length}/5000
-              </div>
-            </div>
-
-            {/* Video Ratio 选择 */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Video Ratio
-              </label>
-              <p className="text-xs text-gray-400 mb-3">Select the aspect ratio for your Video</p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setVideoRatio('9:16')}
-                  className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
-                    videoRatio === '9:16'
-                      ? 'border-green-500 bg-green-500/10'
-                      : 'border-gray-600 bg-gray-700 hover:border-gray-500'
-                  }`}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <Smartphone className="w-6 h-6 text-white" />
-                    <span className="text-sm font-medium text-white">9:16</span>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setVideoRatio('16:9')}
-                  className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
-                    videoRatio === '16:9'
-                      ? 'border-green-500 bg-green-500/10'
-                      : 'border-gray-600 bg-gray-700 hover:border-gray-500'
-                  }`}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <Monitor className="w-6 h-6 text-white" />
-                    <span className="text-sm font-medium text-white">16:9</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {/* Resolution 选择 */}
-            <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Resolution
-              </label>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setResolution('standard')}
-                  className={`px-6 py-3 rounded-lg border-2 transition-colors ${
-                    resolution === 'standard'
-                      ? 'border-green-500 bg-green-500/10 text-white'
-                      : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-gray-500'
-                  }`}
-                >
-                  Standard
-                </button>
-                <button
-                  onClick={() => setResolution('hd')}
-                  className={`px-6 py-3 rounded-lg border-2 transition-colors ${
-                    resolution === 'hd'
-                      ? 'border-green-500 bg-green-500/10 text-white'
-                      : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-gray-500'
-                  }`}
-                >
-                  HD
-                </button>
-              </div>
-            </div>
-
-            {/* 生成按钮区域 */}
-            <div className="mt-auto">
-              <p className="text-xs text-gray-400 mb-2">Sign in to generate</p>
-              <button
-                onClick={handleGenerateVideo}
-                disabled={isGenerating || (activeTab === 'text' ? !motionPrompt.trim() : !selectedImage)}
-                className="w-full bg-gradient-to-r from-green-400 to-purple-500 text-white py-4 px-6 rounded-lg font-semibold hover:from-green-500 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2"
-              >
-                {isGenerating ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Generating...</span>
-                  </>
-                ) : (
-                  <>
-                    <Video className="w-5 h-5" />
-                    <span>Generate Video</span>
-                  </>
-                )}
-              </button>
-              {activeTab === 'text' && !motionPrompt.trim() && (
-                <p className="text-orange-400 text-xs mt-2">Please enter a prompt to generate video</p>
-              )}
-              {activeTab === 'image' && !selectedImage && (
-                <p className="text-orange-400 text-xs mt-2">Please upload an image</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* 右侧面板 - 结果展示 */}
-        <div className="w-1/2 p-8 bg-gray-800">
-          <div className="h-full flex flex-col">
-            <h2 className="text-xl font-bold text-white mb-4">Sora 2 AI Video Generator Result</h2>
-            
-            {isGenerating && (
-              <div className="mb-4">
-                <p className="text-orange-400 text-sm">
-                  Video generation takes 5-10 min. Please don't close this tab. Please don't close this tab.
-                </p>
+            {/* 图片转视频 - 运动描述 */}
+            {activeTab === 'image' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  运动描述 <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={motionPrompt}
+                  onChange={(e) => setMotionPrompt(e.target.value)}
+                  placeholder="描述您想要的运动效果，例如：小猫慢慢走向镜头，然后转身离开，背景中的花朵在微风中轻轻摇摆..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows={4}
+                  maxLength={500}
+                />
+                <div className="text-right text-sm text-gray-500 mt-1">
+                  {motionPrompt.length}/500
+                </div>
               </div>
             )}
 
-            <div className="flex-1 flex items-center justify-center">
+            {/* 设置 */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Settings className="w-5 h-5 text-gray-500" />
+                <span className="font-medium text-gray-700">视频设置</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    分辨率
+                  </label>
+                  <select
+                    value={resolution}
+                    onChange={(e) => setResolution(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="480p">480p</option>
+                    <option value="720p">720p</option>
+                    <option value="1080p">1080p</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    时长
+                  </label>
+                  <select
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="5">5 秒</option>
+                    <option value="10">10 秒</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  视频比例
+                </label>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setVideoRatio('16:9')}
+                    className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
+                      videoRatio === '16:9'
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center gap-1">
+                      <Monitor className="w-5 h-5" />
+                      <span className="text-sm font-medium">16:9</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setVideoRatio('9:16')}
+                    className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
+                      videoRatio === '9:16'
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center gap-1">
+                      <Smartphone className="w-5 h-5" />
+                      <span className="text-sm font-medium">9:16</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* 音频上传 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  背景音乐（可选）
+                </label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    onChange={handleAudioUpload}
+                    className="hidden"
+                    id="audio-upload"
+                  />
+                  <label
+                    htmlFor="audio-upload"
+                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                    <span className="text-sm">选择音频文件</span>
+                  </label>
+                  {audioFile && (
+                    <span className="text-sm text-gray-600">
+                      {audioFile.name}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  支持 WAV/MP3，3-30 秒，最大 15MB
+                </p>
+              </div>
+
+              {/* 公开设置 */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="isPublic"
+                  checked={isPublic}
+                  onChange={(e) => setIsPublic(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="isPublic" className="text-sm text-gray-700">
+                  公开视频
+                </label>
+              </div>
+            </div>
+
+            {/* 生成按钮 */}
+            <button
+              onClick={handleGenerateVideo}
+              disabled={isGenerating || (activeTab === 'text' ? !textPrompt.trim() : (!selectedImage || !motionPrompt.trim()))}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2"
+            >
+              {isGenerating ? (
+                <>
+                  <div className="loading-spinner"></div>
+                  <span>生成中...</span>
+                </>
+              ) : (
+                <>
+                  <Wand2 className="w-5 h-5" />
+                  <span>生成视频</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* 右侧：生成结果 */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                生成结果
+              </h3>
+              
               {generatedVideo ? (
-                <div className="w-full max-w-sm">
-                  <div className={`relative ${videoRatio === '9:16' ? 'aspect-[9/16]' : 'aspect-video'} bg-black rounded-lg overflow-hidden`}>
-                    <video
-                      src={generatedVideo}
-                      controls
-                      className="w-full h-full object-cover"
-                      poster={imagePreview || undefined}
-                    />
-                    {/* Sora 标志 */}
-                    <div className="absolute bottom-4 left-4">
-                      <div className="bg-white/20 backdrop-blur-sm rounded px-2 py-1">
-                        <span className="text-white text-xs font-medium">Sora</span>
-                      </div>
+                <div className="space-y-4">
+                  <div className="bg-gray-100 rounded-lg p-4">
+                    <div className="text-sm text-gray-600 mb-2">
+                      {new Date().toLocaleString('zh-CN')}
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2">
+                      模式: {activeTab === 'text' ? '文本转视频' : '图片转视频'}
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2">
+                      模型: {selectedModel}
+                    </div>
+                    <div className="text-sm text-gray-600 mb-4">
+                      描述: {activeTab === 'text' ? textPrompt : motionPrompt}
+                    </div>
+                    
+                    <div className={`${videoRatio === '9:16' ? 'aspect-[9/16]' : 'aspect-video'} bg-black rounded-lg overflow-hidden`}>
+                      <video
+                        src={generatedVideo}
+                        controls
+                        className="w-full h-full object-cover"
+                        poster={imagePreview || undefined}
+                      />
                     </div>
                   </div>
                   
-                  <div className="flex gap-3 mt-4">
-                    <button className="flex-1 flex items-center justify-center gap-2 bg-gray-700 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors">
+                  <div className="flex space-x-2">
+                    <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                       <Download className="w-4 h-4" />
-                      <span className="text-sm">download result</span>
+                      <span>下载</span>
                     </button>
-                    <button className="flex-1 flex items-center justify-center gap-2 bg-gray-700 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors">
-                      <span className="text-sm">My Assets</span>
+                    <button className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                      <Play className="w-4 h-4" />
+                      <span>分享</span>
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="text-center">
-                  <div className={`${videoRatio === '9:16' ? 'w-48 h-80' : 'w-80 h-48'} bg-gray-700 rounded-lg flex items-center justify-center mb-4`}>
-                    <Video className="w-16 h-16 text-gray-500" />
-                  </div>
-                  <p className="text-gray-400">Generated video will appear here</p>
+                <div className="bg-gray-50 rounded-lg p-8 text-center">
+                  <Video className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500">
+                    生成的视频将显示在这里
+                  </p>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

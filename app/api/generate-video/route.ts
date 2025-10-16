@@ -7,15 +7,72 @@ async function fileToBase64(file: File): Promise<string> {
   return `data:${file.type};base64,${buffer.toString('base64')}`
 }
 
-// Replicate API - 免费额度每月 $5
-async function generateWithReplicate(imageBase64: string, prompt: string): Promise<string> {
+// 文本转视频 - 使用 Replicate API
+async function generateTextToVideoWithReplicate(textPrompt: string, duration: string, resolution: string): Promise<string> {
   const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN
   
   if (!REPLICATE_API_TOKEN) {
     throw new Error('未配置 REPLICATE_API_TOKEN')
   }
 
-  console.log('📡 使用 Replicate API 生成视频...')
+  console.log('📡 使用 Replicate API 生成文本转视频...')
+
+  const response = await fetch('https://api.replicate.com/v1/predictions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Token ${REPLICATE_API_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      version: 'stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438',
+      input: {
+        prompt: textPrompt,
+        num_frames: parseInt(duration) * 7, // 7 FPS
+        fps: 7,
+        seed: Math.floor(Math.random() * 1000000)
+      }
+    }),
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(`Replicate API 错误: ${error.detail || response.statusText}`)
+  }
+
+  const prediction = await response.json()
+  console.log('⏳ 预测 ID:', prediction.id)
+
+  // 轮询结果
+  let result = prediction
+  while (result.status === 'starting' || result.status === 'processing') {
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    const statusResponse = await fetch(`https://api.replicate.com/v1/predictions/${prediction.id}`, {
+      headers: {
+        'Authorization': `Token ${REPLICATE_API_TOKEN}`,
+      },
+    })
+    
+    result = await statusResponse.json()
+    console.log('📊 状态:', result.status)
+  }
+
+  if (result.status === 'succeeded' && result.output) {
+    return result.output
+  } else {
+    throw new Error(`视频生成失败: ${result.error || '未知错误'}`)
+  }
+}
+
+// 图片转视频 - 使用 Replicate API
+async function generateImageToVideoWithReplicate(imageBase64: string, prompt: string): Promise<string> {
+  const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN
+  
+  if (!REPLICATE_API_TOKEN) {
+    throw new Error('未配置 REPLICATE_API_TOKEN')
+  }
+
+  console.log('📡 使用 Replicate API 生成图片转视频...')
 
   const response = await fetch('https://api.replicate.com/v1/predictions', {
     method: 'POST',
@@ -66,18 +123,40 @@ async function generateWithReplicate(imageBase64: string, prompt: string): Promi
   }
 }
 
-// Kie.ai Sora 2 API - 付费但价格便宜（$0.15/10秒视频）
-async function generateWithKie(imageBase64: string, prompt: string, duration: string, resolution: string): Promise<string> {
+// Kie.ai Sora 2 API - 支持文本转视频和图片转视频
+async function generateWithKie(
+  mode: 'text' | 'image', 
+  textPrompt: string, 
+  imageBase64: string | null, 
+  motionPrompt: string, 
+  duration: string, 
+  resolution: string
+): Promise<string> {
   const KIE_API_KEY = process.env.KIE_API_KEY
 
   if (!KIE_API_KEY) {
     throw new Error('未配置 KIE_API_KEY')
   }
 
-  console.log('📡 使用 Kie.ai Sora 2 API 生成视频...')
+  console.log(`📡 使用 Kie.ai Sora 2 API 生成${mode === 'text' ? '文本转视频' : '图片转视频'}...`)
 
-  // 移除 base64 前缀（如果有）
-  const base64Data = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64
+  const requestBody: any = {
+    duration: parseInt(duration) || 5,
+    resolution: resolution || '720p',
+    aspectRatio: '16:9'
+  }
+
+  if (mode === 'text') {
+    requestBody.prompt = textPrompt
+    requestBody.type = 'text-to-video'
+  } else {
+    requestBody.prompt = motionPrompt
+    requestBody.type = 'image-to-video'
+    if (imageBase64) {
+      // 移除 base64 前缀（如果有）
+      requestBody.image = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64
+    }
+  }
 
   const response = await fetch('https://api.kie.ai/api/v1/sora-2/generate', {
     method: 'POST',
@@ -85,13 +164,7 @@ async function generateWithKie(imageBase64: string, prompt: string, duration: st
       'Authorization': `Bearer ${KIE_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      prompt: prompt,
-      image: base64Data,
-      duration: parseInt(duration) || 5,
-      resolution: resolution || '720p',
-      aspectRatio: '16:9'
-    }),
+    body: JSON.stringify(requestBody),
   })
 
   if (!response.ok) {
@@ -158,15 +231,15 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
   throw new Error('任务超时：视频生成时间过长')
 }
 
-// Hugging Face Inference API - 完全免费（有速率限制）
-async function generateWithHuggingFace(imageBase64: string, prompt: string): Promise<string> {
+// Hugging Face Inference API - 图片转视频
+async function generateImageToVideoWithHuggingFace(imageBase64: string, prompt: string): Promise<string> {
   const HF_API_TOKEN = process.env.HF_API_TOKEN
   
   if (!HF_API_TOKEN) {
     throw new Error('未配置 HF_API_TOKEN')
   }
 
-  console.log('📡 使用 Hugging Face API 生成视频...')
+  console.log('📡 使用 Hugging Face API 生成图片转视频...')
 
   // 移除 base64 前缀
   const base64Data = imageBase64.split(',')[1]
@@ -208,31 +281,46 @@ export async function POST(request: NextRequest) {
   
   try {
     const formData = await request.formData()
+    const mode = formData.get('mode') as string
+    const textPrompt = formData.get('textPrompt') as string
+    const motionPrompt = formData.get('motionPrompt') as string
     const image = formData.get('image') as File
-    const prompt = formData.get('prompt') as string
     const model = formData.get('model') as string
     const resolution = formData.get('resolution') as string
+    const videoRatio = formData.get('videoRatio') as string
     const duration = formData.get('duration') as string
 
     console.log('📋 请求参数:', {
+      mode,
+      hasTextPrompt: !!textPrompt,
+      hasMotionPrompt: !!motionPrompt,
       hasImage: !!image,
       imageName: image?.name,
       imageSize: image?.size,
-      prompt: prompt?.substring(0, 50) + '...',
       model,
       resolution,
+      videoRatio,
       duration
     })
 
     // 验证输入
-    if (!image) {
-      console.log('❌ 缺少图像文件')
-      return NextResponse.json({ error: '请上传图像文件' }, { status: 400 })
-    }
-    
-    if (!prompt || !prompt.trim()) {
-      console.log('❌ 缺少运动描述')
-      return NextResponse.json({ error: '请输入运动描述' }, { status: 400 })
+    if (mode === 'text') {
+      if (!textPrompt || !textPrompt.trim()) {
+        console.log('❌ 缺少文本描述')
+        return NextResponse.json({ error: '请输入视频描述' }, { status: 400 })
+      }
+    } else if (mode === 'image') {
+      if (!image) {
+        console.log('❌ 缺少图像文件')
+        return NextResponse.json({ error: '请上传图像文件' }, { status: 400 })
+      }
+      
+      if (!motionPrompt || !motionPrompt.trim()) {
+        console.log('❌ 缺少运动描述')
+        return NextResponse.json({ error: '请输入运动描述' }, { status: 400 })
+      }
+    } else {
+      return NextResponse.json({ error: '无效的生成模式' }, { status: 400 })
     }
 
     // 检查是否配置了API密钥（排除占位符）
@@ -266,7 +354,8 @@ export async function POST(request: NextRequest) {
         imageUrl: '/demo-image.jpg',
         creditsUsed: 0,
         message: '演示模式：请配置 KIE_API_KEY、REPLICATE_API_TOKEN 或 HF_API_TOKEN 以使用真实的 AI 视频生成服务',
-        prompt: prompt,
+        mode: mode,
+        prompt: mode === 'text' ? textPrompt : motionPrompt,
         model: 'demo',
         resolution: resolution,
         duration: duration,
@@ -276,30 +365,37 @@ export async function POST(request: NextRequest) {
 
     console.log('⏳ 开始生成视频...')
     
-    // 将图片转换为 Base64
-    const imageBase64 = await fileToBase64(image)
-    
     let videoUrl: string
+    let usedModel = 'unknown'
 
     try {
-      let usedModel = 'unknown'
-
-      // 优先使用 Kie.ai Sora 2（最佳质量和性价比）
-      if (hasKieKey) {
-        videoUrl = await generateWithKie(imageBase64, prompt, duration, resolution)
-        usedModel = 'Sora 2 (Kie.ai)'
-      }
-      // 备选使用 Replicate（质量好）
-      else if (hasReplicateToken) {
-        videoUrl = await generateWithReplicate(imageBase64, prompt)
-        usedModel = 'Stable Video Diffusion (Replicate)'
-      }
-      // 最后使用 Hugging Face（完全免费）
-      else if (hasHFToken) {
-        videoUrl = await generateWithHuggingFace(imageBase64, prompt)
-        usedModel = 'Stable Video Diffusion (HuggingFace)'
+      if (mode === 'text') {
+        // 文本转视频
+        if (hasKieKey) {
+          videoUrl = await generateWithKie('text', textPrompt, null, '', duration, resolution)
+          usedModel = 'Sora 2 (Kie.ai) - 文本转视频'
+        } else if (hasReplicateToken) {
+          videoUrl = await generateTextToVideoWithReplicate(textPrompt, duration, resolution)
+          usedModel = 'Stable Video Diffusion (Replicate) - 文本转视频'
+        } else {
+          throw new Error('文本转视频需要配置 KIE_API_KEY 或 REPLICATE_API_TOKEN')
+        }
       } else {
-        throw new Error('未配置任何 API 密钥')
+        // 图片转视频
+        const imageBase64 = await fileToBase64(image)
+        
+        if (hasKieKey) {
+          videoUrl = await generateWithKie('image', '', imageBase64, motionPrompt, duration, resolution)
+          usedModel = 'Sora 2 (Kie.ai) - 图片转视频'
+        } else if (hasReplicateToken) {
+          videoUrl = await generateImageToVideoWithReplicate(imageBase64, motionPrompt)
+          usedModel = 'Stable Video Diffusion (Replicate) - 图片转视频'
+        } else if (hasHFToken) {
+          videoUrl = await generateImageToVideoWithHuggingFace(imageBase64, motionPrompt)
+          usedModel = 'Stable Video Diffusion (HuggingFace) - 图片转视频'
+        } else {
+          throw new Error('未配置任何 API 密钥')
+        }
       }
 
       console.log('✅ 视频生成成功')
@@ -309,7 +405,8 @@ export async function POST(request: NextRequest) {
         videoUrl: videoUrl,
         creditsUsed: hasKieKey ? 1 : (hasReplicateToken ? 1 : 0),
         message: '视频生成成功！',
-        prompt: prompt,
+        mode: mode,
+        prompt: mode === 'text' ? textPrompt : motionPrompt,
         model: usedModel,
         resolution: resolution,
         duration: duration,
@@ -326,7 +423,8 @@ export async function POST(request: NextRequest) {
         imageUrl: '/demo-image.jpg',
         creditsUsed: 0,
         message: `API 调用失败，返回演示视频。错误: ${apiError instanceof Error ? apiError.message : '未知错误'}`,
-        prompt: prompt,
+        mode: mode,
+        prompt: mode === 'text' ? textPrompt : motionPrompt,
         model: 'demo (fallback)',
         resolution: resolution,
         duration: duration,
