@@ -167,10 +167,10 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            🎬 AI Video Generator
+            🎬 Sora-2 AI Video Generator
           </h2>
           <p className="text-lg text-gray-600 mb-6">
-            Transform your creative ideas into amazing video content using advanced AI technology
+            Experience the most advanced AI video generation technology with Sora-2. Create stunning videos from text and images in seconds.
           </p>
           <div className="flex justify-center gap-4 text-sm text-gray-500 mb-8">
             <span className="flex items-center gap-1">
