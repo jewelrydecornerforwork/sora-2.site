@@ -6,33 +6,33 @@ export function Features() {
   const features = [
     {
       icon: Monitor,
-      title: 'Multi-Resolution Support',
-      description: 'Generate videos in 480p, 720p, or 1080p resolution. Choose quality based on project needs, processing time 1-3 minutes.',
-    },
-    {
-      icon: Zap,
-      title: 'Motion Control',
-      description: 'Transform static images into dynamic videos based on text prompts with precise control over movement and animation effects.',
-    },
-    {
-      icon: Volume2,
-      title: 'Audio Integration',
-      description: 'Support for WAV/MP3 background music. Audio duration handling with automatic truncation and silence padding.',
-    },
-    {
-      icon: Clock,
-      title: 'Flexible Duration',
-      description: 'Generate videos with 5-second or 10-second duration. Perfect for social media, presentations, or creative projects.',
-    },
-    {
-      icon: Brain,
-      title: 'Smart Prompts',
-      description: 'Intelligent prompt expansion using LLM technology. Get better results through automatic prompt enhancement.',
+      title: 'Text to Video',
+      description: 'Transform text prompts into high-quality results using advanced AI algorithms. Create professional content in minutes.',
     },
     {
       icon: Image,
-      title: 'Multi-Format Support',
-      description: 'Support for JPEG, JPG, PNG, BMP, WEBP images up to 10MB. Resolution range 360-2000 pixels.',
+      title: 'Image to Video',
+      description: 'Turn static images into dynamic content with advanced AI technology. Bring your visuals to life effortlessly.',
+    },
+    {
+      icon: Zap,
+      title: 'HD Quality Output',
+      description: 'Get crystal-clear high-definition results perfect for social media, marketing, and professional presentations.',
+    },
+    {
+      icon: Clock,
+      title: 'Fast Processing',
+      description: 'Experience lightning-fast generation. Create multiple outputs quickly without compromising quality.',
+    },
+    {
+      icon: Brain,
+      title: 'Easy Interface',
+      description: 'Intuitive interface makes AI creation accessible to everyone, from beginners to professionals.',
+    },
+    {
+      icon: Play,
+      title: 'Flexible Export',
+      description: 'Export generated content in multiple formats and resolutions, ready for any platform or purpose.',
     },
   ]
 
@@ -41,10 +41,10 @@ export function Features() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Why Choose Sora-2 Ai
+            Why Choose Sora-2
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Advanced AI technology for professional video generation with comprehensive features and flexible options.
+            Experience the most advanced AI video generation technology with Sora-2. Create stunning videos from text and images with comprehensive features and flexible options.
           </p>
         </div>
 

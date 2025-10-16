@@ -8,44 +8,44 @@ export function FAQ() {
 
   const faqs = [
     {
-      question: 'What video resolutions does Sora-2 Ai support?',
-      answer: 'Sora-2 Ai supports 480p, 720p, and 1080p video generation. Choose the most suitable resolution based on your project needs, with processing time ranging from 1-3 minutes depending on quality and duration.'
+      question: 'What is Sora-2 AI generator?',
+      answer: 'Sora-2 is an advanced AI video generation platform that transforms text prompts and images into high-quality videos using cutting-edge artificial intelligence technology.'
     },
     {
-      question: 'How long can I generate videos in Sora-2?',
-      answer: 'You can generate videos with 5-second or 10-second duration. This is perfect for social media content, presentations, animations, and creative projects that require precise timing control.'
+      question: 'How does text-to-video work?',
+      answer: 'Simply enter a text description of the video you want to create, and our AI model will generate a corresponding video based on your prompt. The AI understands context and creates relevant visual content.'
     },
     {
-      question: 'Can I add audio to videos in Sora-2?',
-      answer: 'Yes! Sora-2 Ai supports audio integration in WAV and MP3 formats. Audio duration should be 3-30 seconds with a maximum file size of 15MB. Audio will be automatically processed to match video length.'
+      question: 'Can I use Sora-2 for free?',
+      answer: 'Yes! Sora-2 offers a free tier that allows you to try the platform and generate videos. You can upgrade to premium plans for more credits and advanced features.'
     },
     {
-      question: 'What image formats does Sora-2 support?',
-      answer: 'Supported formats include JPEG, JPG, PNG (no transparency), BMP, and WEBP. Images should be 360-2000 pixels in width and height with a maximum file size of 10MB for optimal processing.'
+      question: 'What formats are supported?',
+      answer: 'Sora-2 supports multiple export formats including MP4, WebM, and MOV. You can choose the format that best suits your needs and platform requirements.'
     },
     {
-      question: 'What is prompt expansion in Sora-2 Ai?',
-      answer: 'Prompt expansion uses LLM technology to automatically enhance your text prompts for better video generation results. This feature helps create more detailed and accurate motion descriptions.'
+      question: 'How long does generation take?',
+      answer: 'Video generation typically takes 2-5 minutes depending on complexity and current server load. Premium users get priority processing for faster results.'
     },
     {
-      question: 'How does the motion control work?',
-      answer: 'Motion control allows you to describe specific movements, camera angles, and animation effects through text prompts. The AI interprets your descriptions and applies them to transform static images into dynamic videos.'
+      question: 'Is Sora-2 suitable for commercial use?',
+      answer: 'Yes! All generated content comes with commercial license and unrestricted usage rights, making it perfect for marketing, social media, and professional projects.'
     },
     {
-      question: 'Is there a limit on video generation?',
-      answer: 'Currently, there are no strict limits on video generation. However, processing time may vary based on server load and video complexity. Premium users may receive priority processing.'
+      question: 'What makes this different from other AI generators?',
+      answer: 'Sora-2 combines advanced AI technology with an intuitive interface, offering high-quality results, fast processing, and flexible export options in one platform.'
     },
     {
-      question: 'Can I use generated videos commercially?',
-      answer: 'Yes! All videos generated through Sora-2 Ai come with commercial usage rights. You can use them for marketing, social media, presentations, and any commercial projects without restrictions.'
+      question: 'Can Sora-2 convert images to videos?',
+      answer: 'Absolutely! Sora-2 supports both text-to-video and image-to-video generation, allowing you to animate static images or create videos from scratch using text prompts.'
     },
     {
-      question: 'What happens if my video generation fails?',
-      answer: 'If generation fails, please check your internet connection and try again. If the issue persists, contact our support team. Failed generations do not count against your usage limits.'
+      question: 'Do I need technical skills?',
+      answer: 'No technical skills required! Sora-2 is designed to be user-friendly for everyone, from beginners to professionals. The intuitive interface makes AI video creation accessible to all.'
     },
     {
-      question: 'How can I get the best results?',
-      answer: 'For best results, use high-quality images (at least 720p), write detailed motion prompts, and choose appropriate resolution settings. The AI works best with clear, well-lit images and specific movement descriptions.'
+      question: 'How can I get support?',
+      answer: 'Our support team is available to help you with any questions or issues. You can reach out through our contact form or check our comprehensive FAQ section.'
     }
   ]
 
@@ -58,10 +58,10 @@ export function FAQ() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
+            Sora-2 FAQ
           </h2>
           <p className="text-xl text-gray-600">
-            Everything you need to know about Sora-2 Ai
+            Common Questions About Sora-2
           </p>
         </div>
 
