@@ -9,16 +9,15 @@ export function Hero() {
         <div className="text-center">
           {/* 主标题 */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            <span className="gradient-text">Sora-2 Ai</span>
+            <span className="gradient-text">Sora-2</span>
           </h1>
           
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-8">
-            Professional Image to Video Generator
+            Advanced AI Video Generation Platform
           </h2>
           
           <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Transform static images into dynamic videos with advanced AI technology, featuring motion control, audio integration, and multi-resolution output.
-            Generate professional quality videos from 480p to 1080p in 5-10 seconds. Visit <span className="font-semibold text-blue-600">sora-2.site</span> to experience the most advanced image-to-video technology.
+            Transform any text or image into captivating videos with simple prompts. Sora-2's advanced AI model delivers stunning video generation and scene creativity that brings your ideas to life. Experience the future of AI video creation.
           </p>
 
 

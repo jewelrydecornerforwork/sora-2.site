@@ -37,8 +37,7 @@ export function Header() {
               <span className="text-white font-bold text-sm">S2</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold gradient-text">Sora-2 Ai</span>
-              <span className="text-xs text-gray-500">sora-2.site</span>
+              <span className="text-xl font-bold gradient-text">Sora-2</span>
             </div>
           </Link>
 

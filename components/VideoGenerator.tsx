@@ -373,31 +373,31 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Video Ratio
                 </label>
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <button
                     onClick={() => setVideoRatio('16:9')}
-                    className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
+                    className={`flex-1 p-2 rounded-lg border transition-colors ${
                       videoRatio === '16:9'
                         ? 'border-blue-500 bg-blue-50 text-blue-700'
                         : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
                     }`}
                   >
                     <div className="flex flex-col items-center gap-1">
-                      <Monitor className="w-5 h-5" />
-                      <span className="text-sm font-medium">16:9</span>
+                      <Monitor className="w-4 h-4" />
+                      <span className="text-xs font-medium">16:9</span>
                     </div>
                   </button>
                   <button
                     onClick={() => setVideoRatio('9:16')}
-                    className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
+                    className={`flex-1 p-2 rounded-lg border transition-colors ${
                       videoRatio === '9:16'
                         ? 'border-blue-500 bg-blue-50 text-blue-700'
                         : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
                     }`}
                   >
                     <div className="flex flex-col items-center gap-1">
-                      <Smartphone className="w-5 h-5" />
-                      <span className="text-sm font-medium">9:16</span>
+                      <Smartphone className="w-4 h-4" />
+                      <span className="text-xs font-medium">9:16</span>
                     </div>
                   </button>
                 </div>
