@@ -12,15 +12,7 @@ export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [showGenerator, setShowGenerator] = useState(false)
 
-  const handleStartGenerating = () => {
-    console.log('开始生成视频被调用')
-    setShowGenerator(true)
-  }
-
-  console.log('当前状态 - showGenerator:', showGenerator)
-
   if (showGenerator) {
-    console.log('显示视频生成器界面')
     return (
       <VideoGenerator 
         isGenerating={isGenerating}
@@ -33,7 +25,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-900 text-white">
       <Header />
       <main>
-        <Hero onStartGenerating={handleStartGenerating} />
+        <Hero onStartGenerating={() => setShowGenerator(true)} />
         <Features />
         <FAQ />
       </main>

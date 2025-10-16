@@ -23,16 +23,7 @@ export function Hero({ onStartGenerating }: HeroProps) {
           {/* CTA 按钮 */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <button 
-              onClick={() => {
-                console.log('按钮被点击了！')
-                console.log('onStartGenerating 函数:', onStartGenerating)
-                if (onStartGenerating) {
-                  console.log('调用 onStartGenerating 函数')
-                  onStartGenerating()
-                } else {
-                  console.log('onStartGenerating 函数未定义')
-                }
-              }}
+              onClick={onStartGenerating}
               className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300"
             >
               Start with Sora2 Free
