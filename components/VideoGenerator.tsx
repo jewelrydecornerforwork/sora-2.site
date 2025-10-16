@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-// import { useDropzone } from 'react-dropzone'
-import { Upload, Image, Play, Settings, Volume2, Download } from 'lucide-react'
+import { Upload, Image, Play, Settings, Volume2, Download, Video, Smartphone, Monitor } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface VideoGeneratorProps {
@@ -15,11 +14,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [motionPrompt, setMotionPrompt] = useState('')
   const [selectedModel, setSelectedModel] = useState('google-veo3')
-  const [resolution, setResolution] = useState('720p')
+  const [resolution, setResolution] = useState('standard')
+  const [videoRatio, setVideoRatio] = useState('9:16')
   const [duration, setDuration] = useState('5')
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [isPublic, setIsPublic] = useState(true)
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'text' | 'image'>('text')
 
   // 图像上传处理
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,275 +115,205 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   }
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-800">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Sora 2 Generator
-          </h2>
-          <div className="flex justify-center gap-4 mb-8">
-            <button className="px-6 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors">
-              Text to Video
-            </button>
-            <button className="px-6 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors">
-              Image to Video
-            </button>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="flex h-screen">
+        {/* 左侧面板 - Sora 2 Generator */}
+        <div className="w-1/2 p-8 bg-gray-800 border-r border-gray-700">
+          <div className="h-full flex flex-col">
+            {/* 标题和选项卡 */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-6">
+                <Video className="w-8 h-8 text-white" />
+                <h1 className="text-2xl font-bold text-white">Sora 2 Generator</h1>
+              </div>
+              
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setActiveTab('text')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'text' 
+                      ? 'bg-gray-700 text-white' 
+                      : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                  }`}
+                >
+                  Text to Video
+                </button>
+                <button
+                  onClick={() => setActiveTab('image')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    activeTab === 'image' 
+                      ? 'bg-gray-700 text-white' 
+                      : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                  }`}
+                >
+                  Image to Video
+                </button>
+              </div>
+            </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 左侧：输入区域 */}
-          <div className="space-y-6">
-            {/* Prompt 输入 */}
-            <div>
+            {/* Prompt 输入区域 */}
+            <div className="mb-6">
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Prompt
               </label>
               <textarea
                 value={motionPrompt}
                 onChange={(e) => setMotionPrompt(e.target.value)}
-                placeholder="Describe the motion you want to create..."
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                rows={4}
+                placeholder="Describe the video you want to create..."
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                rows={6}
+                maxLength={5000}
               />
               <div className="text-right text-sm text-gray-400 mt-1">
                 {motionPrompt.length}/5000
               </div>
             </div>
 
-            {/* 图像上传 */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Upload Image (Optional)
+            {/* Video Ratio 选择 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Video Ratio
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
-                {imagePreview ? (
-                  <div className="space-y-4">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="max-w-full max-h-48 mx-auto rounded-lg"
-                    />
-                    <p className="text-sm text-gray-600">Click to change image</p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="image-upload"
-                    />
-                    <label
-                      htmlFor="image-upload"
-                      className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
-                    >
-                      Select New Image
-                    </label>
+              <p className="text-xs text-gray-400 mb-3">Select the aspect ratio for your Video</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setVideoRatio('9:16')}
+                  className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
+                    videoRatio === '9:16'
+                      ? 'border-green-500 bg-green-500/10'
+                      : 'border-gray-600 bg-gray-700 hover:border-gray-500'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <Smartphone className="w-6 h-6 text-white" />
+                    <span className="text-sm font-medium text-white">9:16</span>
                   </div>
+                </button>
+                <button
+                  onClick={() => setVideoRatio('16:9')}
+                  className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
+                    videoRatio === '16:9'
+                      ? 'border-green-500 bg-green-500/10'
+                      : 'border-gray-600 bg-gray-700 hover:border-gray-500'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <Monitor className="w-6 h-6 text-white" />
+                    <span className="text-sm font-medium text-white">16:9</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Resolution 选择 */}
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Resolution
+              </label>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setResolution('standard')}
+                  className={`px-6 py-3 rounded-lg border-2 transition-colors ${
+                    resolution === 'standard'
+                      ? 'border-green-500 bg-green-500/10 text-white'
+                      : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-gray-500'
+                  }`}
+                >
+                  Standard
+                </button>
+                <button
+                  onClick={() => setResolution('hd')}
+                  className={`px-6 py-3 rounded-lg border-2 transition-colors ${
+                    resolution === 'hd'
+                      ? 'border-green-500 bg-green-500/10 text-white'
+                      : 'border-gray-600 bg-gray-700 text-gray-300 hover:border-gray-500'
+                  }`}
+                >
+                  HD
+                </button>
+              </div>
+            </div>
+
+            {/* 生成按钮区域 */}
+            <div className="mt-auto">
+              <p className="text-xs text-gray-400 mb-2">Sign in to generate</p>
+              <button
+                onClick={handleGenerateVideo}
+                disabled={isGenerating || !motionPrompt.trim()}
+                className="w-full bg-gradient-to-r from-green-400 to-purple-500 text-white py-4 px-6 rounded-lg font-semibold hover:from-green-500 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2"
+              >
+                {isGenerating ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Generating...</span>
+                  </>
                 ) : (
-                  <div className="space-y-4">
-                    <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-                    <div>
-                      <p className="text-lg font-medium text-gray-700 mb-2">
-                        Select Image File
-                      </p>
-                      <p className="text-sm text-gray-500 mb-4">
-                        Supports JPEG, PNG, WEBP, BMP formats
-                      </p>
-                      <p className="text-xs text-gray-400 mb-4">
-                        Max 10MB, resolution 360-2000 pixels
-                      </p>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="image-upload"
-                      />
-                      <label
-                        htmlFor="image-upload"
-                        className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition-colors"
-                      >
-                        Select Image
-                      </label>
-                    </div>
-                  </div>
+                  <>
+                    <Video className="w-5 h-5" />
+                    <span>Generate Video</span>
+                  </>
                 )}
-              </div>
+              </button>
+              {!motionPrompt.trim() && (
+                <p className="text-orange-400 text-xs mt-2">Please enter a prompt to generate video</p>
+              )}
             </div>
+          </div>
+        </div>
 
-            {/* 运动描述 */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Motion Prompt (describe desired movement)
-              </label>
-              <textarea
-                value={motionPrompt}
-                onChange={(e) => setMotionPrompt(e.target.value)}
-                placeholder="e.g.: A woman walks on the beach and says: 'Have you heard? Sora-2 is now available on sora-2.site!'"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                rows={4}
-                maxLength={500}
-              />
-              <div className="text-right text-sm text-gray-500 mt-1">
-                {motionPrompt.length}/500
-              </div>
-            </div>
-
-            {/* 设置 */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Settings className="w-5 h-5 text-gray-500" />
-                <span className="font-medium text-gray-700">Settings</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Resolution
-                  </label>
-                  <select
-                    value={resolution}
-                    onChange={(e) => setResolution(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="480p">480p</option>
-                    <option value="720p">720p</option>
-                    <option value="1080p">1080p</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Duration
-                  </label>
-                  <select
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="5">5 seconds</option>
-                    <option value="10">10 seconds</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 音频上传 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Background Music (Optional)
-                </label>
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="file"
-                    accept="audio/*"
-                    onChange={handleAudioUpload}
-                    className="hidden"
-                    id="audio-upload"
-                  />
-                  <label
-                    htmlFor="audio-upload"
-                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                  >
-                    <Volume2 className="w-4 h-4" />
-                    <span className="text-sm">Select Audio File</span>
-                  </label>
-                  {audioFile && (
-                    <span className="text-sm text-gray-600">
-                      {audioFile.name}
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-gray-400 mt-1">
-                  Supports WAV/MP3, 3-30 seconds, max 15MB
+        {/* 右侧面板 - 结果展示 */}
+        <div className="w-1/2 p-8 bg-gray-800">
+          <div className="h-full flex flex-col">
+            <h2 className="text-xl font-bold text-white mb-4">Sora 2 AI Video Generator Result</h2>
+            
+            {isGenerating && (
+              <div className="mb-4">
+                <p className="text-orange-400 text-sm">
+                  Video generation takes 5-10 min. Please don't close this tab. Please don't close this tab.
                 </p>
               </div>
+            )}
 
-              {/* 公开设置 */}
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="isPublic"
-                  checked={isPublic}
-                  onChange={(e) => setIsPublic(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor="isPublic" className="text-sm text-gray-700">
-                  Video Public
-                </label>
-              </div>
-            </div>
-
-            {/* 生成按钮 */}
-            <button
-              onClick={handleGenerateVideo}
-              disabled={isGenerating || !selectedImage || !motionPrompt.trim()}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2"
-            >
-              {isGenerating ? (
-                <>
-                  <div className="loading-spinner"></div>
-                  <span>Generating...</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-5 h-5" />
-                  <span>Generate Video</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* 右侧：生成结果 */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Generated Video
-              </h3>
-              
+            <div className="flex-1 flex items-center justify-center">
               {generatedVideo ? (
-                <div className="space-y-4">
-                  <div className="bg-gray-100 rounded-lg p-4">
-                    <div className="text-sm text-gray-600 mb-2">
-                      {new Date().toLocaleString('en-US')}
-                    </div>
-                    <div className="text-sm text-gray-600 mb-2">
-                      Model: {selectedModel}
-                    </div>
-                    <div className="text-sm text-gray-600 mb-4">
-                      Prompt: {motionPrompt}
-                    </div>
-                    
+                <div className="w-full max-w-sm">
+                  <div className={`relative ${videoRatio === '9:16' ? 'aspect-[9/16]' : 'aspect-video'} bg-black rounded-lg overflow-hidden`}>
                     <video
                       src={generatedVideo}
                       controls
-                      className="w-full rounded-lg"
+                      className="w-full h-full object-cover"
                       poster={imagePreview || undefined}
                     />
+                    {/* Sora 标志 */}
+                    <div className="absolute bottom-4 left-4">
+                      <div className="bg-white/20 backdrop-blur-sm rounded px-2 py-1">
+                        <span className="text-white text-xs font-medium">Sora</span>
+                      </div>
+                    </div>
                   </div>
                   
-                  <div className="flex space-x-2">
-                    <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                  <div className="flex gap-3 mt-4">
+                    <button className="flex-1 flex items-center justify-center gap-2 bg-gray-700 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors">
                       <Download className="w-4 h-4" />
-                      <span>Download</span>
+                      <span className="text-sm">download result</span>
                     </button>
-                    <button className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
-                      <Play className="w-4 h-4" />
-                      <span>Share</span>
+                    <button className="flex-1 flex items-center justify-center gap-2 bg-gray-700 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors">
+                      <span className="text-sm">My Assets</span>
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="bg-gray-50 rounded-lg p-8 text-center">
-                  <Image className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">
-                    Generated video will appear here
-                  </p>
+                <div className="text-center">
+                  <div className={`${videoRatio === '9:16' ? 'w-48 h-80' : 'w-80 h-48'} bg-gray-700 rounded-lg flex items-center justify-center mb-4`}>
+                    <Video className="w-16 h-16 text-gray-500" />
+                  </div>
+                  <p className="text-gray-400">Generated video will appear here</p>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

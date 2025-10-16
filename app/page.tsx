@@ -10,16 +10,22 @@ import { Footer } from '@/components/Footer'
 
 export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false)
+  const [showGenerator, setShowGenerator] = useState(false)
+
+  if (showGenerator) {
+    return (
+      <VideoGenerator 
+        isGenerating={isGenerating}
+        setIsGenerating={setIsGenerating}
+      />
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header />
       <main>
-        <Hero />
-        <VideoGenerator 
-          isGenerating={isGenerating}
-          setIsGenerating={setIsGenerating}
-        />
+        <Hero onStartGenerating={() => setShowGenerator(true)} />
         <Features />
         <FAQ />
       </main>

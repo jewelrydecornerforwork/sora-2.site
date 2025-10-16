@@ -2,7 +2,11 @@
 
 import { Play, Sparkles, Zap, Shield } from 'lucide-react'
 
-export function Hero() {
+interface HeroProps {
+  onStartGenerating?: () => void
+}
+
+export function Hero({ onStartGenerating }: HeroProps) {
   return (
     <section className="relative py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -18,7 +22,10 @@ export function Hero() {
 
           {/* CTA 按钮 */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <button className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300">
+            <button 
+              onClick={onStartGenerating}
+              className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300"
+            >
               Start with Sora2 Free
             </button>
           </div>
