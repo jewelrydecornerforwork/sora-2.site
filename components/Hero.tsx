@@ -8,15 +8,15 @@ export function Hero() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
           {/* 主标题 */}
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             <span className="gradient-text">Sora-2</span>
           </h1>
           
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-8">
+          <h2 className="text-2xl md:text-3xl font-semibold text-gray-300 mb-8">
             Advanced AI Video Generation Platform
           </h2>
           
-          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
             Transform any text or image into captivating videos with simple prompts. Sora-2's advanced AI model delivers stunning video generation and scene creativity that brings your ideas to life. Experience the future of AI video creation.
           </p>
 
@@ -40,8 +40,8 @@ export function Hero() {
 
       {/* 背景装饰 */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"></div>
       </div>
     </section>
   )

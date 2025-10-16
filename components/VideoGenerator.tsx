@@ -163,16 +163,16 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   }
 
   return (
-    <section id="video-generator" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section id="video-generator" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-800">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Sora-2 AI Video Generator
           </h2>
-          <p className="text-lg text-gray-600 mb-6">
+          <p className="text-lg text-gray-300 mb-6">
             Experience the most advanced AI video generation technology with Sora-2. Create stunning videos from text and images in seconds.
           </p>
-          <div className="flex justify-center gap-4 text-sm text-gray-500 mb-8">
+          <div className="flex justify-center gap-4 text-sm text-gray-400 mb-8">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
               Text to Video
@@ -191,10 +191,10 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* 左侧：输入区域 */}
-          <div className="space-y-6 bg-gray-50 p-6 rounded-xl">
+          <div className="space-y-6 bg-gray-700 p-6 rounded-xl">
             {/* Mode Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-gray-300 mb-3">
                 Generation Mode
               </label>
               <div className="flex gap-2">
@@ -202,8 +202,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   onClick={() => setActiveTab('text')}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-colors ${
                     activeTab === 'text' 
-                      ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                      : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                      : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                   }`}
                 >
                   <FileText className="w-5 h-5" />
@@ -213,8 +213,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   onClick={() => setActiveTab('image')}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-colors ${
                     activeTab === 'image' 
-                      ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                      : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                      : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                   }`}
                 >
                   <Image className="w-5 h-5" />

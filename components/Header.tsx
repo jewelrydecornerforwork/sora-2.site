@@ -24,10 +24,10 @@ export function Header() {
   }, [])
 
   return (
-    <header className={`backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 transition-all duration-300 ease-in-out ${
+    <header className={`backdrop-blur-md border-b border-gray-700 sticky top-0 z-50 transition-all duration-300 ease-in-out ${
       isScrolled 
-        ? 'bg-white/95 shadow-lg' 
-        : 'bg-white/80'
+        ? 'bg-gray-900/95 shadow-lg' 
+        : 'bg-gray-900/80'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -37,22 +37,22 @@ export function Header() {
               <span className="text-white font-bold text-sm">S2</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold gradient-text">Sora-2</span>
+              <span className="text-xl font-bold text-white">Sora-2</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/" className="text-gray-300 hover:text-white transition-colors">
               Home
             </Link>
-            <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/dashboard" className="text-gray-300 hover:text-white transition-colors">
               Dashboard
             </Link>
-            <Link href="/explore" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/explore" className="text-gray-300 hover:text-white transition-colors">
               Explore
             </Link>
-            <Link href="/history" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <Link href="/history" className="text-gray-300 hover:text-white transition-colors">
               History
             </Link>
           </nav>
@@ -63,7 +63,7 @@ export function Header() {
               <div className="flex items-center space-x-4">
                 <Link 
                   href="/dashboard" 
-                  className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors"
+                  className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
                 >
                   <User className="w-4 h-4" />
                   <span>{session.user?.name || 'User'}</span>
@@ -77,7 +77,7 @@ export function Header() {
                 </Link>
                 <button
                   onClick={() => alert('登出功能待实现')}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
+                  className="flex items-center space-x-2 text-gray-300 hover:text-red-400 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
@@ -120,41 +120,41 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
+          <div className="md:hidden border-t border-gray-700 py-4">
             <nav className="flex flex-col space-y-4">
               <Link 
                 href="/" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link 
                 href="/dashboard" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Dashboard
               </Link>
               <Link 
                 href="/explore" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Explore
               </Link>
               <Link 
                 href="/history" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 History
               </Link>
               
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-700">
                 {session ? (
                   <div className="flex flex-col space-y-2">
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-400">
                       Welcome, {session.user?.name || 'User'}
                     </div>
                     <Link 
