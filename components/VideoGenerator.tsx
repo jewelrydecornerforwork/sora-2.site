@@ -163,20 +163,48 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   }
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <section id="video-generator" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Sora-2 Ai - 视频生成器
+            🎬 AI 视频生成器
           </h2>
-          <p className="text-lg text-gray-600">
-            使用 AI 技术将文本或图片转换为动态视频
+          <p className="text-lg text-gray-600 mb-6">
+            使用先进的 AI 技术，将您的创意想法转换为精彩的视频内容
           </p>
+          <div className="flex justify-center gap-4 text-sm text-gray-500 mb-8">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              文本转视频
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              图片转视频
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              多种分辨率
+            </span>
+          </div>
+
+          {/* 示例展示 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+              <h4 className="font-semibold text-green-800 mb-2">📝 文本转视频示例</h4>
+              <p className="text-sm text-green-700 mb-2">输入描述：</p>
+              <p className="text-xs text-green-600 italic">"一只可爱的小猫在花园里玩耍，阳光明媚，微风轻拂..."</p>
+            </div>
+            <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-semibold text-blue-800 mb-2">🖼️ 图片转视频示例</h4>
+              <p className="text-sm text-blue-700 mb-2">上传图片 + 运动描述：</p>
+              <p className="text-xs text-blue-600 italic">"小猫慢慢走向镜头，然后转身离开，背景中的花朵在微风中轻轻摇摆..."</p>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* 左侧：输入区域 */}
-          <div className="space-y-6">
+          <div className="space-y-6 bg-gray-50 p-6 rounded-xl">
             {/* 模式选择 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -458,7 +486,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
           </div>
 
           {/* 右侧：生成结果 */}
-          <div className="space-y-6">
+          <div className="space-y-6 bg-gray-50 p-6 rounded-xl">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 生成结果

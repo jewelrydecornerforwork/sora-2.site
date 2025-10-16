@@ -2,11 +2,7 @@
 
 import { Play, Sparkles, Zap, Shield } from 'lucide-react'
 
-interface HeroProps {
-  onStartGenerating?: () => void
-}
-
-export function Hero({ onStartGenerating }: HeroProps) {
+export function Hero() {
   return (
     <section className="relative py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -43,11 +39,11 @@ export function Hero({ onStartGenerating }: HeroProps) {
 
           {/* CTA 按钮 */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={onStartGenerating}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <a 
+              href="#video-generator"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-center">
               Try Sora-2 Ai Free
-            </button>
+            </a>
             <button className="flex items-center justify-center space-x-2 bg-white text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-300">
               <Play className="w-5 h-5" />
               <span>View Examples</span>
