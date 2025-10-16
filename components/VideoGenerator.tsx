@@ -226,18 +226,18 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             {/* Text to Video - Text Input */}
             {activeTab === 'text' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Video Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={textPrompt}
                   onChange={(e) => setTextPrompt(e.target.value)}
                   placeholder="Describe the video content you want to create, e.g.: A cute kitten playing in the garden, bright sunshine, gentle breeze..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-400"
                   rows={6}
                   maxLength={1000}
                 />
-                <div className="text-right text-sm text-gray-500 mt-1">
+                <div className="text-right text-sm text-gray-400 mt-1">
                   {textPrompt.length}/1000
                 </div>
               </div>
@@ -246,14 +246,14 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             {/* Image to Video - Image Upload */}
             {activeTab === 'image' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Upload Image <span className="text-red-500">*</span>
                 </label>
                 <div 
                   className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                     isDragOver 
-                      ? 'border-blue-500 bg-blue-50' 
-                      : 'border-gray-300 hover:border-gray-400'
+                      ? 'border-blue-500 bg-blue-900/20' 
+                      : 'border-gray-600 hover:border-gray-500'
                   }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -266,7 +266,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         alt="Preview"
                         className="max-w-full max-h-48 mx-auto rounded-lg"
                       />
-                      <p className="text-sm text-gray-600">Click to change image</p>
+                            <p className="text-sm text-gray-300">Click to change image</p>
                       <input
                         type="file"
                         accept="image/*"
@@ -284,16 +284,16 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   ) : (
                     <div className="space-y-4">
                       <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-                      <div>
-                        <p className="text-lg font-medium text-gray-700 mb-2">
-                          Click or drag to upload image
-                        </p>
-                        <p className="text-sm text-gray-500 mb-4">
-                          Supports JPEG, PNG, WEBP, BMP formats
-                        </p>
-                        <p className="text-xs text-gray-400 mb-4">
-                          Max 10MB, resolution 360-2000 pixels
-                        </p>
+                            <div>
+                              <p className="text-lg font-medium text-gray-300 mb-2">
+                                Click or drag to upload image
+                              </p>
+                              <p className="text-sm text-gray-400 mb-4">
+                                Supports JPEG, PNG, WEBP, BMP formats
+                              </p>
+                              <p className="text-xs text-gray-500 mb-4">
+                                Max 10MB, resolution 360-2000 pixels
+                              </p>
                         <input
                           type="file"
                           accept="image/*"
@@ -317,18 +317,18 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             {/* Image to Video - Motion Description */}
             {activeTab === 'image' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Motion Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={motionPrompt}
                   onChange={(e) => setMotionPrompt(e.target.value)}
                   placeholder="Describe the motion effect you want, e.g.: The kitten slowly walks towards the camera, then turns and leaves, the flowers in the background gently swaying in the breeze..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-400"
                   rows={4}
                   maxLength={500}
                 />
-                <div className="text-right text-sm text-gray-500 mt-1">
+                <div className="text-right text-sm text-gray-400 mt-1">
                   {motionPrompt.length}/500
                 </div>
               </div>
@@ -337,21 +337,21 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             {/* Settings */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <Settings className="w-5 h-5 text-gray-500" />
-                <span className="font-medium text-gray-700">Video Settings</span>
+                <Settings className="w-5 h-5 text-gray-400" />
+                <span className="font-medium text-gray-300">Video Settings</span>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Resolution
                 </label>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setResolution('720p')}
                     className={`px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === '720p'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      resolution === '720p' 
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
                     Standard
@@ -359,9 +359,9 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   <button
                     onClick={() => setResolution('1080p')}
                     className={`px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === '1080p'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      resolution === '1080p' 
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
                     HD
@@ -370,7 +370,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Video Ratio
                 </label>
                 <div className="flex gap-2">
@@ -378,8 +378,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     onClick={() => setVideoRatio('16:9')}
                     className={`flex-1 p-2 rounded-lg border transition-colors ${
                       videoRatio === '16:9'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
                     <div className="flex flex-col items-center gap-1">
@@ -391,8 +391,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     onClick={() => setVideoRatio('9:16')}
                     className={`flex-1 p-2 rounded-lg border transition-colors ${
                       videoRatio === '9:16'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
                     <div className="flex flex-col items-center gap-1">
@@ -405,7 +405,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
 
               {/* Audio Upload */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Background Music (Optional)
                 </label>
                 <div className="flex items-center space-x-4">
@@ -418,13 +418,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   />
                   <label
                     htmlFor="audio-upload"
-                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="flex items-center space-x-2 px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg cursor-pointer hover:bg-gray-700 transition-colors"
                   >
                     <Volume2 className="w-4 h-4" />
                     <span className="text-sm">Choose Audio File</span>
                   </label>
                   {audioFile && (
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-300">
                       {audioFile.name}
                     </span>
                   )}
@@ -443,7 +443,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   onChange={(e) => setIsPublic(e.target.checked)}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <label htmlFor="isPublic" className="text-sm text-gray-700">
+                <label htmlFor="isPublic" className="text-sm text-gray-300">
                   Public Video
                 </label>
               </div>
@@ -470,25 +470,25 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
           </div>
 
           {/* Right Side: Generation Results */}
-          <div className="space-y-6 bg-gray-50 p-6 rounded-xl">
+          <div className="space-y-6 bg-gray-700 p-6 rounded-xl">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 Generation Results
               </h3>
               
               {generatedVideo ? (
                 <div className="space-y-4">
-                  <div className="bg-gray-100 rounded-lg p-4">
-                    <div className="text-sm text-gray-600 mb-2">
+                  <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                    <div className="text-sm text-gray-300 mb-2">
                       {new Date().toLocaleString('en-US')}
                     </div>
-                    <div className="text-sm text-gray-600 mb-2">
+                    <div className="text-sm text-gray-300 mb-2">
                       Mode: {activeTab === 'text' ? 'Text to Video' : 'Image to Video'}
                     </div>
-                    <div className="text-sm text-gray-600 mb-2">
+                    <div className="text-sm text-gray-300 mb-2">
                       Model: {selectedModel}
                     </div>
-                    <div className="text-sm text-gray-600 mb-4">
+                    <div className="text-sm text-gray-300 mb-4">
                       Description: {activeTab === 'text' ? textPrompt : motionPrompt}
                     </div>
                     
@@ -514,9 +514,9 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   </div>
                 </div>
               ) : (
-                <div className="bg-gray-50 rounded-lg p-8 text-center">
-                  <Video className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">
+                <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-600">
+                  <Video className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-300">
                     Generated video will appear here
                   </p>
                 </div>
