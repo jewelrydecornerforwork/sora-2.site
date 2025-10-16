@@ -7,21 +7,23 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   const footerLinks = {
-    product: [
-      { name: 'Features', href: '/features' },
-      { name: 'Pricing', href: '/pricing' },
-      { name: 'FAQ', href: '/faq' },
+    quickLinks: [
+      { name: 'Home', href: '/' },
+      { name: 'Dashboard', href: '/dashboard' },
+      { name: 'Explore', href: '/explore' },
+      { name: 'History', href: '/history' },
     ],
-    company: [
-      { name: 'About', href: '/about' },
-      { name: 'Contact', href: '/contact' },
-      { name: 'Waitlist', href: '/waitlist' },
+    support: [
+      { name: 'Help Center', href: '/help' },
+      { name: 'Contact Support', href: '/support' },
+      { name: 'Status Page', href: '/status' },
+      { name: 'Community Forum', href: '/community' },
     ],
     legal: [
-      { name: 'Cookie Policy', href: '/cookies' },
-      { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Terms of Service', href: '/terms' },
+      { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Refund Policy', href: '/refund' },
+      { name: 'Cookie Policy', href: '/cookies' },
     ],
   }
 
@@ -32,7 +34,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-gray-900 border-t border-gray-800">
+    <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
@@ -41,35 +43,33 @@ export function Footer() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">S2</span>
               </div>
-              <span className="text-xl font-bold text-white">Sora2</span>
+              <span className="text-xl font-bold">Sora-2 Ai</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Create stunning AI-powered video content with advanced technology
+              Transform static images into dynamic videos with advanced AI technology. 
+              Experience the most advanced image-to-video generation at sora-2.site.
             </p>
             
-            {/* Email Signup */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email
-              </label>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-l-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors">
-                  Subscribe
-                </button>
-              </div>
+            {/* Social Links */}
+            <div className="flex space-x-4">
+              {socialLinks.map((social) => (
+                <Link
+                  key={social.name}
+                  href={social.href}
+                  className="text-gray-400 hover:text-white transition-colors"
+                  aria-label={social.name}
+                >
+                  <social.icon className="w-5 h-5" />
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* Product Links */}
+          {/* Quick Links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Product</h3>
+            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              {footerLinks.product.map((link) => (
+              {footerLinks.quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
@@ -82,11 +82,11 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Company Links */}
+          {/* Support */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Company</h3>
+            <h3 className="text-white font-semibold mb-4">Support</h3>
             <ul className="space-y-2">
-              {footerLinks.company.map((link) => (
+              {footerLinks.support.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
@@ -99,7 +99,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Legal Links */}
+          {/* Legal */}
           <div>
             <h3 className="text-white font-semibold mb-4">Legal</h3>
             <ul className="space-y-2">
@@ -120,21 +120,13 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center space-x-1 text-gray-400 text-sm mb-4 md:mb-0">
-            <span>© {currentYear} Sora2 All Rights Reserved.</span>
+            <span>© {currentYear} Sora-2 Ai. All rights reserved.</span>
           </div>
           
-          {/* Social Links */}
-          <div className="flex space-x-4">
-            {socialLinks.map((social) => (
-              <Link
-                key={social.name}
-                href={social.href}
-                className="text-gray-400 hover:text-white transition-colors"
-                aria-label={social.name}
-              >
-                <social.icon className="w-5 h-5" />
-              </Link>
-            ))}
+          <div className="flex items-center space-x-1 text-gray-400 text-sm">
+            <span>Made with</span>
+            <Heart className="w-4 h-4 text-red-500" />
+            <span>by the Sora-2 Ai Team</span>
           </div>
         </div>
       </div>
