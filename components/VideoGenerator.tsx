@@ -187,19 +187,6 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             </span>
           </div>
 
-          {/* 示例展示 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
-              <h4 className="font-semibold text-green-800 mb-2">📝 文本转视频示例</h4>
-              <p className="text-sm text-green-700 mb-2">输入描述：</p>
-              <p className="text-xs text-green-600 italic">"一只可爱的小猫在花园里玩耍，阳光明媚，微风轻拂..."</p>
-            </div>
-            <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-              <h4 className="font-semibold text-blue-800 mb-2">🖼️ 图片转视频示例</h4>
-              <p className="text-sm text-blue-700 mb-2">上传图片 + 运动描述：</p>
-              <p className="text-xs text-blue-600 italic">"小猫慢慢走向镜头，然后转身离开，背景中的花朵在微风中轻轻摇摆..."</p>
-            </div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -364,9 +351,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     onChange={(e) => setResolution(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="480p">480p</option>
-                    <option value="720p">720p</option>
-                    <option value="1080p">1080p</option>
+                    <option value="720p">标准 (720p)</option>
+                    <option value="1080p">高清 (1080p)</option>
                   </select>
                 </div>
                 
@@ -380,6 +366,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="5">5 秒</option>
+                    <option value="8">8 秒</option>
                     <option value="10">10 秒</option>
                   </select>
                 </div>
