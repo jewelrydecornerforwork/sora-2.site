@@ -21,11 +21,19 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [isPublic, setIsPublic] = useState(true)
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'text' | 'image'>('text')
+  const [isDragOver, setIsDragOver] = useState(false)
 
   // 图像上传处理
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
+      processImageFile(file)
+    }
+  }
+
+  // 处理图片文件
+  const processImageFile = (file: File) => {
+    if (file && file.type.startsWith('image/')) {
       setSelectedImage(file)
       const reader = new FileReader()
       reader.onload = () => {
@@ -33,6 +41,29 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       }
       reader.readAsDataURL(file)
       toast.success('Image uploaded successfully!')
+    } else {
+      toast.error('Please select a valid image file!')
+    }
+  }
+
+  // 拖拽处理
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+    
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      processImageFile(files[0])
     }
   }
 
@@ -49,24 +80,29 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const handleGenerateVideo = async () => {
     console.log('🎬 开始生成视频...')
     
-    if (!selectedImage) {
-      console.log('❌ 没有选择图像')
-      toast.error('Please upload an image first!')
-      return
-    }
-    
-    if (!motionPrompt.trim()) {
-      console.log('❌ 没有输入运动描述')
-      toast.error('Please enter a motion description!')
-      return
+    // 根据模式进行不同的验证
+    if (activeTab === 'text') {
+      if (!motionPrompt.trim()) {
+        console.log('❌ 没有输入提示词')
+        toast.error('Please enter a prompt!')
+        return
+      }
+    } else if (activeTab === 'image') {
+      if (!selectedImage) {
+        console.log('❌ 没有选择图像')
+        toast.error('Please upload an image first!')
+        return
+      }
     }
 
     console.log('📋 生成参数:', {
-      imageName: selectedImage.name,
-      imageSize: selectedImage.size,
+      mode: activeTab,
+      imageName: selectedImage?.name,
+      imageSize: selectedImage?.size,
       prompt: motionPrompt,
       model: selectedModel,
       resolution: resolution,
+      videoRatio: videoRatio,
       duration: duration
     })
 
@@ -74,12 +110,18 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     
     try {
       const formData = new FormData()
-      formData.append('image', selectedImage)
+      formData.append('mode', activeTab)
       formData.append('prompt', motionPrompt)
       formData.append('model', selectedModel)
       formData.append('resolution', resolution)
+      formData.append('videoRatio', videoRatio)
       formData.append('duration', duration)
       formData.append('isPublic', isPublic.toString())
+      
+      // 只在 Image to Video 模式下添加图片
+      if (activeTab === 'image' && selectedImage) {
+        formData.append('image', selectedImage)
+      }
       
       if (audioFile) {
         formData.append('audio', audioFile)
@@ -151,15 +193,84 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               </div>
             </div>
 
+            {/* 图片上传区域 - 仅在 Image to Video 模式显示 */}
+            {activeTab === 'image' && (
+              <div className="mb-6">
+                <div 
+                  className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                    isDragOver 
+                      ? 'border-green-500 bg-green-500/10' 
+                      : 'border-gray-600 hover:border-gray-500'
+                  }`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  {imagePreview ? (
+                    <div className="space-y-4">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="max-w-full max-h-48 mx-auto rounded-lg"
+                      />
+                      <p className="text-sm text-gray-400">Click to change image</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label
+                        htmlFor="image-upload"
+                        className="inline-block bg-gray-700 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                      >
+                        Choose New Image
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <Upload className="w-12 h-12 text-gray-400 mx-auto" />
+                      <div>
+                        <p className="text-lg font-medium text-gray-300 mb-2">
+                          Click or drag to upload image
+                        </p>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          id="image-upload"
+                        />
+                        <label
+                          htmlFor="image-upload"
+                          className="inline-block bg-gray-700 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                        >
+                          Choose Image
+                        </label>
+                        <p className="text-xs text-gray-400 mt-2">
+                          Max 10MB • JPEG, PNG, WebP
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Prompt 输入区域 */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Prompt
+                Prompt {activeTab === 'image' && '(optional)'}
               </label>
               <textarea
                 value={motionPrompt}
                 onChange={(e) => setMotionPrompt(e.target.value)}
-                placeholder="Describe the video you want to create..."
+                placeholder={
+                  activeTab === 'text' 
+                    ? "Describe the video you want to create..."
+                    : "Describe the video motion you want..."
+                }
                 className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
                 rows={6}
                 maxLength={5000}
@@ -239,7 +350,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               <p className="text-xs text-gray-400 mb-2">Sign in to generate</p>
               <button
                 onClick={handleGenerateVideo}
-                disabled={isGenerating || !motionPrompt.trim()}
+                disabled={isGenerating || (activeTab === 'text' ? !motionPrompt.trim() : !selectedImage)}
                 className="w-full bg-gradient-to-r from-green-400 to-purple-500 text-white py-4 px-6 rounded-lg font-semibold hover:from-green-500 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2"
               >
                 {isGenerating ? (
@@ -254,8 +365,11 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   </>
                 )}
               </button>
-              {!motionPrompt.trim() && (
+              {activeTab === 'text' && !motionPrompt.trim() && (
                 <p className="text-orange-400 text-xs mt-2">Please enter a prompt to generate video</p>
+              )}
+              {activeTab === 'image' && !selectedImage && (
+                <p className="text-orange-400 text-xs mt-2">Please upload an image</p>
               )}
             </div>
           </div>
