@@ -24,6 +24,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'text' | 'image'>('text')
   const [isDragOver, setIsDragOver] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [progressMessage, setProgressMessage] = useState('')
 
   // 图像上传处理
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,24 +85,44 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     // 根据模式进行不同的验证
     if (activeTab === 'text') {
       if (!textPrompt.trim()) {
-        toast.error('请输入文本描述！')
+        toast.error('Please enter a text description!')
         return
       }
     } else if (activeTab === 'image') {
       if (!selectedImage) {
-        toast.error('请先上传图片！')
+        toast.error('Please upload an image first!')
         return
       }
       if (!motionPrompt.trim()) {
-        toast.error('请输入运动描述！')
+        toast.error('Please enter a motion description!')
         return
       }
     }
 
     setIsGenerating(true)
     setGeneratedVideo(null)
+    setProgress(0)
+    setProgressMessage('Preparing your request...')
+
+    // 模拟进度更新
+    const progressInterval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 90) return prev
+        return prev + Math.random() * 10
+      })
+    }, 1000)
+
+    // 设置超时时间为 2 分钟
+    const REQUEST_TIMEOUT = 120000
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => {
+      controller.abort()
+      toast.error('Request timeout. Please try again.')
+    }, REQUEST_TIMEOUT)
 
     try {
+      setProgressMessage('Uploading data...')
+
       const formData = new FormData()
       formData.append('mode', activeTab)
       formData.append('textPrompt', textPrompt)
@@ -110,36 +132,69 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       formData.append('videoRatio', videoRatio)
       formData.append('duration', duration)
       formData.append('isPublic', isPublic.toString())
-      
+
       // 只在 Image to Video 模式下添加图片
       if (activeTab === 'image' && selectedImage) {
         formData.append('image', selectedImage)
       }
-      
+
       if (audioFile) {
         formData.append('audio', audioFile)
       }
 
+      setProgressMessage('Generating video with AI...')
+
       const response = await fetch('/api/generate-video', {
         method: 'POST',
         body: formData,
+        signal: controller.signal,
       })
 
+      clearTimeout(timeoutId)
+      clearInterval(progressInterval)
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
       }
 
       const result = await response.json()
 
+      setProgress(100)
+      setProgressMessage('Video generated successfully!')
+
       if (result.videoUrl) {
         setGeneratedVideo(result.videoUrl)
-        toast.success('视频生成成功！')
+
+        // 区分 Demo 模式和真实生成
+        if (result.isDemo) {
+          toast('Demo mode: ' + (result.message || 'Using demo video'), {
+            icon: '⚠️',
+            duration: 5000,
+          })
+        } else {
+          toast.success('Video generated successfully!')
+        }
       } else {
         throw new Error('No video URL returned')
       }
     } catch (error) {
-      toast.error(`视频生成失败: ${error instanceof Error ? error.message : '未知错误'}`)
+      clearInterval(progressInterval)
+      setProgress(0)
+      setProgressMessage('')
+
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          toast.error('Request timeout. The video generation took too long. Please try again.')
+        } else {
+          toast.error(`Video generation failed: ${error.message}`)
+        }
+      } else {
+        toast.error('Video generation failed: Unknown error')
+      }
     } finally {
+      clearTimeout(timeoutId)
+      clearInterval(progressInterval)
       setIsGenerating(false)
     }
   }
@@ -452,6 +507,22 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 </>
               )}
             </button>
+
+            {/* Progress Bar */}
+            {isGenerating && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-gray-300">
+                  <span>{progressMessage}</span>
+                  <span>{Math.round(progress)}%</span>
+                </div>
+                <div className="w-full bg-gray-600 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-500 ease-out"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Side: Generation Results */}
