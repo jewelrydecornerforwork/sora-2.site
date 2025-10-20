@@ -1,6 +1,5 @@
 'use client'
 
-import { Play, Sparkles, Zap, Shield } from 'lucide-react'
 
 export function Hero() {
   return (

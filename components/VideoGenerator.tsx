@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { Upload, Image, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2 } from 'lucide-react'
+import { useState } from 'react'
+import Image from 'next/image'
+import { Upload, Image as ImageIcon, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface VideoGeneratorProps {
@@ -79,39 +80,22 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
 
   // 生成视频
   const handleGenerateVideo = async () => {
-    console.log('🎬 开始生成视频...')
-    
     // 根据模式进行不同的验证
     if (activeTab === 'text') {
       if (!textPrompt.trim()) {
-        console.log('❌ 没有输入文本提示词')
         toast.error('请输入文本描述！')
         return
       }
     } else if (activeTab === 'image') {
       if (!selectedImage) {
-        console.log('❌ 没有选择图像')
         toast.error('请先上传图片！')
         return
       }
       if (!motionPrompt.trim()) {
-        console.log('❌ 没有输入运动描述')
         toast.error('请输入运动描述！')
         return
       }
     }
-
-    console.log('📋 生成参数:', {
-      mode: activeTab,
-      textPrompt: textPrompt,
-      imageName: selectedImage?.name,
-      imageSize: selectedImage?.size,
-      motionPrompt: motionPrompt,
-      model: selectedModel,
-      resolution: resolution,
-      videoRatio: videoRatio,
-      duration: duration
-    })
 
     setIsGenerating(true)
     setGeneratedVideo(null)
@@ -146,7 +130,6 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       }
 
       const result = await response.json()
-      console.log('✅ 视频生成成功:', result)
 
       if (result.videoUrl) {
         setGeneratedVideo(result.videoUrl)
@@ -155,7 +138,6 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
         throw new Error('No video URL returned')
       }
     } catch (error) {
-      console.error('❌ 视频生成失败:', error)
       toast.error(`视频生成失败: ${error instanceof Error ? error.message : '未知错误'}`)
     } finally {
       setIsGenerating(false)
@@ -212,12 +194,12 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 <button
                   onClick={() => setActiveTab('image')}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-colors ${
-                    activeTab === 'image' 
-                      ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                    activeTab === 'image'
+                      ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                       : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                   }`}
                 >
-                  <Image className="w-5 h-5" />
+                  <ImageIcon className="w-5 h-5" />
                   <span>Image to Video</span>
                 </button>
               </div>
@@ -261,10 +243,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 >
                   {imagePreview ? (
                     <div className="space-y-4">
-                      <img
+                      <Image
                         src={imagePreview}
                         alt="Preview"
-                        className="max-w-full max-h-48 mx-auto rounded-lg"
+                        width={400}
+                        height={300}
+                        className="max-w-full h-auto max-h-48 mx-auto rounded-lg object-contain"
+                        unoptimized
                       />
                             <p className="text-sm text-gray-300">Click to change image</p>
                       <input
@@ -503,11 +488,44 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                   </div>
                   
                   <div className="flex space-x-2">
-                    <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <button
+                      onClick={() => {
+                        if (generatedVideo) {
+                          const link = document.createElement('a')
+                          link.href = generatedVideo
+                          link.download = `sora-2-video-${Date.now()}.mp4`
+                          document.body.appendChild(link)
+                          link.click()
+                          document.body.removeChild(link)
+                          toast.success('视频下载开始！')
+                        }
+                      }}
+                      className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
                       <Download className="w-4 h-4" />
                       <span>Download</span>
                     </button>
-                    <button className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    <button
+                      onClick={() => {
+                        if (generatedVideo) {
+                          if (navigator.share) {
+                            navigator.share({
+                              title: 'Sora-2 Generated Video',
+                              text: activeTab === 'text' ? textPrompt : motionPrompt,
+                              url: window.location.href
+                            }).then(() => {
+                              toast.success('分享成功！')
+                            }).catch(() => {
+                              toast.error('分享取消')
+                            })
+                          } else {
+                            navigator.clipboard.writeText(window.location.href)
+                            toast.success('链接已复制到剪贴板！')
+                          }
+                        }
+                      }}
+                      className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                    >
                       <Play className="w-4 h-4" />
                       <span>Share</span>
                     </button>

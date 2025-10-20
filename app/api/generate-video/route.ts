@@ -277,8 +277,6 @@ async function generateImageToVideoWithHuggingFace(imageBase64: string, prompt: 
 }
 
 export async function POST(request: NextRequest) {
-  console.log('🎬 收到视频生成请求')
-  
   try {
     const formData = await request.formData()
     const mode = formData.get('mode') as string
@@ -290,33 +288,17 @@ export async function POST(request: NextRequest) {
     const videoRatio = formData.get('videoRatio') as string
     const duration = formData.get('duration') as string
 
-    console.log('📋 请求参数:', {
-      mode,
-      hasTextPrompt: !!textPrompt,
-      hasMotionPrompt: !!motionPrompt,
-      hasImage: !!image,
-      imageName: image?.name,
-      imageSize: image?.size,
-      model,
-      resolution,
-      videoRatio,
-      duration
-    })
-
     // 验证输入
     if (mode === 'text') {
       if (!textPrompt || !textPrompt.trim()) {
-        console.log('❌ 缺少文本描述')
         return NextResponse.json({ error: '请输入视频描述' }, { status: 400 })
       }
     } else if (mode === 'image') {
       if (!image) {
-        console.log('❌ 缺少图像文件')
         return NextResponse.json({ error: '请上传图像文件' }, { status: 400 })
       }
-      
+
       if (!motionPrompt || !motionPrompt.trim()) {
-        console.log('❌ 缺少运动描述')
         return NextResponse.json({ error: '请输入运动描述' }, { status: 400 })
       }
     } else {
@@ -332,20 +314,8 @@ export async function POST(request: NextRequest) {
     const hasReplicateToken = replicateToken && replicateToken !== 'r8_...' && !replicateToken.includes('...')
     const hasHFToken = hfToken && hfToken !== 'hf_...' && !hfToken.includes('...')
 
-    console.log('🔑 API 密钥状态:', {
-      hasKieKey,
-      hasReplicateToken,
-      hasHFToken,
-      kiePrefix: kieApiKey?.substring(0, 5) || 'null',
-      replicatePrefix: replicateToken?.substring(0, 5) || 'null',
-      hfPrefix: hfToken?.substring(0, 5) || 'null'
-    })
-
     // 如果没有配置任何API，返回演示模式
     if (!hasKieKey && !hasReplicateToken && !hasHFToken) {
-      console.log('⚠️ 未配置 API 密钥，使用演示模式')
-      console.log('⏳ 返回演示视频...')
-
       await new Promise(resolve => setTimeout(resolve, 2000))
 
       return NextResponse.json({
@@ -363,8 +333,6 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    console.log('⏳ 开始生成视频...')
-    
     let videoUrl: string
     let usedModel = 'unknown'
 
@@ -383,7 +351,7 @@ export async function POST(request: NextRequest) {
       } else {
         // 图片转视频
         const imageBase64 = await fileToBase64(image)
-        
+
         if (hasKieKey) {
           videoUrl = await generateWithKie('image', '', imageBase64, motionPrompt, duration, resolution)
           usedModel = 'Sora 2 (Kie.ai) - 图片转视频'
@@ -397,8 +365,6 @@ export async function POST(request: NextRequest) {
           throw new Error('未配置任何 API 密钥')
         }
       }
-
-      console.log('✅ 视频生成成功')
 
       return NextResponse.json({
         success: true,
@@ -414,8 +380,6 @@ export async function POST(request: NextRequest) {
       })
 
     } catch (apiError) {
-      console.error('❌ API 调用失败，回退到演示模式:', apiError)
-      
       // API 失败时回退到演示模式
       return NextResponse.json({
         success: true,
@@ -433,9 +397,8 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('❌ 视频生成错误:', error)
     return NextResponse.json(
-      { 
+      {
         error: '服务器内部错误',
         details: error instanceof Error ? error.message : '未知错误'
       },

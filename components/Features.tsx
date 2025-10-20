@@ -1,6 +1,6 @@
 'use client'
 
-import { Monitor, Zap, Volume2, Clock, Brain, Image, Play } from 'lucide-react'
+import { Monitor, Zap, Clock, Brain, Image, Play } from 'lucide-react'
 
 export function Features() {
   const features = [

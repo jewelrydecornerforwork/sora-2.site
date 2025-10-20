@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 // import { useSession, signIn, signOut } from 'next-auth/react'
 import { Menu, X, User, LogOut, CreditCard } from 'lucide-react'
 
@@ -76,7 +77,7 @@ export function Header() {
                   <span>Credits</span>
                 </Link>
                 <button
-                  onClick={() => alert('登出功能待实现')}
+                  onClick={() => toast('登出功能待实现')}
                   className="flex items-center space-x-2 text-gray-300 hover:text-red-400 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
@@ -86,7 +87,7 @@ export function Header() {
             ) : (
                 <div className="flex gap-3">
                   <button
-                    onClick={() => alert('登录功能待实现')}
+                    onClick={() => toast('登录功能待实现')}
                     className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                     style={{
                       background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
@@ -96,7 +97,7 @@ export function Header() {
                     Log in
                   </button>
                   <button
-                    onClick={() => alert('注册功能待实现')}
+                    onClick={() => toast('注册功能待实现')}
                     className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                     style={{
                       background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
@@ -167,7 +168,7 @@ export function Header() {
                     </Link>
                     <button
                       onClick={() => {
-                        alert('登出功能待实现')
+                        toast('登出功能待实现')
                         setIsMenuOpen(false)
                       }}
                       className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
@@ -180,7 +181,7 @@ export function Header() {
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => {
-                          alert('登录功能待实现')
+                          toast('登录功能待实现')
                           setIsMenuOpen(false)
                         }}
                         className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
@@ -193,7 +194,7 @@ export function Header() {
                       </button>
                       <button
                         onClick={() => {
-                          alert('注册功能待实现')
+                          toast('注册功能待实现')
                           setIsMenuOpen(false)
                         }}
                         className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
