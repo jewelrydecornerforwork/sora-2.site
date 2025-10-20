@@ -22,8 +22,12 @@ export function Hero() {
 
           {/* CTA 按钮 */}
           <div className="flex justify-center">
-            <button 
-              className="bg-black text-white px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg"
+            <button
+              onClick={() => {
+                const generator = document.getElementById('video-generator')
+                generator?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }}
+              className="bg-black text-white px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg cursor-pointer"
               style={{
                 background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
                 border: '2px solid transparent'
