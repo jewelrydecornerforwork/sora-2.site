@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Sora-2 Ai - Professional Image to Video Generator | sora-2.site',
-  description: 'Transform images into stunning videos with AI technology, featuring motion control, audio integration, and multi-resolution output. Experience the most advanced image-to-video technology at sora-2.site.',
+  description: 'Transform images into stunning videos with AI technology, featuring motion control and audio integration. Experience the most advanced image-to-video technology at sora-2.site.',
   keywords: 'AI video generation,image to video,Sora,artificial intelligence,video creation,sora-2.site',
   authors: [{ name: 'Sora-2 Ai Team' }],
   metadataBase: new URL('https://sora-2.site'),

@@ -32,7 +32,7 @@ export function Features() {
     {
       icon: Play,
       title: 'Flexible Export',
-      description: 'Export generated content in multiple formats and resolutions, ready for any platform or purpose.',
+      description: 'Export generated content in multiple formats, ready for any platform or purpose.',
     },
   ]
 

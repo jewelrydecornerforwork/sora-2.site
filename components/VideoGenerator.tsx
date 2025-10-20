@@ -218,10 +218,6 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
               Image to Video
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-              Multiple Resolutions
-            </span>
           </div>
 
         </div>
