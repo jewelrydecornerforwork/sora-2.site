@@ -6,9 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "node scripts/test-site.js",
-    "test:api": "node scripts/test-video-api.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@types/node": "^20",

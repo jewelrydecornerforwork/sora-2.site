@@ -5,21 +5,6 @@ import { Sparkles, Video, Image as ImageIcon } from 'lucide-react'
 export function Hero() {
   return (
     <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* 视频背景 */}
-      <div className="absolute inset-0 -z-20">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/demo-video.mp4" type="video/mp4" />
-        </video>
-        {/* 视频覆盖层 - 增加对比度 */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60"></div>
-      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center">
