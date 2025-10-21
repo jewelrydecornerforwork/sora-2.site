@@ -2,16 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import toast from 'react-hot-toast'
-// import { useSession, signIn, signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
 import { Menu, X, User, LogOut, CreditCard } from 'lucide-react'
 
 export function Header() {
+  const router = useRouter()
+  const { user, logout, loading } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  // 模拟用户状态
-  const session = null as { user?: { name?: string } } | null
-  const status: 'loading' | 'authenticated' | 'unauthenticated' = 'unauthenticated'
 
   // 监听滚动事件，实现导航栏背景透明度变化
   useEffect(() => {
@@ -60,24 +59,24 @@ export function Header() {
 
           {/* User Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            {session ? (
+            {user ? (
               <div className="flex items-center space-x-4">
-                <Link 
-                  href="/dashboard" 
+                <Link
+                  href="/dashboard"
                   className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
                 >
                   <User className="w-4 h-4" />
-                  <span>{session.user?.name || 'User'}</span>
+                  <span>{user.name || 'User'}</span>
                 </Link>
-                <Link 
-                  href="/dashboard" 
+                <Link
+                  href="/dashboard"
                   className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <CreditCard className="w-4 h-4" />
-                  <span>Credits</span>
+                  <span>{user.credits} Credits</span>
                 </Link>
                 <button
-                  onClick={() => toast('登出功能待实现')}
+                  onClick={logout}
                   className="flex items-center space-x-2 text-gray-300 hover:text-red-400 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
@@ -87,7 +86,7 @@ export function Header() {
             ) : (
                 <div className="flex gap-3">
                   <button
-                    onClick={() => toast('登录功能待实现')}
+                    onClick={() => router.push('/login')}
                     className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                     style={{
                       background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
@@ -97,7 +96,7 @@ export function Header() {
                     Log in
                   </button>
                   <button
-                    onClick={() => toast('注册功能待实现')}
+                    onClick={() => router.push('/register')}
                     className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                     style={{
                       background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
@@ -152,24 +151,24 @@ export function Header() {
               >
                 History
               </Link>
-              
+
               <div className="pt-4 border-t border-gray-700">
-                {session ? (
+                {user ? (
                   <div className="flex flex-col space-y-2">
                     <div className="text-sm text-gray-400">
-                      Welcome, {session.user?.name || 'User'}
+                      Welcome, {user.name || 'User'}
                     </div>
-                    <Link 
-                      href="/dashboard" 
+                    <Link
+                      href="/dashboard"
                       className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <CreditCard className="w-4 h-4" />
-                      <span>Credits</span>
+                      <span>{user.credits} Credits</span>
                     </Link>
                     <button
                       onClick={() => {
-                        toast('登出功能待实现')
+                        logout()
                         setIsMenuOpen(false)
                       }}
                       className="flex items-center space-x-2 text-gray-300 hover:text-red-400 transition-colors"
@@ -182,7 +181,7 @@ export function Header() {
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => {
-                          toast('登录功能待实现')
+                          router.push('/login')
                           setIsMenuOpen(false)
                         }}
                         className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
@@ -195,7 +194,7 @@ export function Header() {
                       </button>
                       <button
                         onClick={() => {
-                          toast('注册功能待实现')
+                          router.push('/register')
                           setIsMenuOpen(false)
                         }}
                         className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
