@@ -43,18 +43,18 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-300 hover:text-white transition-colors">
-              Home
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link href="/" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
+              Text To Video
             </Link>
-            <Link href="/dashboard" className="text-gray-300 hover:text-white transition-colors">
-              Dashboard
+            <Link href="/image-to-video" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
+              Image To Video
             </Link>
-            <Link href="/explore" className="text-gray-300 hover:text-white transition-colors">
+            <Link href="/explore" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
               Explore
             </Link>
-            <Link href="/history" className="text-gray-300 hover:text-white transition-colors">
-              History
+            <Link href="/pricing" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
+              Pricing
             </Link>
           </nav>
 
@@ -113,7 +113,8 @@ export function Header() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+            className="md:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800"
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -171,7 +172,7 @@ export function Header() {
                         toast('登出功能待实现')
                         setIsMenuOpen(false)
                       }}
-                      className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"
+                      className="flex items-center space-x-2 text-gray-300 hover:text-red-400 transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Logout</span>

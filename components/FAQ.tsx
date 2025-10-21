@@ -54,7 +54,7 @@ export function FAQ() {
   }
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 to-gray-950">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -67,16 +67,16 @@ export function FAQ() {
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div key={index} className="bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-700">
+            <div key={index} className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-lg shadow-md overflow-hidden border border-purple-500/20 hover:border-purple-500/40 transition-all">
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-700 transition-colors"
+                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-800/50 transition-colors"
               >
                 <h3 className="text-lg font-semibold text-white pr-4">
                   {faq.question}
                 </h3>
                 {openIndex === index ? (
-                  <ChevronUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                  <ChevronUp className="w-5 h-5 text-purple-400 flex-shrink-0" />
                 ) : (
                   <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                 )}

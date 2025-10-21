@@ -37,7 +37,7 @@ export function Features() {
   ]
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-800 to-gray-900">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -52,13 +52,13 @@ export function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-700 hover:border-blue-500/50 hover:-translate-y-1 group"
+              className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-purple-500/20 hover:border-purple-500/50 hover:-translate-y-1 group"
             >
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/30">
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors duration-300">
+                <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors duration-300">
                   {feature.title}
                 </h3>
               </div>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Upload, Image as ImageIcon, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2 } from 'lucide-react'
+import { Upload, Image as ImageIcon, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2, Sparkles } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface VideoGeneratorProps {
@@ -26,6 +26,19 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [isDragOver, setIsDragOver] = useState(false)
   const [progress, setProgress] = useState(0)
   const [progressMessage, setProgressMessage] = useState('')
+
+  // Example prompts
+  const textPromptExamples = [
+    "A serene sunset over a calm ocean with waves gently rolling onto a sandy beach",
+    "A futuristic city with flying cars and neon lights at night",
+    "A cute puppy playing with a ball in a green park on a sunny day"
+  ]
+
+  const motionPromptExamples = [
+    "Camera slowly zooms in, the subject looks towards the camera with a gentle smile",
+    "Smooth pan from left to right, flowers swaying in the breeze",
+    "Dynamic movement with the subject walking forward, background slightly blurred"
+  ]
 
   // 图像上传处理
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,22 +213,22 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   }
 
   return (
-    <section id="video-generator" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-800">
+    <section id="video-generator" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Sora-2 AI Video Generator
           </h2>
           <p className="text-lg text-gray-300 mb-6">
             Experience the most advanced AI video generation technology with Sora-2. Create stunning videos from text and images in seconds.
           </p>
           <div className="flex justify-center gap-4 text-sm text-gray-400 mb-8">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+            <span className="flex items-center gap-2 px-4 py-2 bg-purple-900/20 border border-purple-500/30 rounded-full">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
               Text to Video
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+            <span className="flex items-center gap-2 px-4 py-2 bg-pink-900/20 border border-pink-500/30 rounded-full">
+              <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
               Image to Video
             </span>
           </div>
@@ -234,10 +247,11 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 <button
                   onClick={() => setActiveTab('text')}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-colors ${
-                    activeTab === 'text' 
-                      ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                    activeTab === 'text'
+                      ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                       : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                   }`}
+                  aria-label="Switch to text to video mode"
                 >
                   <FileText className="w-5 h-5" />
                   <span>Text to Video</span>
@@ -249,6 +263,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                       ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                       : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                   }`}
+                  aria-label="Switch to image to video mode"
                 >
                   <ImageIcon className="w-5 h-5" />
                   <span>Image to Video</span>
@@ -272,6 +287,25 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 />
                 <div className="text-right text-sm text-gray-400 mt-1">
                   {textPrompt.length}/1000
+                </div>
+
+                {/* Example Prompts */}
+                <div className="mt-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-yellow-400" />
+                    <span className="text-sm text-gray-400">Try these examples:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {textPromptExamples.map((example, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setTextPrompt(example)}
+                        className="text-xs px-3 py-1.5 bg-gray-800 border border-gray-600 text-gray-300 rounded-full hover:border-blue-500 hover:text-blue-300 transition-colors"
+                      >
+                        {example.substring(0, 30)}...
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -367,6 +401,25 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 <div className="text-right text-sm text-gray-400 mt-1">
                   {motionPrompt.length}/500
                 </div>
+
+                {/* Example Motion Prompts */}
+                <div className="mt-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-yellow-400" />
+                    <span className="text-sm text-gray-400">Try these examples:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {motionPromptExamples.map((example, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setMotionPrompt(example)}
+                        className="text-xs px-3 py-1.5 bg-gray-800 border border-gray-600 text-gray-300 rounded-full hover:border-blue-500 hover:text-blue-300 transition-colors"
+                      >
+                        {example.substring(0, 30)}...
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -384,23 +437,29 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 <div className="flex gap-2">
                   <button
                     onClick={() => setResolution('720p')}
-                    className={`px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === '720p' 
-                        ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                      resolution === '720p'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    Standard
+                    <div className="flex flex-col items-center">
+                      <span className="font-medium">720p</span>
+                      <span className="text-xs text-gray-400">1280×720</span>
+                    </div>
                   </button>
                   <button
                     onClick={() => setResolution('1080p')}
-                    className={`px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === '1080p' 
-                        ? 'border-blue-500 bg-blue-900/30 text-blue-300' 
+                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                      resolution === '1080p'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    HD
+                    <div className="flex flex-col items-center">
+                      <span className="font-medium">1080p</span>
+                      <span className="text-xs text-gray-400">1920×1080</span>
+                    </div>
                   </button>
                 </div>
               </div>
@@ -435,6 +494,44 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                       <Smartphone className="w-4 h-4" />
                       <span className="text-xs font-medium">9:16</span>
                     </div>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Duration
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setDuration('5')}
+                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                      duration === '5'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
+                    }`}
+                  >
+                    5s
+                  </button>
+                  <button
+                    onClick={() => setDuration('10')}
+                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                      duration === '10'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
+                    }`}
+                  >
+                    10s
+                  </button>
+                  <button
+                    onClick={() => setDuration('15')}
+                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                      duration === '15'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
+                    }`}
+                  >
+                    15s
                   </button>
                 </div>
               </div>
@@ -489,7 +586,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
             <button
               onClick={handleGenerateVideo}
               disabled={isGenerating || (activeTab === 'text' ? !textPrompt.trim() : (!selectedImage || !motionPrompt.trim()))}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg shadow-purple-500/30"
+              aria-label="Generate video from prompt"
             >
               {isGenerating ? (
                 <>
@@ -513,7 +611,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 </div>
                 <div className="w-full bg-gray-600 rounded-full h-2 overflow-hidden">
                   <div
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-500 ease-out"
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-full transition-all duration-500 ease-out"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -527,8 +625,19 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
               <h3 className="text-lg font-semibold text-white mb-4">
                 Generation Results
               </h3>
-              
-              {generatedVideo ? (
+
+              {isGenerating ? (
+                <div className="space-y-4">
+                  <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
+                    <div className="skeleton h-4 w-48 mb-3 rounded"></div>
+                    <div className="skeleton h-4 w-32 mb-3 rounded"></div>
+                    <div className="skeleton h-4 w-40 mb-4 rounded"></div>
+
+                    <div className={`${videoRatio === '9:16' ? 'aspect-[9/16]' : 'aspect-video'} bg-gray-900 rounded-lg overflow-hidden skeleton`}>
+                    </div>
+                  </div>
+                </div>
+              ) : generatedVideo ? (
                 <div className="space-y-4">
                   <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
                     <div className="text-sm text-gray-300 mb-2">
@@ -543,7 +652,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     <div className="text-sm text-gray-300 mb-4">
                       Description: {activeTab === 'text' ? textPrompt : motionPrompt}
                     </div>
-                    
+
                     <div className={`${videoRatio === '9:16' ? 'aspect-[9/16]' : 'aspect-video'} bg-black rounded-lg overflow-hidden`}>
                       <video
                         src={generatedVideo}
@@ -553,7 +662,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                       />
                     </div>
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <button
                       onClick={() => {
@@ -568,6 +677,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         }
                       }}
                       className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      aria-label="Download video"
                     >
                       <Download className="w-4 h-4" />
                       <span>Download</span>
@@ -592,6 +702,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         }
                       }}
                       className="flex items-center space-x-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                      aria-label="Share video"
                     >
                       <Play className="w-4 h-4" />
                       <span>Share</span>
