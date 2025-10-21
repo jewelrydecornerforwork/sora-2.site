@@ -37,7 +37,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           {children}
-          <Toaster 
+          <Toaster
             position="top-right"
             toastOptions={{
               duration: 4000,
