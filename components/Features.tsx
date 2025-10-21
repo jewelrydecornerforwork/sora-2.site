@@ -1,11 +1,11 @@
 'use client'
 
-import { Monitor, Zap, Clock, Brain, Image, Play } from 'lucide-react'
+import { Edit3, Zap, Clock, Brain, Image, Download } from 'lucide-react'
 
 export function Features() {
   const features = [
     {
-      icon: Monitor,
+      icon: Edit3,
       title: 'Text to Video',
       description: 'Transform text prompts into high-quality results using advanced AI algorithms. Create professional content in minutes.',
     },
@@ -30,7 +30,7 @@ export function Features() {
       description: 'Intuitive interface makes AI creation accessible to everyone, from beginners to professionals.',
     },
     {
-      icon: Play,
+      icon: Download,
       title: 'Flexible Export',
       description: 'Export generated content in multiple formats, ready for any platform or purpose.',
     },
@@ -55,7 +55,7 @@ export function Features() {
               className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-purple-500/20 hover:border-purple-500/50 hover:-translate-y-1 group"
             >
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/30">
+                <div className="w-12 h-12 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors duration-300">
