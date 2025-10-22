@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import GithubProvider from 'next-auth/providers/github'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -6,12 +6,12 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 // 简单的用户数据存储
 const getUsers = () => {
   if (typeof window === 'undefined') {
-    return global.users || (global.users = [])
+    return (global as any).users || ((global as any).users = [])
   }
   return []
 }
 
-export const authOptions: NextAuthOptions = {
+const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -80,7 +80,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id
         token.email = user.email
         token.name = user.name
-        token.picture = user.image
+        token.picture = user.image || undefined
 
         // 从存储中获取用户完整信息
         const users = getUsers()
@@ -96,7 +96,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.email = token.email as string
         session.user.name = token.name as string
-        session.user.image = token.picture as string
+        session.user.image = token.picture as string | undefined
         session.user.credits = token.credits as number || 100
       }
       return session
@@ -110,8 +110,6 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   secret: process.env.NEXTAUTH_SECRET,
-}
-
-const handler = NextAuth(authOptions)
+})
 
 export { handler as GET, handler as POST }

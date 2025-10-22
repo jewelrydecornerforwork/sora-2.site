@@ -9,7 +9,7 @@ interface RegisterRequest {
 // 简单的用户数据存储（生产环境应该使用真实数据库）
 const getUsers = () => {
   if (typeof window === 'undefined') {
-    return global.users || (global.users = [])
+    return (global as any).users || ((global as any).users = [])
   }
   return []
 }

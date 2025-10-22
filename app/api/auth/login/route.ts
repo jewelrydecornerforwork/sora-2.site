@@ -9,7 +9,7 @@ interface LoginRequest {
 const getUsers = () => {
   if (typeof window === 'undefined') {
     // 服务器端：使用内存存储
-    return global.users || (global.users = [])
+    return (global as any).users || ((global as any).users = [])
   }
   return []
 }
