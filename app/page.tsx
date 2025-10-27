@@ -5,6 +5,7 @@ import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import { VideoGenerator } from '@/components/VideoGenerator'
 import { Features } from '@/components/Features'
+import { Pricing } from '@/components/Pricing'
 import { FAQ } from '@/components/FAQ'
 import { Footer } from '@/components/Footer'
 
@@ -16,11 +17,12 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <VideoGenerator 
+        <VideoGenerator
           isGenerating={isGenerating}
           setIsGenerating={setIsGenerating}
         />
         <Features />
+        <Pricing />
         <FAQ />
       </main>
       <Footer />

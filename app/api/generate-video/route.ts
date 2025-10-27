@@ -107,6 +107,57 @@ async function fileToBase64(file: File): Promise<string> {
   return `data:${file.type};base64,${buffer.toString('base64')}`
 }
 
+// Helper function: Fetch with timeout
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs: number = 60000): Promise<Response> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
+    return response
+  } catch (error) {
+    clearTimeout(timeoutId)
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`Request timeout after ${timeoutMs / 1000}s`)
+    }
+    throw error
+  }
+}
+
+// Helper function: Retry with exponential backoff
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> {
+  let lastError: Error | undefined
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn()
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error))
+
+      // Don't retry on authentication errors
+      if (lastError.message.includes('401') || lastError.message.includes('403')) {
+        throw lastError
+      }
+
+      if (i < maxRetries - 1) {
+        const delay = baseDelay * Math.pow(2, i)
+        console.log(`⚠️ Attempt ${i + 1} failed, retrying in ${delay}ms...`)
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+    }
+  }
+
+  throw lastError || new Error('All retry attempts failed')
+}
+
 // CometAPI - Text-to-Video using Sora 2
 async function generateTextToVideoWithComet(textPrompt: string, duration: string, resolution: string): Promise<string> {
   const COMET_API_KEY = process.env.COMET_API_KEY
@@ -117,46 +168,52 @@ async function generateTextToVideoWithComet(textPrompt: string, duration: string
 
   console.log('📡 Generating text-to-video with CometAPI Sora 2...')
 
-  const response = await fetch(`${API_CONFIG.COMET.BASE_URL}${API_CONFIG.COMET.CHAT_ENDPOINT}`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${COMET_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: API_CONFIG.COMET.TEXT_MODEL,
-      stream: false,
-      messages: [
-        {
-          role: 'user',
-          content: textPrompt
-        }
-      ]
-    }),
-  })
+  return await retryWithBackoff(async () => {
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.COMET.BASE_URL}${API_CONFIG.COMET.CHAT_ENDPOINT}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${COMET_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: API_CONFIG.COMET.TEXT_MODEL,
+          stream: false,
+          messages: [
+            {
+              role: 'user',
+              content: textPrompt
+            }
+          ]
+        }),
+      },
+      60000 // 60 second timeout
+    )
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`CometAPI error: ${response.status} ${errorText}`)
-  }
-
-  const result = await response.json()
-  console.log('✅ CometAPI response received')
-
-  // Extract video URL from response
-  if (result.choices && result.choices[0] && result.choices[0].message) {
-    const content = result.choices[0].message.content
-    // The content might contain the video URL or a direct URL in the response
-    if (typeof content === 'string' && content.startsWith('http')) {
-      return content
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(`CometAPI error: ${response.status} ${errorText}`)
     }
-    // Check if there's a URL in the result
-    if (result.video_url) {
-      return result.video_url
-    }
-  }
 
-  throw new Error('Failed to extract video URL from CometAPI response')
+    const result = await response.json()
+    console.log('✅ CometAPI response received')
+
+    // Extract video URL from response
+    if (result.choices && result.choices[0] && result.choices[0].message) {
+      const content = result.choices[0].message.content
+      // The content might contain the video URL or a direct URL in the response
+      if (typeof content === 'string' && content.startsWith('http')) {
+        return content
+      }
+      // Check if there's a URL in the result
+      if (result.video_url) {
+        return result.video_url
+      }
+    }
+
+    throw new Error('Failed to extract video URL from CometAPI response')
+  }, 2) // Retry up to 2 times
 }
 
 // CometAPI - Image-to-Video using Sora 2
@@ -169,58 +226,61 @@ async function generateImageToVideoWithComet(imageBase64: string, motionPrompt: 
 
   console.log('📡 Generating image-to-video with CometAPI Sora 2...')
 
-  // For image-to-video, we need to include the image in the prompt
-  const prompt = `${motionPrompt}\n\nImage: ${imageBase64}`
-
-  const response = await fetch(`${API_CONFIG.COMET.BASE_URL}${API_CONFIG.COMET.CHAT_ENDPOINT}`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${COMET_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: API_CONFIG.COMET.IMAGE_MODEL,
-      stream: false,
-      messages: [
-        {
-          role: 'user',
-          content: [
+  return await retryWithBackoff(async () => {
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.COMET.BASE_URL}${API_CONFIG.COMET.CHAT_ENDPOINT}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${COMET_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: API_CONFIG.COMET.IMAGE_MODEL,
+          stream: false,
+          messages: [
             {
-              type: 'text',
-              text: motionPrompt
-            },
-            {
-              type: 'image_url',
-              image_url: {
-                url: imageBase64
-              }
+              role: 'user',
+              content: [
+                {
+                  type: 'text',
+                  text: motionPrompt
+                },
+                {
+                  type: 'image_url',
+                  image_url: {
+                    url: imageBase64
+                  }
+                }
+              ]
             }
           ]
-        }
-      ]
-    }),
-  })
+        }),
+      },
+      60000 // 60 second timeout
+    )
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`CometAPI error: ${response.status} ${errorText}`)
-  }
-
-  const result = await response.json()
-  console.log('✅ CometAPI image-to-video response received')
-
-  // Extract video URL from response
-  if (result.choices && result.choices[0] && result.choices[0].message) {
-    const content = result.choices[0].message.content
-    if (typeof content === 'string' && content.startsWith('http')) {
-      return content
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(`CometAPI error: ${response.status} ${errorText}`)
     }
-    if (result.video_url) {
-      return result.video_url
-    }
-  }
 
-  throw new Error('Failed to extract video URL from CometAPI response')
+    const result = await response.json()
+    console.log('✅ CometAPI image-to-video response received')
+
+    // Extract video URL from response
+    if (result.choices && result.choices[0] && result.choices[0].message) {
+      const content = result.choices[0].message.content
+      if (typeof content === 'string' && content.startsWith('http')) {
+        return content
+      }
+      if (result.video_url) {
+        return result.video_url
+      }
+    }
+
+    throw new Error('Failed to extract video URL from CometAPI response')
+  }, 2) // Retry up to 2 times
 }
 
 // Text-to-Video - Using Replicate API

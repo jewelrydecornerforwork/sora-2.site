@@ -84,28 +84,26 @@ export function Header() {
                 </button>
               </div>
             ) : (
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => router.push('/login')}
-                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
-                    style={{
-                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
-                      border: '2px solid transparent'
-                    }}
-                  >
-                    Log in
-                  </button>
-                  <button
-                    onClick={() => router.push('/register')}
-                    className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
-                    style={{
-                      background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
-                      border: '2px solid transparent'
-                    }}
-                  >
-                    Sign up
-                  </button>
-                </div>
+              <div className="flex gap-3">
+                <button
+                  className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
+                  style={{
+                    background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                    border: '2px solid transparent'
+                  }}
+                >
+                  Log in
+                </button>
+                <button
+                  className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
+                  style={{
+                    background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                    border: '2px solid transparent'
+                  }}
+                >
+                  Sign up
+                </button>
+              </div>
             )}
           </div>
 
@@ -178,34 +176,28 @@ export function Header() {
                     </button>
                   </div>
                 ) : (
-                    <div className="flex flex-col gap-2">
-                      <button
-                        onClick={() => {
-                          router.push('/login')
-                          setIsMenuOpen(false)
-                        }}
-                        className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
-                        style={{
-                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
-                          border: '2px solid transparent'
-                        }}
-                      >
-                        Log in
-                      </button>
-                      <button
-                        onClick={() => {
-                          router.push('/register')
-                          setIsMenuOpen(false)
-                        }}
-                        className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
-                        style={{
-                          background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
-                          border: '2px solid transparent'
-                        }}
-                      >
-                        Sign up
-                      </button>
-                    </div>
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={() => setIsMenuOpen(false)}
+                      className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
+                      style={{
+                        background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                        border: '2px solid transparent'
+                      }}
+                    >
+                      Log in
+                    </button>
+                    <button
+                      onClick={() => setIsMenuOpen(false)}
+                      className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
+                      style={{
+                        background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                        border: '2px solid transparent'
+                      }}
+                    >
+                      Sign up
+                    </button>
+                  </div>
                 )}
               </div>
             </nav>
