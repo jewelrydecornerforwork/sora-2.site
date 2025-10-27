@@ -1,13 +1,16 @@
 'use client'
 
+import { useState } from 'react'
 import { Check } from 'lucide-react'
 
 export function Pricing() {
+  const [isYearly, setIsYearly] = useState(false)
+
   const plans = [
     {
       name: 'Free Trial',
-      price: '$0',
-      period: 'forever',
+      monthlyPrice: 0,
+      yearlyPrice: 0,
       credits: '10 credits',
       description: 'Perfect for trying out Sora-2',
       features: [
@@ -25,8 +28,8 @@ export function Pricing() {
     },
     {
       name: 'Starter',
-      price: '$19.90',
-      period: 'per month',
+      monthlyPrice: 19.90,
+      yearlyPrice: 199,
       credits: '100 credits',
       description: 'Great for individual creators',
       features: [
@@ -41,12 +44,13 @@ export function Pricing() {
       ],
       cta: 'Get Started',
       popular: true,
-      highlight: true
+      highlight: true,
+      savings: 40
     },
     {
       name: 'Pro',
-      price: '$49.90',
-      period: 'per month',
+      monthlyPrice: 49.90,
+      yearlyPrice: 499,
       credits: '300 credits',
       description: 'Best for professionals and businesses',
       features: [
@@ -63,12 +67,13 @@ export function Pricing() {
       ],
       cta: 'Go Pro',
       popular: false,
-      highlight: false
+      highlight: false,
+      savings: 100
     },
     {
       name: 'Enterprise',
-      price: '$99.90',
-      period: 'per month',
+      monthlyPrice: 99.90,
+      yearlyPrice: 999,
       credits: '1000 credits',
       description: 'For teams and high-volume users',
       features: [
@@ -86,21 +91,64 @@ export function Pricing() {
       ],
       cta: 'Contact Sales',
       popular: false,
-      highlight: false
+      highlight: false,
+      savings: 200
     }
   ]
+
+  const getPrice = (plan: typeof plans[0]) => {
+    if (plan.monthlyPrice === 0) return '$0'
+    return isYearly ? `$${plan.yearlyPrice}` : `$${plan.monthlyPrice}`
+  }
+
+  const getPeriod = (plan: typeof plans[0]) => {
+    if (plan.monthlyPrice === 0) return 'forever'
+    return isYearly ? 'per year' : 'per month'
+  }
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-950 to-gray-900">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Simple, Transparent Pricing
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
             Choose the perfect plan for your creative needs. All plans include commercial usage rights.
           </p>
+
+          {/* Monthly/Yearly Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <span className={`text-lg font-medium transition-colors ${!isYearly ? 'text-white' : 'text-gray-400'}`}>
+              Monthly
+            </span>
+            <button
+              onClick={() => setIsYearly(!isYearly)}
+              className="relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+              style={{ backgroundColor: isYearly ? '#9333ea' : '#4b5563' }}
+              aria-label="Toggle between monthly and yearly pricing"
+            >
+              <span
+                className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                  isYearly ? 'translate-x-9' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span className={`text-lg font-medium transition-colors ${isYearly ? 'text-white' : 'text-gray-400'}`}>
+              Yearly
+            </span>
+          </div>
+
+          {/* Savings Badge */}
+          {isYearly && (
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-full animate-pulse">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-400">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              <span className="text-sm text-green-300 font-medium">Save up to 20% with yearly billing</span>
+            </div>
+          )}
         </div>
 
         {/* Pricing Cards */}
@@ -123,6 +171,15 @@ export function Pricing() {
                 </div>
               )}
 
+              {/* Savings Badge for Yearly */}
+              {isYearly && plan.savings && (
+                <div className="absolute -top-4 right-4">
+                  <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    Save ${plan.savings}
+                  </span>
+                </div>
+              )}
+
               {/* Plan Name */}
               <div className="mb-4">
                 <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
@@ -132,10 +189,17 @@ export function Pricing() {
               {/* Price */}
               <div className="mb-6">
                 <div className="flex items-baseline mb-1">
-                  <span className="text-4xl font-bold text-white">{plan.price}</span>
-                  <span className="text-gray-400 ml-2">/{plan.period.split(' ')[1] || plan.period}</span>
+                  <span className="text-4xl font-bold text-white">{getPrice(plan)}</span>
+                  <span className="text-gray-400 ml-2">
+                    /{isYearly && plan.monthlyPrice > 0 ? 'year' : plan.monthlyPrice === 0 ? '' : 'month'}
+                  </span>
                 </div>
-                <p className="text-purple-400 font-semibold">{plan.credits}</p>
+                {isYearly && plan.monthlyPrice > 0 && (
+                  <p className="text-sm text-gray-400">
+                    ${(plan.yearlyPrice / 12).toFixed(2)}/month billed annually
+                  </p>
+                )}
+                <p className="text-purple-400 font-semibold mt-1">{plan.credits}</p>
               </div>
 
               {/* CTA Button */}
