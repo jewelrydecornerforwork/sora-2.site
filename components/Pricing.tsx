@@ -8,17 +8,17 @@ export function Pricing() {
 
   const plans = [
     {
-      name: 'Free Trial',
+      name: 'Free',
       monthlyPrice: 0,
       yearlyPrice: 0,
-      credits: '10 credits',
+      credits: '50 credits',
       description: 'Perfect for trying out Sora-2',
       features: [
-        '10 free credits (5 videos)',
+        '50 free credits (~25 videos)',
         '720p resolution',
         'Text-to-video generation',
         'Image-to-video generation',
-        'Standard queue',
+        'Standard processing',
         'Watermarked videos',
         'Community support'
       ],
@@ -27,17 +27,17 @@ export function Pricing() {
       highlight: false
     },
     {
-      name: 'Starter',
-      monthlyPrice: 19.90,
-      yearlyPrice: 199,
-      credits: '100 credits',
+      name: 'Basic',
+      monthlyPrice: 29,
+      yearlyPrice: 290,
+      credits: '500 credits',
       description: 'Great for individual creators',
       features: [
-        '100 credits per month (~50 videos)',
+        '500 credits per month (~250 videos)',
         '1080p HD resolution',
         'Text-to-video generation',
         'Image-to-video generation',
-        'Priority queue',
+        'Priority processing',
         'No watermark',
         'Commercial license',
         'Email support'
@@ -45,20 +45,19 @@ export function Pricing() {
       cta: 'Get Started',
       popular: true,
       highlight: true,
-      savings: 40
+      savings: 58
     },
     {
       name: 'Pro',
-      monthlyPrice: 49.90,
-      yearlyPrice: 499,
-      credits: '300 credits',
-      description: 'Best for professionals and businesses',
+      monthlyPrice: 59,
+      yearlyPrice: 590,
+      credits: '1,200 credits',
+      description: 'Best for professionals',
       features: [
-        '300 credits per month (~150 videos)',
+        '1,200 credits per month (~600 videos)',
         '1080p HD resolution',
-        'Text-to-video generation',
-        'Image-to-video generation',
-        'Fastest queue',
+        'All generation modes',
+        'Fastest processing',
         'No watermark',
         'Full commercial license',
         'API access',
@@ -68,31 +67,31 @@ export function Pricing() {
       cta: 'Go Pro',
       popular: false,
       highlight: false,
-      savings: 100
+      savings: 118
     },
     {
       name: 'Enterprise',
-      monthlyPrice: 99.90,
-      yearlyPrice: 999,
-      credits: '1000 credits',
-      description: 'For teams and high-volume users',
+      monthlyPrice: 99,
+      yearlyPrice: 990,
+      credits: '2,500 credits',
+      description: 'For teams and agencies',
       features: [
-        '1000 credits per month (~500 videos)',
+        '2,500 credits per month (~1,250 videos)',
         '1080p HD resolution',
-        'All generation modes',
-        'Highest priority queue',
+        'Unlimited generations',
+        'Highest priority',
         'No watermark',
-        'Unrestricted commercial license',
+        'Unrestricted commercial use',
         'Full API access',
         'Team collaboration',
-        'Dedicated support',
+        'Dedicated account manager',
         'Custom integrations',
-        'Volume discounts available'
+        'Volume discounts'
       ],
       cta: 'Contact Sales',
       popular: false,
       highlight: false,
-      savings: 200
+      savings: 198
     }
   ]
 
