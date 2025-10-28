@@ -78,12 +78,13 @@ export function Pricing() {
 
   const getPrice = (plan: typeof plans[0]) => {
     if (plan.monthlyPrice === 0) return '$0'
-    return isYearly ? `$${plan.yearlyPrice}` : `$${plan.monthlyPrice}`
+    // Yearly mode: show monthly price, Monthly mode: show monthly price
+    return isYearly ? `$${(plan.yearlyPrice / 12).toFixed(2)}` : `$${plan.monthlyPrice}`
   }
 
   const getPeriod = (plan: typeof plans[0]) => {
     if (plan.monthlyPrice === 0) return 'forever'
-    return isYearly ? 'per year' : 'per month'
+    return 'per month'
   }
 
   return (
@@ -170,13 +171,16 @@ export function Pricing() {
               <div className="mb-6">
                 <div className="flex items-baseline mb-1">
                   <span className="text-4xl font-bold text-white">{getPrice(plan)}</span>
-                  <span className="text-gray-400 ml-2">
-                    /{isYearly && plan.monthlyPrice > 0 ? 'year' : plan.monthlyPrice === 0 ? '' : 'month'}
-                  </span>
+                  <span className="text-gray-400 ml-2">/month</span>
                 </div>
                 {isYearly && plan.monthlyPrice > 0 && (
                   <p className="text-sm text-gray-400">
-                    ${(plan.yearlyPrice / 12).toFixed(2)}/month billed annually
+                    ${plan.yearlyPrice.toFixed(2)}/year billed annually
+                  </p>
+                )}
+                {!isYearly && plan.monthlyPrice > 0 && (
+                  <p className="text-sm text-gray-400">
+                    Billed monthly
                   </p>
                 )}
                 <p className="text-purple-400 font-semibold mt-1">{plan.credits}</p>
