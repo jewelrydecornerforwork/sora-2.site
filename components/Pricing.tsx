@@ -5,6 +5,7 @@ import { Check } from 'lucide-react'
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState<string>('Basic')
 
   const plans = [
     {
@@ -109,7 +110,7 @@ export function Pricing() {
                 onClick={() => setIsYearly(false)}
                 className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                   !isYearly
-                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -119,7 +120,7 @@ export function Pricing() {
                 onClick={() => setIsYearly(true)}
                 className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                   isYearly
-                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -134,7 +135,7 @@ export function Pricing() {
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-400">
                 <path d="M20 6 9 17l-5-5"/>
               </svg>
-              <span className="text-sm text-green-300 font-medium">Save up to 20% with yearly billing</span>
+              <span className="text-sm text-green-300 font-medium">Save up to 35% with yearly billing</span>
             </div>
           )}
         </div>
@@ -144,16 +145,20 @@ export function Pricing() {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative rounded-2xl p-8 transition-all duration-300 ${
-                plan.highlight
-                  ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border-2 border-purple-500 shadow-2xl shadow-purple-500/20 transform scale-105'
+              onClick={() => setSelectedPlan(plan.name)}
+              className={`relative rounded-2xl p-8 transition-all duration-300 cursor-pointer ${
+                selectedPlan === plan.name
+                  ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-transparent bg-clip-padding'
                   : 'bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-gray-700 hover:border-purple-500/50'
               }`}
+              style={selectedPlan === plan.name ? {
+                borderImage: 'linear-gradient(to right, rgb(147, 51, 234), rgb(219, 39, 119)) 1',
+              } : {}}
             >
               {/* Popular Badge */}
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
+                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
                     MOST POPULAR
                   </span>
                 </div>
@@ -192,9 +197,13 @@ export function Pricing() {
 
               {/* CTA Button */}
               <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setSelectedPlan(plan.name)
+                }}
                 className={`w-full py-3 px-6 rounded-lg font-semibold mb-6 transition-all ${
-                  plan.highlight
-                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600 shadow-lg'
+                  selectedPlan === plan.name
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg'
                     : 'bg-gray-700 text-white hover:bg-gray-600'
                 }`}
               >
