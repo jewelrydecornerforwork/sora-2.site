@@ -5,7 +5,7 @@ import { Check } from 'lucide-react'
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<string>('Basic')
+  const [selectedPlan, setSelectedPlan] = useState<string>('Pro')
 
   const plans = [
     {
