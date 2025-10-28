@@ -209,44 +209,6 @@ export function Pricing() {
             </div>
           ))}
         </div>
-
-        {/* Additional Info */}
-        <div className="text-center">
-          <p className="text-gray-400 mb-4">
-            All plans include a 7-day money-back guarantee. No questions asked.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
-            <span>✓ Cancel anytime</span>
-            <span>✓ Secure payments</span>
-            <span>✓ Commercial license included</span>
-            <span>✓ No hidden fees</span>
-          </div>
-        </div>
-
-        {/* Credits Explanation */}
-        <div className="mt-16 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-2xl p-8 border border-gray-700">
-          <h3 className="text-2xl font-bold text-white mb-4 text-center">How Credits Work</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            <div className="flex items-start">
-              <div className="bg-purple-500/20 rounded-lg p-3 mr-4">
-                <span className="text-2xl font-bold text-purple-400">2-3</span>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-1">Text-to-Video</h4>
-                <p className="text-gray-400 text-sm">2 credits for 5s, 3 credits for 10s</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <div className="bg-blue-500/20 rounded-lg p-3 mr-4">
-                <span className="text-2xl font-bold text-blue-400">3-5</span>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-1">Image-to-Video</h4>
-                <p className="text-gray-400 text-sm">3 credits for 5s, 5 credits for 10s</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )
