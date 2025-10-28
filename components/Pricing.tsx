@@ -8,25 +8,6 @@ export function Pricing() {
 
   const plans = [
     {
-      name: 'Free',
-      monthlyPrice: 0,
-      yearlyPrice: 0,
-      credits: '50 credits',
-      description: 'Perfect for trying out Sora-2',
-      features: [
-        '50 free credits (~25 videos)',
-        '720p resolution',
-        'Text-to-video generation',
-        'Image-to-video generation',
-        'Standard processing',
-        'Watermarked videos',
-        'Community support'
-      ],
-      cta: 'Start Free',
-      popular: false,
-      highlight: false
-    },
-    {
       name: 'Basic',
       monthlyPrice: 49.99,
       yearlyPrice: 449.88,
@@ -45,7 +26,7 @@ export function Pricing() {
       cta: 'Get Started',
       popular: true,
       highlight: true,
-      savings: 149.99
+      savings: 150.00
     },
     {
       name: 'Pro',
@@ -67,7 +48,7 @@ export function Pricing() {
       cta: 'Go Pro',
       popular: false,
       highlight: false,
-      savings: 360
+      savings: 360.00
     },
     {
       name: 'Enterprise',
@@ -91,7 +72,7 @@ export function Pricing() {
       cta: 'Contact Sales',
       popular: false,
       highlight: false,
-      savings: 840
+      savings: 840.00
     }
   ]
 
@@ -151,7 +132,7 @@ export function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <div
               key={index}
