@@ -22,6 +22,16 @@ const nextConfig = {
       },
     ],
   },
+  // Fix for WSL2 file watching issues
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.watchOptions = {
+        poll: 1000, // Check for changes every second
+        aggregateTimeout: 300, // Delay before rebuilding
+      }
+    }
+    return config
+  },
 }
 
 module.exports = nextConfig
