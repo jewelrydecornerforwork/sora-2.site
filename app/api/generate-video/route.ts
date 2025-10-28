@@ -76,7 +76,10 @@ const API_CONFIG = {
   },
   // Kie.ai API
   KIE: {
-    API_URL: 'https://api.kie.ai/api/v1/sora-2',
+    BASE_URL: 'https://api.kie.ai',
+    CREATE_TASK_ENDPOINT: '/createTask',
+    GET_TASK_ENDPOINT: '/getTaskResult',
+    UPLOAD_ENDPOINT: '/upload',
     DEFAULT_ASPECT_RATIO: '16:9',
   },
   // Polling configuration
@@ -399,14 +402,49 @@ async function generateImageToVideoWithReplicate(imageBase64: string, prompt: st
   }
 }
 
+// Upload image to Kie.ai and get public URL
+async function uploadImageToKie(imageFile: File, apiKey: string): Promise<string> {
+  console.log('📤 Uploading image to Kie.ai...')
+
+  const formData = new FormData()
+  formData.append('file', imageFile)
+
+  const response = await fetchWithTimeout(
+    `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.UPLOAD_ENDPOINT}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: formData,
+    },
+    30000
+  )
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Image upload failed: ${response.status} ${errorText}`)
+  }
+
+  const result = await response.json()
+  console.log('✅ Image uploaded:', result)
+
+  // Return the public URL of uploaded image
+  if (result.url || result.file_url || result.imageUrl) {
+    return result.url || result.file_url || result.imageUrl
+  }
+
+  throw new Error('Upload response missing image URL')
+}
+
 // Kie.ai Sora 2 API - Supports text-to-video and image-to-video
 async function generateWithKie(
   mode: 'text' | 'image',
   textPrompt: string,
-  imageBase64: string | null,
+  imageFile: File | null,
   motionPrompt: string,
   duration: string,
-  resolution: string
+  videoRatio: string
 ): Promise<string> {
   const KIE_API_KEY = process.env.KIE_API_KEY
 
@@ -416,32 +454,43 @@ async function generateWithKie(
 
   console.log(`📡 Generating ${mode === 'text' ? 'text-to-video' : 'image-to-video'} with Kie.ai Sora 2 API...`)
 
+  // Determine model based on mode
+  const model = mode === 'text' ? 'sora-2-text-to-video' : 'sora-2-image-to-video'
+
+  // Convert video ratio to aspect_ratio format
+  const aspectRatio = videoRatio === '9:16' ? 'portrait' : 'landscape'
+
+  // Convert duration to n_frames (10s or 15s)
+  const nFrames = parseInt(duration) >= 10 ? '10s' : '5s'
+
   const requestBody: any = {
-    duration: parseInt(duration) || 5,
-    resolution: resolution || '720p',
-    aspectRatio: API_CONFIG.KIE.DEFAULT_ASPECT_RATIO
+    model: model,
+    prompt: mode === 'text' ? textPrompt : motionPrompt,
+    aspect_ratio: aspectRatio,
+    n_frames: nFrames,
+    remove_watermark: true
   }
 
-  if (mode === 'text') {
-    requestBody.prompt = textPrompt
-    requestBody.type = 'text-to-video'
-  } else {
-    requestBody.prompt = motionPrompt
-    requestBody.type = 'image-to-video'
-    if (imageBase64) {
-      // Remove base64 prefix (if exists)
-      requestBody.image = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64
-    }
+  // For image-to-video, upload image first and get URL
+  if (mode === 'image' && imageFile) {
+    const imageUrl = await uploadImageToKie(imageFile, KIE_API_KEY)
+    requestBody.image_urls = [imageUrl]
   }
 
-  const response = await fetch(`${API_CONFIG.KIE.API_URL}/generate`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${KIE_API_KEY}`,
-      'Content-Type': 'application/json',
+  console.log('📝 Request body:', JSON.stringify(requestBody, null, 2))
+
+  const response = await fetchWithTimeout(
+    `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.CREATE_TASK_ENDPOINT}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${KIE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
     },
-    body: JSON.stringify(requestBody),
-  })
+    30000
+  )
 
   if (!response.ok) {
     const errorText = await response.text()
@@ -460,15 +509,15 @@ async function generateWithKie(
   const result = await response.json()
   console.log('📊 Kie API response:', result)
 
-  // Kie API may return task ID that needs polling, or directly return video URL
-  if (result.taskId) {
-    // Poll task status
-    console.log('⏳ Task ID:', result.taskId)
-    return await pollKieTask(result.taskId, KIE_API_KEY)
+  // Kie API returns task ID that needs polling
+  if (result.taskId || result.task_id || result.id) {
+    const taskId = result.taskId || result.task_id || result.id
+    console.log('⏳ Task ID:', taskId)
+    return await pollKieTask(taskId, KIE_API_KEY)
   } else if (result.videoUrl || result.video_url || result.url) {
     return result.videoUrl || result.video_url || result.url
   } else {
-    throw new Error('Kie API returned invalid format')
+    throw new Error('Kie API returned invalid format: ' + JSON.stringify(result))
   }
 }
 
@@ -480,7 +529,7 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     await new Promise(resolve => setTimeout(resolve, API_CONFIG.POLLING.INTERVAL_MS))
     attempts++
 
-    const response = await fetch(`${API_CONFIG.KIE.API_URL}/task/${taskId}`, {
+    const response = await fetch(`${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.GET_TASK_ENDPOINT}?taskId=${taskId}`, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
       },
@@ -491,14 +540,16 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     }
 
     const result = await response.json()
-    console.log(`📊 Task status (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS}):`, result.status)
+    console.log(`📊 Task status (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS}):`, result.status || result.state)
 
-    if (result.status === 'completed' || result.status === 'succeeded') {
-      if (result.videoUrl || result.video_url || result.url) {
-        return result.videoUrl || result.video_url || result.url
+    const status = result.status || result.state
+
+    if (status === 'completed' || status === 'succeeded' || status === 'success') {
+      if (result.videoUrl || result.video_url || result.url || result.output) {
+        return result.videoUrl || result.video_url || result.url || result.output
       }
-      throw new Error('Task completed but no video URL returned')
-    } else if (result.status === 'failed' || result.status === 'error') {
+      throw new Error('Task completed but no video URL returned: ' + JSON.stringify(result))
+    } else if (status === 'failed' || status === 'error') {
       throw new Error(`Task failed: ${result.error || result.message || 'Unknown error'}`)
     }
   }
@@ -704,7 +755,7 @@ export async function POST(request: NextRequest) {
           videoUrl = await generateTextToVideoWithComet(textPrompt, duration, resolution)
           usedModel = 'Sora 2 (CometAPI) - Text-to-Video'
         } else if (hasKieKey) {
-          videoUrl = await generateWithKie('text', textPrompt, null, '', duration, resolution)
+          videoUrl = await generateWithKie('text', textPrompt, null, '', duration, videoRatio)
           usedModel = 'Sora 2 (Kie.ai) - Text-to-Video'
         } else if (hasReplicateToken) {
           videoUrl = await generateTextToVideoWithReplicate(textPrompt, duration, resolution)
@@ -714,18 +765,19 @@ export async function POST(request: NextRequest) {
         }
       } else {
         // Image-to-video - Priority: CometAPI > Kie > Replicate > HuggingFace
-        const imageBase64 = await fileToBase64(image)
-
         if (hasCometKey) {
+          const imageBase64 = await fileToBase64(image)
           videoUrl = await generateImageToVideoWithComet(imageBase64, motionPrompt, duration)
           usedModel = 'Sora 2 (CometAPI) - Image-to-Video'
         } else if (hasKieKey) {
-          videoUrl = await generateWithKie('image', '', imageBase64, motionPrompt, duration, resolution)
+          videoUrl = await generateWithKie('image', '', image, motionPrompt, duration, videoRatio)
           usedModel = 'Sora 2 (Kie.ai) - Image-to-Video'
         } else if (hasReplicateToken) {
+          const imageBase64 = await fileToBase64(image)
           videoUrl = await generateImageToVideoWithReplicate(imageBase64, motionPrompt)
           usedModel = 'Stable Video Diffusion (Replicate) - Image-to-Video'
         } else if (hasHFToken) {
+          const imageBase64 = await fileToBase64(image)
           videoUrl = await generateImageToVideoWithHuggingFace(imageBase64, motionPrompt)
           usedModel = 'Stable Video Diffusion (HuggingFace) - Image-to-Video'
         } else {
