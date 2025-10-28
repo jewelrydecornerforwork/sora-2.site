@@ -82,7 +82,7 @@ export function Header() {
                 <button
                   className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                   style={{
-                    background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                    background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #9333ea, #ec4899) border-box',
                     border: '2px solid transparent'
                   }}
                 >
@@ -91,7 +91,7 @@ export function Header() {
                 <button
                   className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                   style={{
-                    background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                    background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #9333ea, #ec4899) border-box',
                     border: '2px solid transparent'
                   }}
                 >
@@ -175,7 +175,7 @@ export function Header() {
                       onClick={() => setIsMenuOpen(false)}
                       className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                       style={{
-                        background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                        background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #9333ea, #ec4899) border-box',
                         border: '2px solid transparent'
                       }}
                     >
@@ -185,7 +185,7 @@ export function Header() {
                       onClick={() => setIsMenuOpen(false)}
                       className="w-full bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                       style={{
-                        background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box',
+                        background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #9333ea, #ec4899) border-box',
                         border: '2px solid transparent'
                       }}
                     >

@@ -1,3 +1,5 @@
+'use client'
+
 import { Pricing } from '@/components/Pricing'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
