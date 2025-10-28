@@ -25,8 +25,8 @@ export function Pricing() {
         'Email support'
       ],
       cta: 'Get Started',
-      popular: true,
-      highlight: true,
+      popular: false,
+      highlight: false,
       savings: 150.00,
       discount: '25% off'
     },
@@ -48,7 +48,7 @@ export function Pricing() {
         'Advanced features'
       ],
       cta: 'Go Pro',
-      popular: false,
+      popular: true,
       highlight: false,
       savings: 360.00,
       discount: '30% off'
@@ -146,15 +146,16 @@ export function Pricing() {
             <div
               key={index}
               onClick={() => setSelectedPlan(plan.name)}
-              className={`relative rounded-2xl p-8 transition-all duration-300 cursor-pointer ${
+              className={`relative rounded-3xl p-8 transition-all duration-300 cursor-pointer ${
                 selectedPlan === plan.name
-                  ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-transparent bg-clip-padding'
-                  : 'bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-gray-700 hover:border-purple-500/50'
+                  ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20'
+                  : 'bg-gradient-to-br from-gray-800/80 to-gray-900/80 border-2 border-gray-700 hover:border-purple-500/50'
               }`}
-              style={selectedPlan === plan.name ? {
-                borderImage: 'linear-gradient(to right, rgb(147, 51, 234), rgb(219, 39, 119)) 1',
-              } : {}}
             >
+              {/* Gradient Border for Selected Plan */}
+              {selectedPlan === plan.name && (
+                <div className="absolute inset-0 rounded-3xl p-[2px] bg-gradient-to-r from-purple-600 to-pink-600 -z-10"></div>
+              )}
               {/* Popular Badge */}
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
