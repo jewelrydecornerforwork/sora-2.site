@@ -16,7 +16,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [textPrompt, setTextPrompt] = useState('')
   const [motionPrompt, setMotionPrompt] = useState('')
   const [selectedModel, setSelectedModel] = useState('google-veo3')
-  const [resolution, setResolution] = useState('720p')
+  const [resolution, setResolution] = useState('standard')
   const [videoRatio, setVideoRatio] = useState('16:9')
   const [duration, setDuration] = useState('5')
   const [audioFile, setAudioFile] = useState<File | null>(null)
@@ -436,30 +436,24 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 </label>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setResolution('720p')}
+                    onClick={() => setResolution('standard')}
                     className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === '720p'
+                      resolution === 'standard'
                         ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    <div className="flex flex-col items-center">
-                      <span className="font-medium">720p</span>
-                      <span className="text-xs text-gray-400">1280×720</span>
-                    </div>
+                    <span className="font-medium">Standard</span>
                   </button>
                   <button
-                    onClick={() => setResolution('1080p')}
+                    onClick={() => setResolution('hd')}
                     className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === '1080p'
+                      resolution === 'hd'
                         ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    <div className="flex flex-col items-center">
-                      <span className="font-medium">1080p</span>
-                      <span className="text-xs text-gray-400">1920×1080</span>
-                    </div>
+                    <span className="font-medium">HD</span>
                   </button>
                 </div>
               </div>
@@ -496,89 +490,6 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     </div>
                   </button>
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Duration
-                </label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setDuration('5')}
-                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      duration === '5'
-                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
-                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
-                    }`}
-                  >
-                    5s
-                  </button>
-                  <button
-                    onClick={() => setDuration('10')}
-                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      duration === '10'
-                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
-                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
-                    }`}
-                  >
-                    10s
-                  </button>
-                  <button
-                    onClick={() => setDuration('15')}
-                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      duration === '15'
-                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
-                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
-                    }`}
-                  >
-                    15s
-                  </button>
-                </div>
-              </div>
-
-              {/* Audio Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Background Music (Optional)
-                </label>
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="file"
-                    accept="audio/*"
-                    onChange={handleAudioUpload}
-                    className="hidden"
-                    id="audio-upload"
-                  />
-                  <label
-                    htmlFor="audio-upload"
-                    className="flex items-center space-x-2 px-4 py-2 border border-gray-600 bg-gray-800 text-white rounded-lg cursor-pointer hover:bg-gray-700 transition-colors"
-                  >
-                    <Volume2 className="w-4 h-4" />
-                    <span className="text-sm">Choose Audio File</span>
-                  </label>
-                  {audioFile && (
-                    <span className="text-sm text-gray-300">
-                      {audioFile.name}
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-gray-400 mt-1">
-                  Supports WAV/MP3, 3-30 seconds, max 15MB
-                </p>
-              </div>
-
-              {/* Public Setting */}
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="isPublic"
-                  checked={isPublic}
-                  onChange={(e) => setIsPublic(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor="isPublic" className="text-sm text-gray-300">
-                  Public Video
-                </label>
               </div>
             </div>
 

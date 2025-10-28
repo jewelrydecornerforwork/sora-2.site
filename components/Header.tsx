@@ -43,15 +43,9 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
-              Text To Video
-            </Link>
-            <Link href="/image-to-video" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
-              Image To Video
-            </Link>
-            <Link href="/explore" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
-              Explore
-            </Link>
+            <a href="#features" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
+              Features
+            </a>
             <Link href="/pricing" className="text-gray-300 hover:text-purple-400 transition-colors font-medium">
               Pricing
             </Link>
