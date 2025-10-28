@@ -26,7 +26,8 @@ export function Pricing() {
       cta: 'Get Started',
       popular: true,
       highlight: true,
-      savings: 150.00
+      savings: 150.00,
+      discount: '25% off'
     },
     {
       name: 'Pro',
@@ -48,7 +49,8 @@ export function Pricing() {
       cta: 'Go Pro',
       popular: false,
       highlight: false,
-      savings: 360.00
+      savings: 360.00,
+      discount: '30% off'
     },
     {
       name: 'Enterprise',
@@ -72,7 +74,8 @@ export function Pricing() {
       cta: 'Contact Sales',
       popular: false,
       highlight: false,
-      savings: 840.00
+      savings: 840.00,
+      discount: '35% off'
     }
   ]
 
@@ -156,15 +159,6 @@ export function Pricing() {
                 </div>
               )}
 
-              {/* Savings Badge for Yearly */}
-              {isYearly && plan.savings && (
-                <div className="absolute -top-4 right-4">
-                  <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                    Save ${plan.savings}
-                  </span>
-                </div>
-              )}
-
               {/* Plan Name */}
               <div className="mb-4">
                 <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
@@ -173,9 +167,15 @@ export function Pricing() {
 
               {/* Price */}
               <div className="mb-6">
-                <div className="flex items-baseline mb-1">
+                <div className="flex items-baseline mb-1 gap-3">
                   <span className="text-4xl font-bold text-white">{getPrice(plan)}</span>
-                  <span className="text-gray-400 ml-2">/month</span>
+                  <span className="text-gray-400">/month</span>
+                  {/* Discount Badge for Yearly - inline with price */}
+                  {isYearly && plan.discount && (
+                    <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                      {plan.discount}
+                    </span>
+                  )}
                 </div>
                 {isYearly && plan.monthlyPrice > 0 && (
                   <p className="text-sm text-gray-400">
