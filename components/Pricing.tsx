@@ -28,8 +28,8 @@ export function Pricing() {
     },
     {
       name: 'Basic',
-      monthlyPrice: 29,
-      yearlyPrice: 290,
+      monthlyPrice: 49.99,
+      yearlyPrice: 449.88,
       credits: '500 credits',
       description: 'Great for individual creators',
       features: [
@@ -45,12 +45,12 @@ export function Pricing() {
       cta: 'Get Started',
       popular: true,
       highlight: true,
-      savings: 58
+      savings: 149.99
     },
     {
       name: 'Pro',
-      monthlyPrice: 59,
-      yearlyPrice: 590,
+      monthlyPrice: 99.99,
+      yearlyPrice: 839.88,
       credits: '1,200 credits',
       description: 'Best for professionals',
       features: [
@@ -67,12 +67,12 @@ export function Pricing() {
       cta: 'Go Pro',
       popular: false,
       highlight: false,
-      savings: 118
+      savings: 360
     },
     {
       name: 'Enterprise',
-      monthlyPrice: 99,
-      yearlyPrice: 990,
+      monthlyPrice: 199.99,
+      yearlyPrice: 1559.88,
       credits: '2,500 credits',
       description: 'For teams and agencies',
       features: [
@@ -91,7 +91,7 @@ export function Pricing() {
       cta: 'Contact Sales',
       popular: false,
       highlight: false,
-      savings: 198
+      savings: 840
     }
   ]
 
