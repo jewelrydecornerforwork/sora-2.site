@@ -100,25 +100,29 @@ export function Pricing() {
           </p>
 
           {/* Monthly/Yearly Toggle */}
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <span className={`text-lg font-medium transition-colors ${!isYearly ? 'text-white' : 'text-gray-400'}`}>
-              Monthly
-            </span>
-            <button
-              onClick={() => setIsYearly(!isYearly)}
-              className="relative inline-flex h-8 w-16 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-              style={{ backgroundColor: isYearly ? '#9333ea' : '#4b5563' }}
-              aria-label="Toggle between monthly and yearly pricing"
-            >
-              <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                  isYearly ? 'translate-x-9' : 'translate-x-1'
+          <div className="flex items-center justify-center mb-4">
+            <div className="inline-flex rounded-lg bg-gray-800/80 p-1 backdrop-blur-sm border border-gray-700">
+              <button
+                onClick={() => setIsYearly(false)}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                  !isYearly
+                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white'
                 }`}
-              />
-            </button>
-            <span className={`text-lg font-medium transition-colors ${isYearly ? 'text-white' : 'text-gray-400'}`}>
-              Yearly
-            </span>
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setIsYearly(true)}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                  isYearly
+                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                Yearly
+              </button>
+            </div>
           </div>
 
           {/* Savings Badge */}
