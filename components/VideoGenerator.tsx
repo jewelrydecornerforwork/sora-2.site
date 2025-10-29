@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Upload, Image as ImageIcon, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2, Sparkles } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -39,6 +39,14 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     "Smooth pan from left to right, flowers swaying in the breeze",
     "Dynamic movement with the subject walking forward, background slightly blurred"
   ]
+
+  // Auto-adjust duration when resolution changes to 1080p
+  useEffect(() => {
+    if (resolution === '1080p' && duration === '10') {
+      setDuration('5')
+      toast('1080p only supports 5s duration', { icon: 'ℹ️' })
+    }
+  }, [resolution, duration])
 
   // 图像上传处理
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -447,7 +455,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    <span className="font-medium">Standard</span>
+                    <span className="font-medium">720p</span>
                   </button>
                   <button
                     onClick={() => setResolution('1080p')}
@@ -457,7 +465,45 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    <span className="font-medium">HD</span>
+                    <span className="font-medium">1080p</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Duration
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setDuration('5')}
+                    disabled={resolution === '1080p' && duration === '10'}
+                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                      duration === '5'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
+                    }`}
+                  >
+                    <span className="font-medium">5s</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (resolution === '1080p') return
+                      setDuration('10')
+                    }}
+                    disabled={resolution === '1080p'}
+                    className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                      duration === '10'
+                        ? 'border-blue-500 bg-blue-900/30 text-blue-300'
+                        : resolution === '1080p'
+                        ? 'border-gray-600 bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+                        : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
+                    }`}
+                  >
+                    <span className="font-medium">10s</span>
+                    {resolution === '1080p' && (
+                      <span className="text-xs block text-gray-500">(720p only)</span>
+                    )}
                   </button>
                 </div>
               </div>
