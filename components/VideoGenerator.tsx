@@ -16,7 +16,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [textPrompt, setTextPrompt] = useState('')
   const [motionPrompt, setMotionPrompt] = useState('')
   const [selectedModel, setSelectedModel] = useState('google-veo3')
-  const [resolution, setResolution] = useState('standard')
+  const [resolution, setResolution] = useState('720p')
   const [videoRatio, setVideoRatio] = useState('16:9')
   const [duration, setDuration] = useState('5')
   const [audioFile, setAudioFile] = useState<File | null>(null)
@@ -440,9 +440,9 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 </label>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setResolution('standard')}
+                    onClick={() => setResolution('720p')}
                     className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === 'standard'
+                      resolution === '720p'
                         ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
@@ -450,9 +450,9 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                     <span className="font-medium">Standard</span>
                   </button>
                   <button
-                    onClick={() => setResolution('hd')}
+                    onClick={() => setResolution('1080p')}
                     className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      resolution === 'hd'
+                      resolution === '1080p'
                         ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
