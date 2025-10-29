@@ -72,7 +72,6 @@ const API_CONFIG = {
     BASE_URL: 'https://api.kie.ai',
     CREATE_TASK_ENDPOINT: '/createTask',
     GET_TASK_ENDPOINT: '/getTaskResult',
-    UPLOAD_ENDPOINT: '/upload',
     DEFAULT_ASPECT_RATIO: '16:9',
   },
   // Polling configuration
@@ -270,41 +269,6 @@ async function generateImageToVideoWithReplicate(imageBase64: string, prompt: st
   }
 }
 
-// Upload image to Kie.ai and get public URL
-async function uploadImageToKie(imageFile: File, apiKey: string): Promise<string> {
-  console.log('📤 Uploading image to Kie.ai...')
-
-  const formData = new FormData()
-  formData.append('file', imageFile)
-
-  const response = await fetchWithTimeout(
-    `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.UPLOAD_ENDPOINT}`,
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: formData,
-    },
-    30000
-  )
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`Image upload failed: ${response.status} ${errorText}`)
-  }
-
-  const result = await response.json()
-  console.log('✅ Image uploaded:', result)
-
-  // Return the public URL of uploaded image
-  if (result.url || result.file_url || result.imageUrl) {
-    return result.url || result.file_url || result.imageUrl
-  }
-
-  throw new Error('Upload response missing image URL')
-}
-
 // Kie.ai Sora 2 API - Supports text-to-video and image-to-video
 async function generateWithKie(
   mode: 'text' | 'image',
@@ -339,13 +303,15 @@ async function generateWithKie(
     remove_watermark: true
   }
 
-  // For image-to-video, upload image first and get URL
+  // For image-to-video, convert image to base64 and include in request
   if (mode === 'image' && imageFile) {
-    const imageUrl = await uploadImageToKie(imageFile, KIE_API_KEY)
-    requestBody.image_urls = [imageUrl]
+    console.log('📤 Converting image to base64...')
+    const imageBase64 = await fileToBase64(imageFile)
+    // Use base64 data URL directly
+    requestBody.image_urls = [imageBase64]
   }
 
-  console.log('📝 Request body:', JSON.stringify(requestBody, null, 2))
+  console.log('📝 Request body:', JSON.stringify({ ...requestBody, image_urls: requestBody.image_urls ? ['<base64_data>'] : undefined }, null, 2))
 
   const response = await fetchWithTimeout(
     `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.CREATE_TASK_ENDPOINT}`,
