@@ -69,9 +69,9 @@ const API_CONFIG = {
   },
   // Kie.ai API
   KIE: {
-    BASE_URL: 'https://api.kie.ai',
-    CREATE_TASK_ENDPOINT: '/createTask',
-    GET_TASK_ENDPOINT: '/getTaskResult',
+    BASE_URL: 'https://api.kie.ai/v1',
+    CREATE_TASK_ENDPOINT: '/videos/generations',
+    GET_TASK_ENDPOINT: '/videos/generations',
     DEFAULT_ASPECT_RATIO: '16:9',
   },
   // Polling configuration
@@ -363,7 +363,7 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     await new Promise(resolve => setTimeout(resolve, API_CONFIG.POLLING.INTERVAL_MS))
     attempts++
 
-    const response = await fetch(`${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.GET_TASK_ENDPOINT}?taskId=${taskId}`, {
+    const response = await fetch(`${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.GET_TASK_ENDPOINT}/${taskId}`, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
       },
