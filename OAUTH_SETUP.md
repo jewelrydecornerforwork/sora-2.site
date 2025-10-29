@@ -101,8 +101,8 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 GITHUB_ID=your-github-client-id
 GITHUB_SECRET=your-github-client-secret
 
-# Other API Keys...
-COMET_API_KEY=sk-PXSfnqu5WwH29lAGsNWleV6LUIGOQqr6heGXi3PcSZlStqy3
+# Other API Keys (optional)
+KIE_API_KEY=kie_your_api_key_here
 ```
 
 ---

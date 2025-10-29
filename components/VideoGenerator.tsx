@@ -167,8 +167,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       clearInterval(progressInterval)
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
+        const errorData = await response.json().catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }))
+        throw new Error(errorData.error || errorData.details || `HTTP error! status: ${response.status}`)
       }
 
       const result = await response.json()
@@ -199,11 +199,15 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
           toast.error('Request timeout. The video generation took too long. Please try again.')
+        } else if (error.message === 'Failed to fetch') {
+          toast.error('Network error: Unable to connect to the server. Please check your internet connection and ensure the server is running.')
         } else {
           toast.error(`Video generation failed: ${error.message}`)
         }
+        console.error('Video generation error:', error)
       } else {
         toast.error('Video generation failed: Unknown error')
+        console.error('Unknown error:', error)
       }
     } finally {
       clearTimeout(timeoutId)

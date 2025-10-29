@@ -53,13 +53,6 @@ interface KieTaskResponse {
 
 // API configuration constants
 const API_CONFIG = {
-  // CometAPI - Sora 2
-  COMET: {
-    BASE_URL: 'https://api.cometapi.com/v1',
-    CHAT_ENDPOINT: '/chat/completions',
-    TEXT_MODEL: 'sora-2',
-    IMAGE_MODEL: 'sora-2',
-  },
   // Replicate API
   REPLICATE: {
     MODEL_VERSION: 'stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438',
@@ -159,131 +152,6 @@ async function retryWithBackoff<T>(
   }
 
   throw lastError || new Error('All retry attempts failed')
-}
-
-// CometAPI - Text-to-Video using Sora 2
-async function generateTextToVideoWithComet(textPrompt: string, duration: string, resolution: string): Promise<string> {
-  const COMET_API_KEY = process.env.COMET_API_KEY
-
-  if (!COMET_API_KEY) {
-    throw new Error('COMET_API_KEY is not configured')
-  }
-
-  console.log('📡 Generating text-to-video with CometAPI Sora 2...')
-
-  return await retryWithBackoff(async () => {
-    const response = await fetchWithTimeout(
-      `${API_CONFIG.COMET.BASE_URL}${API_CONFIG.COMET.CHAT_ENDPOINT}`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${COMET_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: API_CONFIG.COMET.TEXT_MODEL,
-          stream: false,
-          messages: [
-            {
-              role: 'user',
-              content: textPrompt
-            }
-          ]
-        }),
-      },
-      60000 // 60 second timeout
-    )
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`CometAPI error: ${response.status} ${errorText}`)
-    }
-
-    const result = await response.json()
-    console.log('✅ CometAPI response received')
-
-    // Extract video URL from response
-    if (result.choices && result.choices[0] && result.choices[0].message) {
-      const content = result.choices[0].message.content
-      // The content might contain the video URL or a direct URL in the response
-      if (typeof content === 'string' && content.startsWith('http')) {
-        return content
-      }
-      // Check if there's a URL in the result
-      if (result.video_url) {
-        return result.video_url
-      }
-    }
-
-    throw new Error('Failed to extract video URL from CometAPI response')
-  }, 2) // Retry up to 2 times
-}
-
-// CometAPI - Image-to-Video using Sora 2
-async function generateImageToVideoWithComet(imageBase64: string, motionPrompt: string, duration: string): Promise<string> {
-  const COMET_API_KEY = process.env.COMET_API_KEY
-
-  if (!COMET_API_KEY) {
-    throw new Error('COMET_API_KEY is not configured')
-  }
-
-  console.log('📡 Generating image-to-video with CometAPI Sora 2...')
-
-  return await retryWithBackoff(async () => {
-    const response = await fetchWithTimeout(
-      `${API_CONFIG.COMET.BASE_URL}${API_CONFIG.COMET.CHAT_ENDPOINT}`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${COMET_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: API_CONFIG.COMET.IMAGE_MODEL,
-          stream: false,
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text: motionPrompt
-                },
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: imageBase64
-                  }
-                }
-              ]
-            }
-          ]
-        }),
-      },
-      60000 // 60 second timeout
-    )
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`CometAPI error: ${response.status} ${errorText}`)
-    }
-
-    const result = await response.json()
-    console.log('✅ CometAPI image-to-video response received')
-
-    // Extract video URL from response
-    if (result.choices && result.choices[0] && result.choices[0].message) {
-      const content = result.choices[0].message.content
-      if (typeof content === 'string' && content.startsWith('http')) {
-        return content
-      }
-      if (result.video_url) {
-        return result.video_url
-      }
-    }
-
-    throw new Error('Failed to extract video URL from CometAPI response')
-  }, 2) // Retry up to 2 times
 }
 
 // Text-to-Video - Using Replicate API
@@ -703,7 +571,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if API keys are configured (excluding placeholders)
-    const cometApiKey = process.env.COMET_API_KEY
     const kieApiKey = process.env.KIE_API_KEY
     const replicateToken = process.env.REPLICATE_API_TOKEN
     const hfToken = process.env.HF_API_TOKEN
@@ -721,13 +588,13 @@ export async function POST(request: NextRequest) {
       return !placeholderPatterns.some(pattern => pattern.test(key))
     }
 
-    const hasCometKey = isValidApiKey(cometApiKey, 30)
     const hasKieKey = isValidApiKey(kieApiKey, 20)
     const hasReplicateToken = isValidApiKey(replicateToken, 30)
     const hasHFToken = isValidApiKey(hfToken, 30)
 
     // If no API is configured, return demo mode
-    if (!hasCometKey && !hasKieKey && !hasReplicateToken && !hasHFToken) {
+    if (!hasKieKey && !hasReplicateToken && !hasHFToken) {
+      console.log('⚠️ No API keys configured, using demo mode')
       await new Promise(resolve => setTimeout(resolve, 2000))
 
       return NextResponse.json({
@@ -735,7 +602,7 @@ export async function POST(request: NextRequest) {
         videoUrl: '/demo-video.mp4',
         imageUrl: '/demo-image.jpg',
         creditsUsed: 0,
-        message: 'Demo mode: Please configure COMET_API_KEY, KIE_API_KEY, REPLICATE_API_TOKEN, or HF_API_TOKEN to use real AI video generation services',
+        message: 'Demo mode: Please configure at least one API key (KIE_API_KEY, REPLICATE_API_TOKEN, or HF_API_TOKEN) to use real AI video generation services',
         mode: mode,
         prompt: mode === 'text' ? textPrompt : motionPrompt,
         model: 'demo',
@@ -750,26 +617,19 @@ export async function POST(request: NextRequest) {
 
     try {
       if (mode === 'text') {
-        // Text-to-video - Priority: CometAPI > Kie > Replicate
-        if (hasCometKey) {
-          videoUrl = await generateTextToVideoWithComet(textPrompt, duration, resolution)
-          usedModel = 'Sora 2 (CometAPI) - Text-to-Video'
-        } else if (hasKieKey) {
+        // Text-to-video - Priority: Kie > Replicate
+        if (hasKieKey) {
           videoUrl = await generateWithKie('text', textPrompt, null, '', duration, videoRatio)
           usedModel = 'Sora 2 (Kie.ai) - Text-to-Video'
         } else if (hasReplicateToken) {
           videoUrl = await generateTextToVideoWithReplicate(textPrompt, duration, resolution)
           usedModel = 'Stable Video Diffusion (Replicate) - Text-to-Video'
         } else {
-          throw new Error('Text-to-video requires COMET_API_KEY, KIE_API_KEY or REPLICATE_API_TOKEN')
+          throw new Error('Text-to-video requires KIE_API_KEY or REPLICATE_API_TOKEN')
         }
       } else {
-        // Image-to-video - Priority: CometAPI > Kie > Replicate > HuggingFace
-        if (hasCometKey) {
-          const imageBase64 = await fileToBase64(image)
-          videoUrl = await generateImageToVideoWithComet(imageBase64, motionPrompt, duration)
-          usedModel = 'Sora 2 (CometAPI) - Image-to-Video'
-        } else if (hasKieKey) {
+        // Image-to-video - Priority: Kie > Replicate > HuggingFace
+        if (hasKieKey) {
           videoUrl = await generateWithKie('image', '', image, motionPrompt, duration, videoRatio)
           usedModel = 'Sora 2 (Kie.ai) - Image-to-Video'
         } else if (hasReplicateToken) {
@@ -788,7 +648,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         videoUrl: videoUrl,
-        creditsUsed: hasCometKey || hasKieKey ? 1 : (hasReplicateToken ? 1 : 0),
+        creditsUsed: hasKieKey ? 1 : (hasReplicateToken ? 1 : 0),
         message: 'Video generated successfully!',
         mode: mode,
         prompt: mode === 'text' ? textPrompt : motionPrompt,
