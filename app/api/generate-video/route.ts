@@ -69,9 +69,9 @@ const API_CONFIG = {
   },
   // Kie.ai API
   KIE: {
-    BASE_URL: 'https://api.kie.ai/v1',
-    CREATE_TASK_ENDPOINT: '/videos/generations',
-    GET_TASK_ENDPOINT: '/videos/generations',
+    BASE_URL: 'https://api.kie.ai',
+    CREATE_TASK_ENDPOINT: '/api/sora-2/generate',
+    GET_TASK_ENDPOINT: '/api/sora-2/status',
     DEFAULT_ASPECT_RATIO: '16:9',
   },
   // Polling configuration
@@ -312,6 +312,7 @@ async function generateWithKie(
   }
 
   console.log('📝 Request body:', JSON.stringify({ ...requestBody, image_urls: requestBody.image_urls ? ['<base64_data>'] : undefined }, null, 2))
+  console.log('📡 Sending request to:', `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.CREATE_TASK_ENDPOINT}`)
 
   const response = await fetchWithTimeout(
     `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.CREATE_TASK_ENDPOINT}`,
@@ -326,8 +327,11 @@ async function generateWithKie(
     30000
   )
 
+  console.log('📊 Response status:', response.status, response.statusText)
+
   if (!response.ok) {
     const errorText = await response.text()
+    console.log('❌ Error response:', errorText)
     let errorMessage = `HTTP ${response.status}: ${response.statusText}`
 
     try {
@@ -370,6 +374,11 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     })
 
     if (!response.ok) {
+      console.log(`⚠️ Polling attempt ${attempts}: HTTP ${response.status}`)
+      if (response.status === 404) {
+        // Task might not be ready yet, continue polling
+        continue
+      }
       throw new Error(`Task polling failed: HTTP ${response.status}`)
     }
 
