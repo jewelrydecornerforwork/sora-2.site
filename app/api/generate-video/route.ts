@@ -70,8 +70,8 @@ const API_CONFIG = {
   // Kie.ai API
   KIE: {
     BASE_URL: 'https://api.kie.ai',
-    CREATE_TASK_ENDPOINT: '/api/sora-2/generate',
-    GET_TASK_ENDPOINT: '/api/sora-2/status',
+    CREATE_TASK_ENDPOINT: '/api/v1/jobs/createTask',
+    GET_TASK_ENDPOINT: '/api/v1/jobs/recordInfo',
     DEFAULT_ASPECT_RATIO: '16:9',
   },
   // Polling configuration
@@ -100,6 +100,61 @@ async function fileToBase64(file: File): Promise<string> {
   const bytes = await file.arrayBuffer()
   const buffer = Buffer.from(bytes)
   return `data:${file.type};base64,${buffer.toString('base64')}`
+}
+
+// Upload image to imgbb and return public URL
+async function uploadImageToImgbb(file: File): Promise<string> {
+  const IMGBB_API_KEY = process.env.IMGBB_API_KEY
+
+  if (!IMGBB_API_KEY) {
+    throw new Error('IMGBB_API_KEY is not configured. Please get a free API key from https://api.imgbb.com/')
+  }
+
+  console.log('📤 Uploading image to imgbb...')
+
+  // Convert file to base64 (without data URL prefix)
+  const bytes = await file.arrayBuffer()
+  const buffer = Buffer.from(bytes)
+  const base64String = buffer.toString('base64')
+
+  // Create form data for imgbb API (according to official docs)
+  // imgbb requires multipart/form-data with 'image' field containing base64 data
+  const formData = new FormData()
+  formData.append('image', base64String)
+
+  // Optional: set a custom name for the image
+  if (file.name) {
+    formData.append('name', file.name.replace(/\.[^/.]+$/, '')) // Remove extension
+  }
+
+  // API key is passed as URL parameter (according to official docs)
+  const response = await fetchWithTimeout(
+    `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+    {
+      method: 'POST',
+      body: formData,
+      // Note: Don't set Content-Type header - let browser set it with boundary for multipart/form-data
+    },
+    30000
+  )
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    console.log('❌ imgbb upload error:', errorText)
+    throw new Error(`Failed to upload image to imgbb: HTTP ${response.status}`)
+  }
+
+  const result = await response.json()
+  console.log('📊 imgbb response:', { success: result.success, hasData: !!result.data, hasUrl: !!result.data?.url })
+
+  if (!result.success || !result.data || !result.data.url) {
+    throw new Error('imgbb returned invalid response: ' + JSON.stringify(result))
+  }
+
+  const imageUrl = result.data.url
+  console.log('✅ Image uploaded successfully:', imageUrl)
+
+  return imageUrl
 }
 
 // Helper function: Fetch with timeout
@@ -292,26 +347,30 @@ async function generateWithKie(
   // Convert video ratio to aspect_ratio format
   const aspectRatio = videoRatio === '9:16' ? 'portrait' : 'landscape'
 
-  // Convert duration to n_frames (10s or 15s)
-  const nFrames = parseInt(duration) >= 10 ? '10s' : '5s'
+  // Convert duration to n_frames (10 or 15 seconds)
+  const nFrames = parseInt(duration) >= 10 ? '10' : '5'
 
-  const requestBody: any = {
-    model: model,
+  // Build input object according to Kie.ai API spec
+  const input: any = {
     prompt: mode === 'text' ? textPrompt : motionPrompt,
     aspect_ratio: aspectRatio,
     n_frames: nFrames,
     remove_watermark: true
   }
 
-  // For image-to-video, convert image to base64 and include in request
+  // For image-to-video, upload image to public URL
   if (mode === 'image' && imageFile) {
-    console.log('📤 Converting image to base64...')
-    const imageBase64 = await fileToBase64(imageFile)
-    // Use base64 data URL directly
-    requestBody.image_urls = [imageBase64]
+    console.log('📤 Uploading image to get public URL...')
+    const imageUrl = await uploadImageToImgbb(imageFile)
+    input.image_urls = [imageUrl]
   }
 
-  console.log('📝 Request body:', JSON.stringify({ ...requestBody, image_urls: requestBody.image_urls ? ['<base64_data>'] : undefined }, null, 2))
+  const requestBody = {
+    model: model,
+    input: input
+  }
+
+  console.log('📝 Request body:', JSON.stringify({ model: requestBody.model, input: { ...requestBody.input, image_urls: requestBody.input.image_urls ? ['<image_url>'] : undefined } }, null, 2))
   console.log('📡 Sending request to:', `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.CREATE_TASK_ENDPOINT}`)
 
   const response = await fetchWithTimeout(
@@ -367,7 +426,7 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     await new Promise(resolve => setTimeout(resolve, API_CONFIG.POLLING.INTERVAL_MS))
     attempts++
 
-    const response = await fetch(`${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.GET_TASK_ENDPOINT}/${taskId}`, {
+    const response = await fetch(`${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.GET_TASK_ENDPOINT}?taskId=${taskId}`, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
       },
@@ -383,18 +442,27 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     }
 
     const result = await response.json()
-    console.log(`📊 Task status (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS}):`, result.status || result.state)
+    console.log(`📊 Task status (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS}):`, result)
 
-    const status = result.status || result.state
+    // According to API docs, the status field is 'state' and possible values are: waiting, success, fail
+    const status = result.state || result.status
 
-    if (status === 'completed' || status === 'succeeded' || status === 'success') {
+    if (status === 'success' || status === 'completed' || status === 'succeeded') {
+      // According to API docs, video URLs are in resultJson.resultUrls array
+      if (result.resultJson && result.resultJson.resultUrls && result.resultJson.resultUrls.length > 0) {
+        return result.resultJson.resultUrls[0]
+      }
+      // Fallback to other possible response formats
       if (result.videoUrl || result.video_url || result.url || result.output) {
         return result.videoUrl || result.video_url || result.url || result.output
       }
       throw new Error('Task completed but no video URL returned: ' + JSON.stringify(result))
-    } else if (status === 'failed' || status === 'error') {
-      throw new Error(`Task failed: ${result.error || result.message || 'Unknown error'}`)
+    } else if (status === 'fail' || status === 'failed' || status === 'error') {
+      const errorMsg = result.failMsg || result.error || result.message || 'Unknown error'
+      const errorCode = result.failCode || 'N/A'
+      throw new Error(`Task failed (code: ${errorCode}): ${errorMsg}`)
     }
+    // If status is 'waiting', continue polling
   }
 
   throw new Error('Task timeout: Video generation took too long')
