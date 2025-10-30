@@ -347,8 +347,9 @@ async function generateWithKie(
   // Convert video ratio to aspect_ratio format
   const aspectRatio = videoRatio === '9:16' ? 'portrait' : 'landscape'
 
-  // Convert duration to n_frames (10 or 15 seconds)
-  const nFrames = parseInt(duration) >= 10 ? '10' : '5'
+  // Convert duration to n_frames (only "10" or "15" are allowed by Kie.ai API)
+  // If duration is less than 10, use "10" (minimum supported)
+  const nFrames = parseInt(duration) >= 15 ? '15' : '10'
 
   // Build input object according to Kie.ai API spec
   const input: any = {
@@ -406,13 +407,20 @@ async function generateWithKie(
   const result = await response.json()
   console.log('📊 Kie API response:', result)
 
-  // Kie API returns task ID that needs polling
-  if (result.taskId || result.task_id || result.id) {
-    const taskId = result.taskId || result.task_id || result.id
+  // Kie API response format: { code: 200, msg: "success", data: { taskId: "..." } }
+  // Check if response indicates success
+  if (result.code !== 200) {
+    throw new Error(`Kie API error: ${result.msg || 'Unknown error'}`)
+  }
+
+  // Extract taskId from data object
+  const data = result.data
+  if (data && (data.taskId || data.task_id || data.id)) {
+    const taskId = data.taskId || data.task_id || data.id
     console.log('⏳ Task ID:', taskId)
     return await pollKieTask(taskId, KIE_API_KEY)
-  } else if (result.videoUrl || result.video_url || result.url) {
-    return result.videoUrl || result.video_url || result.url
+  } else if (data && (data.videoUrl || data.video_url || data.url)) {
+    return data.videoUrl || data.video_url || data.url
   } else {
     throw new Error('Kie API returned invalid format: ' + JSON.stringify(result))
   }
@@ -420,11 +428,14 @@ async function generateWithKie(
 
 // Poll Kie API task status
 async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
+  console.log(`🔄 Starting to poll task: ${taskId}`)
   let attempts = 0
 
   while (attempts < API_CONFIG.POLLING.MAX_ATTEMPTS) {
     await new Promise(resolve => setTimeout(resolve, API_CONFIG.POLLING.INTERVAL_MS))
     attempts++
+
+    console.log(`📡 Polling attempt ${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS} for task ${taskId}...`)
 
     const response = await fetch(`${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.GET_TASK_ENDPOINT}?taskId=${taskId}`, {
       headers: {
