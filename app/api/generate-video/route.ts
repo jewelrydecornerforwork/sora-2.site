@@ -67,12 +67,12 @@ const API_CONFIG = {
     NUM_FRAMES: 14,
     NUM_INFERENCE_STEPS: 25,
   },
-  // Kie.ai API
+  // Kie.ai API (Sora 2)
   KIE: {
     BASE_URL: 'https://api.kie.ai',
     CREATE_TASK_ENDPOINT: '/api/v1/jobs/createTask',
     GET_TASK_ENDPOINT: '/api/v1/jobs/recordInfo',
-    DEFAULT_ASPECT_RATIO: '16:9',
+    DEFAULT_ASPECT_RATIO: 'landscape',
   },
   // Polling configuration
   POLLING: {
@@ -344,14 +344,13 @@ async function generateWithKie(
   // Determine model based on mode
   const model = mode === 'text' ? 'sora-2-text-to-video' : 'sora-2-image-to-video'
 
-  // Convert video ratio to aspect_ratio format
+  // Convert video ratio to aspect_ratio format (landscape or portrait)
   const aspectRatio = videoRatio === '9:16' ? 'portrait' : 'landscape'
 
-  // Convert duration to n_frames (only "10" or "15" are allowed by Kie.ai API)
-  // If duration is less than 10, use "10" (minimum supported)
+  // Convert duration to n_frames ("10" or "15")
   const nFrames = parseInt(duration) >= 15 ? '15' : '10'
 
-  // Build input object according to Kie.ai API spec
+  // Build input object according to Kie.ai Sora 2 API spec
   const input: any = {
     prompt: mode === 'text' ? textPrompt : motionPrompt,
     aspect_ratio: aspectRatio,
@@ -371,7 +370,10 @@ async function generateWithKie(
     input: input
   }
 
-  console.log('📝 Request body:', JSON.stringify({ model: requestBody.model, input: { ...requestBody.input, image_urls: requestBody.input.image_urls ? ['<image_url>'] : undefined } }, null, 2))
+  console.log('📝 Request body:', JSON.stringify({
+    model: requestBody.model,
+    input: { ...requestBody.input, image_urls: requestBody.input.image_urls ? ['<image_url>'] : undefined }
+  }, null, 2))
   console.log('📡 Sending request to:', `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.CREATE_TASK_ENDPOINT}`)
 
   const response = await fetchWithTimeout(
@@ -396,7 +398,7 @@ async function generateWithKie(
 
     try {
       const error = JSON.parse(errorText)
-      errorMessage = error.error || error.message || errorMessage
+      errorMessage = error.error || error.message || error.msg || errorMessage
     } catch {
       errorMessage = errorText || errorMessage
     }
@@ -407,26 +409,24 @@ async function generateWithKie(
   const result = await response.json()
   console.log('📊 Kie API response:', result)
 
-  // Kie API response format: { code: 200, msg: "success", data: { taskId: "..." } }
-  // Check if response indicates success
+  // Sora 2 API response format: { code: 200, msg: "success", data: { taskId: "..." } }
+  // Check if response indicates success (code 200 = success)
   if (result.code !== 200) {
     throw new Error(`Kie API error: ${result.msg || 'Unknown error'}`)
   }
 
   // Extract taskId from data object
   const data = result.data
-  if (data && (data.taskId || data.task_id || data.id)) {
-    const taskId = data.taskId || data.task_id || data.id
+  if (data && data.taskId) {
+    const taskId = data.taskId
     console.log('⏳ Task ID:', taskId)
     return await pollKieTask(taskId, KIE_API_KEY)
-  } else if (data && (data.videoUrl || data.video_url || data.url)) {
-    return data.videoUrl || data.video_url || data.url
   } else {
     throw new Error('Kie API returned invalid format: ' + JSON.stringify(result))
   }
 }
 
-// Poll Kie API task status
+// Poll Kie API task status (Sora 2)
 async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
   console.log(`🔄 Starting to poll task: ${taskId}`)
   let attempts = 0
@@ -455,28 +455,34 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     const result = await response.json()
     console.log(`📊 Task status (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS}):`, result)
 
-    // According to API docs, the status field is 'state' and possible values are: waiting, success, fail
-    const status = result.state || result.status
+    // Sora 2 API response format:
+    // { code: 200, msg: "success", data: { state: "waiting" | "success" | "fail", resultUrls: [...] } }
+    if (result.code === 200 && result.data) {
+      const state = result.data.state
 
-    if (status === 'success' || status === 'completed' || status === 'succeeded') {
-      // According to API docs, video URLs are in resultJson.resultUrls array
-      if (result.resultJson && result.resultJson.resultUrls && result.resultJson.resultUrls.length > 0) {
-        return result.resultJson.resultUrls[0]
+      if (state === 'success') {
+        // Generation successful - extract video URL
+        if (result.data.resultUrls && result.data.resultUrls.length > 0) {
+          console.log('✅ Video generated successfully:', result.data.resultUrls[0])
+          return result.data.resultUrls[0]
+        }
+        throw new Error('Task completed but no video URL returned: ' + JSON.stringify(result))
+      } else if (state === 'fail') {
+        // Generation failed
+        const errorMsg = result.data.failMsg || result.msg || 'Unknown error'
+        throw new Error(`Video generation failed: ${errorMsg}`)
+      } else if (state === 'waiting') {
+        // Still generating, continue polling
+        console.log(`⏳ Video is still generating (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS})...`)
+      } else {
+        console.log(`⚠️ Unknown state value: ${state}`)
       }
-      // Fallback to other possible response formats
-      if (result.videoUrl || result.video_url || result.url || result.output) {
-        return result.videoUrl || result.video_url || result.url || result.output
-      }
-      throw new Error('Task completed but no video URL returned: ' + JSON.stringify(result))
-    } else if (status === 'fail' || status === 'failed' || status === 'error') {
-      const errorMsg = result.failMsg || result.error || result.message || 'Unknown error'
-      const errorCode = result.failCode || 'N/A'
-      throw new Error(`Task failed (code: ${errorCode}): ${errorMsg}`)
+    } else {
+      console.log(`⚠️ Unexpected response format:`, result)
     }
-    // If status is 'waiting', continue polling
   }
 
-  throw new Error('Task timeout: Video generation took too long')
+  throw new Error('Task timeout: Video generation took too long (exceeded 2 minutes)')
 }
 
 // Hugging Face Inference API - Image-to-Video
@@ -671,7 +677,7 @@ export async function POST(request: NextRequest) {
 
     try {
       if (mode === 'text') {
-        // Text-to-video - Priority: Kie > Replicate
+        // Text-to-video - Priority: Kie (Sora 2) > Replicate
         if (hasKieKey) {
           videoUrl = await generateWithKie('text', textPrompt, null, '', duration, videoRatio)
           usedModel = 'Sora 2 (Kie.ai) - Text-to-Video'
@@ -682,7 +688,7 @@ export async function POST(request: NextRequest) {
           throw new Error('Text-to-video requires KIE_API_KEY or REPLICATE_API_TOKEN')
         }
       } else {
-        // Image-to-video - Priority: Kie > Replicate > HuggingFace
+        // Image-to-video - Priority: Kie (Sora 2) > Replicate > HuggingFace
         if (hasKieKey) {
           videoUrl = await generateWithKie('image', '', image, motionPrompt, duration, videoRatio)
           usedModel = 'Sora 2 (Kie.ai) - Image-to-Video'
