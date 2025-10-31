@@ -2,8 +2,21 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Upload, Image as ImageIcon, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2, Sparkles } from 'lucide-react'
+import { Upload, Image as ImageIcon, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2, Sparkles, History, Trash2, Eye } from 'lucide-react'
 import toast from 'react-hot-toast'
+
+interface VideoHistory {
+  id: string
+  videoUrl: string
+  mode: 'text' | 'image'
+  prompt: string
+  model: string
+  resolution: string
+  duration: string
+  videoRatio: string
+  timestamp: number
+  imagePreview?: string
+}
 
 interface VideoGeneratorProps {
   isGenerating: boolean
@@ -26,6 +39,87 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [isDragOver, setIsDragOver] = useState(false)
   const [progress, setProgress] = useState(0)
   const [progressMessage, setProgressMessage] = useState('')
+
+  // Video history state
+  const [videoHistory, setVideoHistory] = useState<VideoHistory[]>([])
+  const [showHistory, setShowHistory] = useState(false)
+
+  // Load video history from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedHistory = localStorage.getItem('videoHistory')
+      if (savedHistory) {
+        const parsed = JSON.parse(savedHistory)
+        setVideoHistory(parsed)
+      }
+    } catch (error) {
+      console.error('Failed to load video history:', error)
+    }
+  }, [])
+
+  // Save video to history
+  const saveToHistory = (videoUrl: string, usedModel: string) => {
+    const historyItem: VideoHistory = {
+      id: Date.now().toString(),
+      videoUrl,
+      mode: activeTab,
+      prompt: activeTab === 'text' ? textPrompt : motionPrompt,
+      model: usedModel,
+      resolution,
+      duration,
+      videoRatio,
+      timestamp: Date.now(),
+      imagePreview: activeTab === 'image' ? imagePreview || undefined : undefined
+    }
+
+    const newHistory = [historyItem, ...videoHistory].slice(0, 20) // Keep only last 20 videos
+    setVideoHistory(newHistory)
+
+    try {
+      localStorage.setItem('videoHistory', JSON.stringify(newHistory))
+    } catch (error) {
+      console.error('Failed to save video history:', error)
+      toast.error('Failed to save to history')
+    }
+  }
+
+  // Load video from history
+  const loadFromHistory = (item: VideoHistory) => {
+    setGeneratedVideo(item.videoUrl)
+    setActiveTab(item.mode)
+    if (item.mode === 'text') {
+      setTextPrompt(item.prompt)
+    } else {
+      setMotionPrompt(item.prompt)
+      if (item.imagePreview) {
+        setImagePreview(item.imagePreview)
+      }
+    }
+    setResolution(item.resolution)
+    setDuration(item.duration)
+    setVideoRatio(item.videoRatio)
+    setShowHistory(false)
+    toast.success('Loaded from history')
+  }
+
+  // Delete single history item
+  const deleteHistoryItem = (id: string) => {
+    const newHistory = videoHistory.filter(item => item.id !== id)
+    setVideoHistory(newHistory)
+    try {
+      localStorage.setItem('videoHistory', JSON.stringify(newHistory))
+      toast.success('Deleted from history')
+    } catch (error) {
+      console.error('Failed to delete history item:', error)
+    }
+  }
+
+  // Clear all history
+  const clearHistory = () => {
+    setVideoHistory([])
+    localStorage.removeItem('videoHistory')
+    toast.success('History cleared')
+  }
 
   // Example prompts
   const textPromptExamples = [
@@ -184,8 +278,14 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       setProgress(100)
       setProgressMessage('Video generated successfully!')
 
+      console.log('API Response:', result)
+      console.log('Video URL:', result.videoUrl)
+
       if (result.videoUrl) {
         setGeneratedVideo(result.videoUrl)
+
+        // Save to history
+        saveToHistory(result.videoUrl, result.model || 'Unknown')
 
         // 区分 Demo 模式和真实生成
         if (result.isDemo) {
@@ -228,9 +328,23 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
     <section id="video-generator" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Sora-2 AI Video Generator
-          </h2>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              Sora-2 AI Video Generator
+            </h2>
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="relative p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+              title="View History"
+            >
+              <History className="w-5 h-5 text-gray-300" />
+              {videoHistory.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {videoHistory.length}
+                </span>
+              )}
+            </button>
+          </div>
           <p className="text-lg text-gray-300 mb-6">
             Experience the most advanced AI video generation technology with Sora-2. Create stunning videos from text and images in seconds.
           </p>
@@ -246,6 +360,85 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
           </div>
 
         </div>
+
+        {/* History Panel */}
+        {showHistory && (
+          <div className="mb-8 bg-gray-700 p-6 rounded-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                <History className="w-5 h-5" />
+                Video History ({videoHistory.length})
+              </h3>
+              {videoHistory.length > 0 && (
+                <button
+                  onClick={clearHistory}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Clear All
+                </button>
+              )}
+            </div>
+
+            {videoHistory.length === 0 ? (
+              <div className="text-center py-8 text-gray-400">
+                <History className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                <p>No video history yet. Generate your first video!</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                {videoHistory.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-gray-800 rounded-lg p-4 border border-gray-600 hover:border-purple-500 transition-colors"
+                  >
+                    <div className="aspect-video bg-black rounded-lg mb-3 overflow-hidden">
+                      <video
+                        src={item.videoUrl}
+                        className="w-full h-full object-cover"
+                        poster={item.imagePreview}
+                      />
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="text-gray-400 text-xs">
+                        {new Date(item.timestamp).toLocaleString()}
+                      </div>
+                      <div className="text-gray-300 line-clamp-2">
+                        {item.prompt}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-400">
+                        <span className="px-2 py-1 bg-gray-700 rounded">
+                          {item.mode === 'text' ? 'Text' : 'Image'}
+                        </span>
+                        <span className="px-2 py-1 bg-gray-700 rounded">
+                          {item.resolution}
+                        </span>
+                        <span className="px-2 py-1 bg-gray-700 rounded">
+                          {item.duration}s
+                        </span>
+                      </div>
+                      <div className="flex gap-2 mt-3">
+                        <button
+                          onClick={() => loadFromHistory(item)}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View
+                        </button>
+                        <button
+                          onClick={() => deleteHistoryItem(item.id)}
+                          className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* 左侧：输入区域 */}
@@ -620,6 +813,17 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                         controls
                         className="w-full h-full object-cover"
                         poster={imagePreview || undefined}
+                        onError={(e) => {
+                          console.error('Video load error:', e)
+                          console.error('Video URL:', generatedVideo)
+                          toast.error('Failed to load video. The video URL may have expired or is inaccessible.')
+                        }}
+                        onLoadStart={() => {
+                          console.log('Video loading started:', generatedVideo)
+                        }}
+                        onCanPlay={() => {
+                          console.log('Video can play')
+                        }}
                       />
                     </div>
                   </div>

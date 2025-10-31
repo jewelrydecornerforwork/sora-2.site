@@ -341,14 +341,16 @@ async function generateWithKie(
 
   console.log(`📡 Generating ${mode === 'text' ? 'text-to-video' : 'image-to-video'} with Kie.ai Sora 2 API...`)
 
-  // Determine model based on mode
-  const model = mode === 'text' ? 'sora-2-text-to-video' : 'sora-2-image-to-video'
-
-  // Convert video ratio to aspect_ratio format (landscape or portrait)
+  // Convert video ratio to aspect_ratio format for Sora 2 API
+  // 16:9 -> landscape, 9:16 -> portrait
   const aspectRatio = videoRatio === '9:16' ? 'portrait' : 'landscape'
 
-  // Convert duration to n_frames ("10" or "15")
-  const nFrames = parseInt(duration) >= 15 ? '15' : '10'
+  // Convert duration to n_frames format (5s -> "10", 10s -> "15")
+  // Sora 2 API uses "10" or "15" for n_frames parameter
+  const nFrames = duration === '5' ? '10' : '15'
+
+  // Select model based on mode
+  const model = mode === 'text' ? 'sora-2-text-to-video' : 'sora-2-image-to-video'
 
   // Build input object according to Kie.ai Sora 2 API spec
   const input: any = {
@@ -365,6 +367,7 @@ async function generateWithKie(
     input.image_urls = [imageUrl]
   }
 
+  // Build request body according to Sora 2 API format
   const requestBody = {
     model: model,
     input: input
@@ -372,7 +375,10 @@ async function generateWithKie(
 
   console.log('📝 Request body:', JSON.stringify({
     model: requestBody.model,
-    input: { ...requestBody.input, image_urls: requestBody.input.image_urls ? ['<image_url>'] : undefined }
+    input: {
+      ...requestBody.input,
+      image_urls: requestBody.input.image_urls ? ['<image_url>'] : undefined
+    }
   }, null, 2))
   console.log('📡 Sending request to:', `${API_CONFIG.KIE.BASE_URL}${API_CONFIG.KIE.CREATE_TASK_ENDPOINT}`)
 
@@ -403,16 +409,16 @@ async function generateWithKie(
       errorMessage = errorText || errorMessage
     }
 
-    throw new Error(`Kie API error: ${errorMessage}`)
+    throw new Error(`Kie Sora 2 API error: ${errorMessage}`)
   }
 
   const result = await response.json()
-  console.log('📊 Kie API response:', result)
+  console.log('📊 Kie Sora 2 API response:', result)
 
   // Sora 2 API response format: { code: 200, msg: "success", data: { taskId: "..." } }
   // Check if response indicates success (code 200 = success)
   if (result.code !== 200) {
-    throw new Error(`Kie API error: ${result.msg || 'Unknown error'}`)
+    throw new Error(`Kie Sora 2 API error: ${result.msg || 'Unknown error'}`)
   }
 
   // Extract taskId from data object
@@ -422,11 +428,11 @@ async function generateWithKie(
     console.log('⏳ Task ID:', taskId)
     return await pollKieTask(taskId, KIE_API_KEY)
   } else {
-    throw new Error('Kie API returned invalid format: ' + JSON.stringify(result))
+    throw new Error('Kie Sora 2 API returned invalid format: ' + JSON.stringify(result))
   }
 }
 
-// Poll Kie API task status (Sora 2)
+// Poll Kie Sora 2 API task status
 async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
   console.log(`🔄 Starting to poll task: ${taskId}`)
   let attempts = 0
@@ -456,15 +462,16 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
     console.log(`📊 Task status (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS}):`, result)
 
     // Sora 2 API response format:
-    // { code: 200, msg: "success", data: { state: "waiting" | "success" | "fail", resultUrls: [...] } }
+    // { code: 200, msg: "success", data: { state: "waiting" | "success" | "fail", resultUrls: ["..."] } }
     if (result.code === 200 && result.data) {
       const state = result.data.state
 
       if (state === 'success') {
-        // Generation successful - extract video URL
+        // Generation successful - extract video URL from resultUrls
         if (result.data.resultUrls && result.data.resultUrls.length > 0) {
-          console.log('✅ Video generated successfully:', result.data.resultUrls[0])
-          return result.data.resultUrls[0]
+          const videoUrl = result.data.resultUrls[0]
+          console.log('✅ Video generated successfully:', videoUrl)
+          return videoUrl
         }
         throw new Error('Task completed but no video URL returned: ' + JSON.stringify(result))
       } else if (state === 'fail') {
@@ -473,7 +480,7 @@ async function pollKieTask(taskId: string, apiKey: string): Promise<string> {
         throw new Error(`Video generation failed: ${errorMsg}`)
       } else if (state === 'waiting') {
         // Still generating, continue polling
-        console.log(`⏳ Video is still generating (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS})...`)
+        console.log(`⏳ Video is ${state} (${attempts}/${API_CONFIG.POLLING.MAX_ATTEMPTS})...`)
       } else {
         console.log(`⚠️ Unknown state value: ${state}`)
       }
