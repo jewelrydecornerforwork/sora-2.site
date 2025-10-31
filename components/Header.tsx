@@ -5,12 +5,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Menu, X, User, LogOut, CreditCard } from 'lucide-react'
+import { LoginModal } from './LoginModal'
 
 export function Header() {
   const router = useRouter()
   const { user, logout, loading } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
   // 监听滚动事件，实现导航栏背景透明度变化
   useEffect(() => {
@@ -80,6 +82,7 @@ export function Header() {
             ) : (
               <div className="flex gap-3">
                 <button
+                  onClick={() => setShowLoginModal(true)}
                   className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                   style={{
                     background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #9333ea, #ec4899) border-box',
@@ -88,7 +91,8 @@ export function Header() {
                 >
                   Log in
                 </button>
-                <button
+                <Link
+                  href="/auth/register"
                   className="bg-black text-white px-6 py-2 rounded-lg border-2 border-transparent hover:opacity-90 transition-all"
                   style={{
                     background: 'linear-gradient(black, black) padding-box, linear-gradient(45deg, #9333ea, #ec4899) border-box',
@@ -96,7 +100,7 @@ export function Header() {
                   }}
                 >
                   Sign up
-                </button>
+                </Link>
               </div>
             )}
           </div>
@@ -198,6 +202,9 @@ export function Header() {
           </div>
         )}
       </div>
+
+      {/* Login Modal */}
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </header>
   )
 }
