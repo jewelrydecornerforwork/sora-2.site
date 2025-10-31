@@ -331,7 +331,8 @@ async function generateWithKie(
   imageFile: File | null,
   motionPrompt: string,
   duration: string,
-  videoRatio: string
+  videoRatio: string,
+  removeWatermark: boolean
 ): Promise<string> {
   const KIE_API_KEY = process.env.KIE_API_KEY
 
@@ -357,7 +358,7 @@ async function generateWithKie(
     prompt: mode === 'text' ? textPrompt : motionPrompt,
     aspect_ratio: aspectRatio,
     n_frames: nFrames,
-    remove_watermark: true
+    remove_watermark: removeWatermark
   }
 
   // For image-to-video, upload image to public URL
@@ -560,6 +561,7 @@ export async function POST(request: NextRequest) {
     const resolution = formData.get('resolution') as string
     const videoRatio = formData.get('videoRatio') as string
     const duration = formData.get('duration') as string
+    const removeWatermark = formData.get('removeWatermark') === 'true'
 
     // Validate inputs
     if (mode === 'text') {
@@ -686,7 +688,7 @@ export async function POST(request: NextRequest) {
       if (mode === 'text') {
         // Text-to-video - Priority: Kie (Sora 2) > Replicate
         if (hasKieKey) {
-          videoUrl = await generateWithKie('text', textPrompt, null, '', duration, videoRatio)
+          videoUrl = await generateWithKie('text', textPrompt, null, '', duration, videoRatio, removeWatermark)
           usedModel = 'Sora 2 (Kie.ai) - Text-to-Video'
         } else if (hasReplicateToken) {
           videoUrl = await generateTextToVideoWithReplicate(textPrompt, duration, resolution)
@@ -697,7 +699,7 @@ export async function POST(request: NextRequest) {
       } else {
         // Image-to-video - Priority: Kie (Sora 2) > Replicate > HuggingFace
         if (hasKieKey) {
-          videoUrl = await generateWithKie('image', '', image, motionPrompt, duration, videoRatio)
+          videoUrl = await generateWithKie('image', '', image, motionPrompt, duration, videoRatio, removeWatermark)
           usedModel = 'Sora 2 (Kie.ai) - Image-to-Video'
         } else if (hasReplicateToken) {
           const imageBase64 = await fileToBase64(image)

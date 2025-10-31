@@ -31,7 +31,8 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
   const [selectedModel, setSelectedModel] = useState('google-veo3')
   const [resolution, setResolution] = useState('720p')
   const [videoRatio, setVideoRatio] = useState('16:9')
-  const [duration, setDuration] = useState('5')
+  const [duration, setDuration] = useState('10')
+  const [removeWatermark, setRemoveWatermark] = useState(true)
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [isPublic, setIsPublic] = useState(true)
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null)
@@ -136,9 +137,9 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
 
   // Auto-adjust duration when resolution changes to 1080p
   useEffect(() => {
-    if (resolution === '1080p' && duration === '10') {
-      setDuration('5')
-      toast('1080p only supports 5s duration', { icon: 'ℹ️' })
+    if (resolution === '1080p' && duration === '15') {
+      setDuration('10')
+      toast('1080p only supports 10s duration', { icon: 'ℹ️' })
     }
   }, [resolution, duration])
 
@@ -246,6 +247,7 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
       formData.append('resolution', resolution)
       formData.append('videoRatio', videoRatio)
       formData.append('duration', duration)
+      formData.append('removeWatermark', removeWatermark.toString())
       formData.append('isPublic', isPublic.toString())
 
       // 只在 Image to Video 模式下添加图片
@@ -669,31 +671,30 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                 </label>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setDuration('5')}
-                    disabled={resolution === '1080p' && duration === '10'}
+                    onClick={() => setDuration('10')}
                     className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      duration === '5'
+                      duration === '10'
                         ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    <span className="font-medium">5s</span>
+                    <span className="font-medium">10s</span>
                   </button>
                   <button
                     onClick={() => {
                       if (resolution === '1080p') return
-                      setDuration('10')
+                      setDuration('15')
                     }}
                     disabled={resolution === '1080p'}
                     className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                      duration === '10'
+                      duration === '15'
                         ? 'border-blue-500 bg-blue-900/30 text-blue-300'
                         : resolution === '1080p'
                         ? 'border-gray-600 bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
                         : 'border-gray-600 bg-gray-800 text-gray-300 hover:border-gray-500'
                     }`}
                   >
-                    <span className="font-medium">10s</span>
+                    <span className="font-medium">15s</span>
                     {resolution === '1080p' && (
                       <span className="text-xs block text-gray-500">(720p only)</span>
                     )}
@@ -731,6 +732,33 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
                       <Smartphone className="w-4 h-4" />
                       <span className="text-xs font-medium">9:16</span>
                     </div>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Remove Watermark
+                </label>
+                <div className="flex items-center justify-between bg-gray-800 px-4 py-3 rounded-lg border border-gray-600">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-purple-400" />
+                    <div>
+                      <div className="text-sm text-gray-300">Remove watermarks</div>
+                      <div className="text-xs text-gray-400">When enabled, removes watermarks from the generated video</div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setRemoveWatermark(!removeWatermark)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      removeWatermark ? 'bg-purple-600' : 'bg-gray-600'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        removeWatermark ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
                   </button>
                 </div>
               </div>
