@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Upload, Image as ImageIcon, Play, Settings, Volume2, Download, Video, Smartphone, Monitor, FileText, Wand2, Sparkles, History, Trash2, Eye } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useAuth } from '@/contexts/AuthContext'
+import { LoginModal } from '@/components/LoginModal'
 
 interface VideoHistory {
   id: string
@@ -24,6 +26,8 @@ interface VideoGeneratorProps {
 }
 
 export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGeneratorProps) {
+  const { user } = useAuth()
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [textPrompt, setTextPrompt] = useState('')
@@ -198,6 +202,13 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
 
   // 生成视频
   const handleGenerateVideo = async () => {
+    // Check if user is logged in
+    if (!user) {
+      setIsLoginModalOpen(true)
+      toast.error('Please log in to generate videos')
+      return
+    }
+
     // 根据模式进行不同的验证
     if (activeTab === 'text') {
       if (!textPrompt.trim()) {
@@ -914,6 +925,12 @@ export function VideoGenerator({ isGenerating, setIsGenerating }: VideoGenerator
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
     </section>
   )
 }
