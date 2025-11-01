@@ -15,11 +15,12 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://sora-2.site'),
   icons: {
     icon: [
+      { url: '/favicon.ico' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
-    shortcut: '/favicon-32x32.png',
-    apple: '/logo.png',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     title: 'Sora-2 Ai - Professional Image to Video Generator',
