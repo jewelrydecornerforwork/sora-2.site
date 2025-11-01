@@ -24,10 +24,13 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   // Ensure component is mounted (for SSR compatibility)
   useEffect(() => {
     setMounted(true)
+    return () => setMounted(false)
   }, [])
 
   // Lock body scroll when modal is open
   useEffect(() => {
+    if (!mounted) return
+
     if (isOpen) {
       document.body.style.overflow = 'hidden'
     } else {
@@ -38,9 +41,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     return () => {
       document.body.style.overflow = 'unset'
     }
-  }, [isOpen])
-
-  if (!isOpen || !mounted) return null
+  }, [isOpen, mounted])
 
   const handleGoogleSignIn = async () => {
     try {
@@ -74,7 +75,10 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     }
   }
 
-  return createPortal(
+  // Don't render anything on server or if not open
+  if (!mounted || !isOpen) return null
+
+  const modalContent = (
     <div
       className="fixed inset-0 flex items-center justify-center p-4"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', zIndex: 10000 }}
@@ -96,10 +100,15 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
         {/* Header */}
         <div className="p-8 pb-6 text-center">
           <div className="mb-4">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
+            <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
+              <div className="relative w-14 h-14">
+                <Image
+                  src="/logo.png"
+                  alt="Sora-2 Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-white mb-2 bg-clip-text">Welcome to Sora-2</h2>
@@ -206,7 +215,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </div>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   )
+
+  // Use portal to render at document body
+  return typeof window !== 'undefined' ? createPortal(modalContent, document.body) : null
 }

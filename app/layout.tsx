@@ -13,6 +13,14 @@ export const metadata: Metadata = {
   keywords: 'AI video generation,image to video,Sora,artificial intelligence,video creation,sora-2.site',
   authors: [{ name: 'Sora-2 Ai Team' }],
   metadataBase: new URL('https://sora-2.site'),
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    shortcut: '/favicon-32x32.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     title: 'Sora-2 Ai - Professional Image to Video Generator',
     description: 'Transform images into stunning videos with AI technology',
@@ -20,11 +28,20 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://sora-2.site',
     siteName: 'sora-2.site',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Sora-2 AI Video Generator',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Sora-2 Ai - Professional Image to Video Generator',
     description: 'Transform images into stunning videos with AI technology',
+    images: ['/logo.png'],
   },
 }
 
