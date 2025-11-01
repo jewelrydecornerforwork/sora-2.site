@@ -5,83 +5,78 @@ import { Check } from 'lucide-react'
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<string>('Pro')
+  const [selectedPlan, setSelectedPlan] = useState<string>('')
 
   const plans = [
     {
-      name: 'Starter',
-      monthlyPrice: 19.99,
-      yearlyPrice: 179.88,
-      credits: '1000 credits',
-      description: 'Perfect for trying out',
+      name: 'Basic',
+      monthlyPrice: 49.99,
+      yearlyPrice: 449.88,
+      credits: '500 credits',
+      description: 'Great for individual creators',
       features: [
-        '1000 credits per month (~30 videos)',
+        '500 credits per month (~250 videos)',
+        '1080p HD resolution',
         'Text-to-video generation',
         'Image-to-video generation',
-        '720p & 1080p resolution',
-        'Landscape & Portrait modes',
-        '5-10 second videos',
-        'No watermark option',
-        'Basic support',
-        'Commercial use allowed'
+        'Priority processing',
+        'No watermark',
+        'Commercial license',
+        'Email support'
+      ],
+      cta: 'Get Started',
+      popular: false,
+      highlight: true,
+      savings: 150.00,
+      discount: '25% off'
+    },
+    {
+      name: 'Pro',
+      monthlyPrice: 99.99,
+      yearlyPrice: 839.88,
+      credits: '1,200 credits',
+      description: 'Best for professionals',
+      features: [
+        '1,200 credits per month (~600 videos)',
+        '1080p HD resolution',
+        'All generation modes',
+        'Fastest processing',
+        'No watermark',
+        'Full commercial license',
+        'API access',
+        'Priority support',
+        'Advanced features'
+      ],
+      cta: 'Get Started',
+      popular: true,
+      highlight: false,
+      savings: 360.00,
+      discount: '30% off'
+    },
+    {
+      name: 'Enterprise',
+      monthlyPrice: 199.99,
+      yearlyPrice: 1559.88,
+      credits: '2,500 credits',
+      description: 'For teams and agencies',
+      features: [
+        '2,500 credits per month (~1,250 videos)',
+        '1080p HD resolution',
+        'Unlimited generations',
+        'Highest priority',
+        'No watermark',
+        'Unrestricted commercial use',
+        'Full API access',
+        'Team collaboration',
+        'Dedicated account manager',
+        'Custom integrations',
+        'Volume discounts'
       ],
       cta: 'Get Started',
       popular: false,
       highlight: false,
-      savings: 60.00,
-      discount: '25% off',
-      videosPerMonth: '~30 videos'
-    },
-    {
-      name: 'Pro',
-      monthlyPrice: 49.99,
-      yearlyPrice: 419.88,
-      credits: '3000 credits',
-      description: 'Best for creators',
-      features: [
-        '3000 credits per month (~100 videos)',
-        'All generation modes',
-        'Unlimited 720p & 1080p',
-        'All aspect ratios',
-        '5-15 second videos',
-        'No watermark included',
-        'Priority processing',
-        'API access',
-        'Priority support',
-        'Full commercial license'
-      ],
-      cta: 'Go Pro',
-      popular: true,
-      highlight: false,
-      savings: 180.00,
-      discount: '30% off',
-      videosPerMonth: '~100 videos'
-    },
-    {
-      name: 'Business',
-      monthlyPrice: 99.99,
-      yearlyPrice: 779.88,
-      credits: '7000 credits',
-      description: 'For teams & agencies',
-      features: [
-        '7000 credits per month (~230 videos)',
-        'Unlimited generations',
-        'All premium features',
-        'Highest priority queue',
-        'Extended video lengths',
-        'No watermark always',
-        'Full API access',
-        'Team collaboration tools',
-        'Dedicated account manager',
-        'Custom integrations',
-        'Volume discounts available'
-      ],
-      cta: 'Contact Sales',
-      popular: false,
-      highlight: false,
-      savings: 420.00,
-      discount: '35% off',
-      videosPerMonth: '~230 videos'
+      savings: 840.00,
+      discount: '35% off'
     }
   ]
 
@@ -146,44 +141,34 @@ export function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 max-w-7xl mx-auto">
           {plans.map((plan, index) => (
             <div
               key={index}
-              onClick={() => setSelectedPlan(plan.name)}
-              className={`relative rounded-3xl p-8 transition-all duration-300 cursor-pointer ${
-                selectedPlan === plan.name
-                  ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20'
-                  : 'bg-gradient-to-br from-gray-800/80 to-gray-900/80 border-2 border-gray-700 hover:border-purple-500/50'
-              }`}
+              className="relative rounded-3xl p-8 transition-all duration-300 bg-gradient-to-br from-gray-800/80 to-gray-900/80 border-2 border-gray-700 hover:border-purple-500"
             >
-              {/* Gradient Border for Selected Plan */}
-              {selectedPlan === plan.name && (
-                <div className="absolute inset-0 rounded-3xl p-[2px] bg-gradient-to-r from-purple-600 to-pink-600 -z-10"></div>
-              )}
               {/* Popular Badge */}
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
-                    MOST POPULAR
+                    Popular
                   </span>
                 </div>
               )}
 
               {/* Plan Name */}
               <div className="mb-4">
-                <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-sm text-gray-400">{plan.description}</p>
+                <h3 className="text-xl text-white mb-2">{plan.name}</h3>
               </div>
 
               {/* Price */}
               <div className="mb-6">
-                <div className="flex items-baseline mb-1 gap-3">
+                <div className="flex items-baseline mb-1 gap-2">
                   <span className="text-4xl font-bold text-white">{getPrice(plan)}</span>
-                  <span className="text-gray-400">/month</span>
+                  <span className="text-4xl text-white">/month</span>
                   {/* Discount Badge for Yearly - inline with price */}
                   {isYearly && plan.discount && (
-                    <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    <span className="bg-green-900/50 text-green-300 text-xs font-bold px-2 py-1 rounded shadow-lg border border-green-700/50">
                       {plan.discount}
                     </span>
                   )}
@@ -193,25 +178,12 @@ export function Pricing() {
                     ${plan.yearlyPrice.toFixed(2)}/year billed annually
                   </p>
                 )}
-                {!isYearly && plan.monthlyPrice > 0 && (
-                  <p className="text-sm text-gray-400">
-                    Billed monthly
-                  </p>
-                )}
-                <p className="text-purple-400 font-semibold mt-1">{plan.credits}</p>
+                <p className="text-sm text-gray-400 mt-1">{plan.description}</p>
               </div>
 
               {/* CTA Button */}
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setSelectedPlan(plan.name)
-                }}
-                className={`w-full py-3 px-6 rounded-lg font-semibold mb-6 transition-all ${
-                  selectedPlan === plan.name
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg'
-                    : 'bg-gray-700 text-white hover:bg-gray-600'
-                }`}
+                className="w-full py-3 px-6 rounded-lg font-semibold mb-6 transition-all bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg"
               >
                 {plan.cta}
               </button>
@@ -221,7 +193,7 @@ export function Pricing() {
                 {plan.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-start">
                     <Check className="w-5 h-5 text-green-400 mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-300">{feature}</span>
+                    <span className="text-sm text-white">{feature}</span>
                   </div>
                 ))}
               </div>
