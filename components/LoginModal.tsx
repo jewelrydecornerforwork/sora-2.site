@@ -99,16 +99,15 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
         {/* Header */}
         <div className="p-8 pb-6 text-center">
-          <div className="mb-4">
-            <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
-              <div className="relative w-14 h-14">
-                <Image
-                  src="/logo.png"
-                  alt="Sora-2 Logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
+          <div className="flex items-center justify-center mb-4">
+            <div className="relative w-16 h-16">
+              <Image
+                src="/logo.png"
+                alt="Sora-2 Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
           </div>
           <h2 className="text-3xl font-bold text-white mb-2 bg-clip-text">Welcome to Sora-2</h2>

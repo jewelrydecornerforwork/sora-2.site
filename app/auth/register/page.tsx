@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react'
 import { signIn } from 'next-auth/react'
@@ -93,8 +94,14 @@ export default function RegisterPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-xl">S2</span>
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/logo.png"
+                  alt="Sora-2 Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </div>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
