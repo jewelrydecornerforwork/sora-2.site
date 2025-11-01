@@ -9,74 +9,79 @@ export function Pricing() {
 
   const plans = [
     {
-      name: 'Basic',
-      monthlyPrice: 49.99,
-      yearlyPrice: 449.88,
-      credits: '500 credits',
-      description: 'Great for individual creators',
+      name: 'Starter',
+      monthlyPrice: 19.99,
+      yearlyPrice: 179.88,
+      credits: '1000 credits',
+      description: 'Perfect for trying out',
       features: [
-        '500 credits per month (~250 videos)',
-        '1080p HD resolution',
+        '1000 credits per month (~30 videos)',
         'Text-to-video generation',
         'Image-to-video generation',
-        'Priority processing',
-        'No watermark',
-        'Commercial license',
-        'Email support'
+        '720p & 1080p resolution',
+        'Landscape & Portrait modes',
+        '5-10 second videos',
+        'No watermark option',
+        'Basic support',
+        'Commercial use allowed'
       ],
       cta: 'Get Started',
       popular: false,
       highlight: false,
-      savings: 150.00,
-      discount: '25% off'
+      savings: 60.00,
+      discount: '25% off',
+      videosPerMonth: '~30 videos'
     },
     {
       name: 'Pro',
-      monthlyPrice: 99.99,
-      yearlyPrice: 839.88,
-      credits: '1,200 credits',
-      description: 'Best for professionals',
+      monthlyPrice: 49.99,
+      yearlyPrice: 419.88,
+      credits: '3000 credits',
+      description: 'Best for creators',
       features: [
-        '1,200 credits per month (~600 videos)',
-        '1080p HD resolution',
+        '3000 credits per month (~100 videos)',
         'All generation modes',
-        'Fastest processing',
-        'No watermark',
-        'Full commercial license',
+        'Unlimited 720p & 1080p',
+        'All aspect ratios',
+        '5-15 second videos',
+        'No watermark included',
+        'Priority processing',
         'API access',
         'Priority support',
-        'Advanced features'
+        'Full commercial license'
       ],
       cta: 'Go Pro',
       popular: true,
       highlight: false,
-      savings: 360.00,
-      discount: '30% off'
+      savings: 180.00,
+      discount: '30% off',
+      videosPerMonth: '~100 videos'
     },
     {
-      name: 'Enterprise',
-      monthlyPrice: 199.99,
-      yearlyPrice: 1559.88,
-      credits: '2,500 credits',
-      description: 'For teams and agencies',
+      name: 'Business',
+      monthlyPrice: 99.99,
+      yearlyPrice: 779.88,
+      credits: '7000 credits',
+      description: 'For teams & agencies',
       features: [
-        '2,500 credits per month (~1,250 videos)',
-        '1080p HD resolution',
+        '7000 credits per month (~230 videos)',
         'Unlimited generations',
-        'Highest priority',
-        'No watermark',
-        'Unrestricted commercial use',
+        'All premium features',
+        'Highest priority queue',
+        'Extended video lengths',
+        'No watermark always',
         'Full API access',
-        'Team collaboration',
+        'Team collaboration tools',
         'Dedicated account manager',
         'Custom integrations',
-        'Volume discounts'
+        'Volume discounts available'
       ],
       cta: 'Contact Sales',
       popular: false,
       highlight: false,
-      savings: 840.00,
-      discount: '35% off'
+      savings: 420.00,
+      discount: '35% off',
+      videosPerMonth: '~230 videos'
     }
   ]
 
