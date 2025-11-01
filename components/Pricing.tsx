@@ -145,7 +145,7 @@ export function Pricing() {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className="relative rounded-3xl p-8 transition-all duration-300 bg-gradient-to-br from-gray-800/80 to-gray-900/80 border-2 border-gray-700 hover:border-purple-500"
+              className="relative rounded-3xl p-10 transition-all duration-300 bg-gradient-to-br from-gray-800/80 to-gray-900/80 border-2 border-gray-700 hover:border-purple-500"
             >
               {/* Popular Badge */}
               {plan.popular && (
